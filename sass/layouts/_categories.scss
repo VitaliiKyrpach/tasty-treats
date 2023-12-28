@@ -1,0 +1,53 @@
+.categories {
+  margin-bottom: 64px;
+}
+.cats-all {
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.22;
+  color: $color-secondary-lighter;
+  background-color: transparent;
+  padding: 14px 28px;
+  border-radius: 15px;
+  border: 1px solid $color-secondary-lightest;
+  margin-bottom: 42px;
+  cursor: pointer;
+}
+.cats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 416px;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px; /* width of the entire scrollbar */
+  }
+
+  // &::-webkit-scrollbar-track {
+  //   background: orange;        /* color of the tracking area */
+  // }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $color-secondary-lightest; /* color of the scroll thumb */
+    border-radius: 12px; /* roundness of the scroll thumb */
+  }
+  .btn {
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: $color-secondary-light;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    &:hover {
+      color: $color-primary-dark;
+    }
+    .active {
+      color: $color-accent;
+    }
+  }
+}

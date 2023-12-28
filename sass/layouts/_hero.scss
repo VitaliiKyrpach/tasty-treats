@@ -1,0 +1,57 @@
+.hero {
+  padding: 50px 0;
+  .wrapper {
+    position: relative;
+  }
+}
+.hero-content {
+  padding-top: 64px;
+  width: 446px;
+  .title {
+    font-size: 36px;
+    line-height: 1.16;
+    font-weight: 600;
+    color: $color-secondary-dark;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    .accent {
+      font-weight: 400;
+      color: $color-accent;
+      font-style: italic;
+    }
+  }
+  .text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: $color-secondary-dark;
+    width: 400px;
+    margin-bottom: 32px;
+  }
+}
+.master-wrapper {
+  position: absolute;
+  top: 0;
+  left: 478px;
+  width: 696px;
+  overflow: hidden;
+}
+.master-list {
+  margin-bottom: 20px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  transform: translateX(-19px);
+}
+.bullet {
+  display: block;
+  width: 6px;
+  height: 6px;
+  background-color: $color-secondary-lighter;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.bullet-active {
+  background-color: $color-accent;
+}

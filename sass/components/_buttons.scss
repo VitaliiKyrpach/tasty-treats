@@ -1,0 +1,18 @@
+.primary-btn {
+  display: block;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  line-height: 1.21;
+  font-weight: 500;
+  color: $color-secondary-dark;
+  background-color: $color-primary-light;
+  padding: 13px 27px;
+  border: 1px solid $color-accent;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
+  &:hover {
+    color: $color-primary-light;
+    background-color: $color-accent;
+  }
+}

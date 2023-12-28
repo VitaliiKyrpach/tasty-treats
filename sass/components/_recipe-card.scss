@@ -1,0 +1,61 @@
+.recipe-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  width: 250px;
+  height: 287px;
+  border-radius: 8px;
+  background: linear-gradient(1deg, rgba(5, 5, 5, 0.6) 4.82%, rgba(5, 5, 5, 0) 108.72%), url(<path-to-image>), lightgray -36.5px 0px / 129.2% 112.544% no-repeat;
+  padding: 16px;
+  .title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.28;
+    text-transform: uppercase;
+    color: $color-primary-light;
+    margin-bottom: 8px;
+  }
+  .text {
+    font-size: 12px;
+    line-height: 1.33;
+    color: $color-primary-light;
+    margin-bottom: 16px;
+  }
+  .info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+.recipe-btn {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: $color-primary-light;
+  background-color: $color-accent;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.score {
+  display: flex;
+  gap: 4px;
+}
+.score-text {
+  font-weight: 500;
+  color: $color-primary-light;
+}
+.stars {
+  display: flex;
+  gap: 2px;
+}
+.star-svg {
+  width: 16px;
+  height: 16px;
+  fill: $color-star;
+  &.active {
+    fill: $color-star-active;
+  }
+}

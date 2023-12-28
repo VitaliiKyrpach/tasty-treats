@@ -1,0 +1,74 @@
+%select {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: $color-secondary-lighter;
+  padding: 14px 18px;
+  border: 1px solid $color-secondary-lightest;
+  border-radius: 15px;
+  width: 100%;
+  appearance: none;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+.options-wrapper {
+  position: relative;
+  width: 100%;
+}
+.filter {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 44px;
+  .arrow {
+    position: absolute;
+    right: 18px;
+    top: 15px;
+    width: 18px;
+    height: 18px;
+    fill: $color-secondary-lighter;
+    transform: rotate(-90deg);
+    pointer-events: none;
+  }
+}
+.filter-label {
+  font-weight: 500;
+  color: $color-secondary-lighter;
+  display: block;
+  text-align: start;
+  margin-bottom: 8px;
+}
+.options {
+  @extend %select;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+.options.simple::part(button) {
+  background-color: aqua;
+}
+.time {
+  width: 125px;
+}
+.area {
+  width: 141px;
+}
+.ingredients {
+  width: 188px;
+}
+.search {
+  position: relative;
+  .input {
+    @extend %select;
+    padding-left: 48px;
+  }
+  width: 278px;
+}
+.loop {
+  position: absolute;
+  top: 41px;
+  left: 18px;
+  width: 18px;
+  height: 18px;
+  fill: $color-secondary-lighter;
+}

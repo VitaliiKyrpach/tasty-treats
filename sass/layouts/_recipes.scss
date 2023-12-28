@@ -1,0 +1,20 @@
+.recipes {
+  padding-top: 184px;
+  padding-bottom: 100px;
+  .wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 64px;
+  }
+}
+.aside {
+  padding-top: 26px;
+  width: 234px;
+  flex-shrink: 0;
+}
+.recipe-list {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 20px;
+  column-gap: 16px;
+}
