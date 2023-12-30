@@ -1,0 +1,47 @@
+.popular {
+	.title {
+		color: $color-secondary-dark;
+		font-size: 24px;
+		font-weight: 600;
+		line-height: 1.17;
+		text-transform: uppercase;
+		margin-bottom: 32px;
+	}
+}
+.popular-content {
+	overflow: hidden;
+}
+.popular-list {
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+	.card {
+		display: flex;
+		gap: 16px;
+		height: 67px;
+		overflow: hidden;
+		.img {
+			flex-shrink: 0;
+			width: 64px;
+			height: 64px;
+			border-radius: 10px;
+		}
+		.title {
+			font-size: 14px;
+			line-height: 1.28;
+			margin-bottom: 8px;
+			text-overflow: ellipsis; /* enables ellipsis */
+			white-space: nowrap; /* keeps the text in a single line */
+			overflow: hidden;
+		}
+		.text {
+			color: $color-primary-dark;
+			font-size: 10px;
+			line-height: 1.4;
+			overflow: hidden;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 3; /* start showing ellipsis when 3rd line is reached */
+		}
+	}
+}

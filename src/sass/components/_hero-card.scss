@@ -1,0 +1,81 @@
+%hero-card-image {
+	background-color: $color-secondary-dark;
+	border-radius: 15px;
+	overflow: hidden;
+}
+%dish-big-img {
+	position: absolute;
+	top: 50%;
+	left: 60%;
+}
+.hero-card {
+	display: flex;
+	gap: 16px;
+	height: 442px;
+	width: 871px;
+	.card-chief {
+		position: relative;
+		width: 137px;
+		@extend %hero-card-image;
+	}
+	.card-dish {
+		@extend %hero-card-image;
+		position: relative;
+		width: 351px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+		justify-content: end;
+		padding-bottom: 32px;
+		// background: radial-gradient(
+		// 	circle,
+		// 	rgba(155, 181, 55, 1) 1%,
+		// 	rgba(155, 181, 55, 0.3) 5%,
+		// 	$color-secondary-dark 50%
+		// );
+	}
+}
+.chief {
+	position: absolute;
+	top: 47%;
+	left: 60%;
+	transform: translate(-50%, -50%) scale(3.1);
+}
+.dish-img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	height: 271px;
+	z-index: 1;
+}
+.elips-img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.dish-1-big-img {
+	@extend %dish-big-img;
+	transform: translate(-50%, -50%) scale(1.32);
+}
+.dish-2-big-img {
+	@extend %dish-big-img;
+	transform: translate(-50%, -50%) scale(1.9);
+}
+.dish-3-big-img {
+	@extend %dish-big-img;
+	top: 57%;
+	transform: translate(-50%, -50%) scale(2.4);
+}
+.master-text {
+	font-weight: 500;
+	color: $color-third-light;
+	text-transform: uppercase;
+}
+.master-text-country {
+	color: $color-third-lighter;
+	font-size: 12px;
+	line-height: 1.16;
+}
