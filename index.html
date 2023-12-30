@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<title>Tasty treats</title>
+	<link href="main.css" rel="stylesheet"></head>
+	<body>
+		<header class="header">
+			<div class="container">
+				<div class="wrapper">
+					<nav class="header-nav">
+						<ul class="nav-list">
+							<li><a href="" class="link">Home</a></li>
+							<li><a href="" class="link">Favorites</a></li>
+						</ul>
+						<a href="" class="nav-logo"
+							><img
+								src="assets/logo.svg"
+								alt="tasty treats logo"
+								class="src"
+						/></a>
+					</nav>
+					<div class="nav-tech">
+						<svg class="cart-svg">
+							<use href="assets/sprite.svg#icon-cart"></use>
+						</svg>
+						<div class="theme-wrapper">
+							<div class="theme-circle"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<main>
+			<section class="hero">
+				<div class="container">
+					<div class="wrapper">
+						<div class="hero-content">
+							<h1 class="title">
+								Learn to Cook
+								<span class="accent">Tasty Treats'</span> Customizable
+								Masterclass
+							</h1>
+							<p class="text">
+								TastyTreats - Customize Your Meal with Ingredient
+								Options and Step-by-Step Video Guides.
+							</p>
+							<button type="button" class="primary-btn">
+								Order now
+							</button>
+						</div>
+						<div class="master-wrapper swiper-container">
+							<ul class="master-list swiper-wrapper"></ul>
+							<div class="pagination"></div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section class="recipes">
+				<div class="container">
+					<div class="wrapper">
+						<div class="aside">
+							<div class="categories">
+								<button class="cats-all" type="button">
+									All Categories
+								</button>
+								<ul class="cats-list"></ul>
+							</div>
+							<div class="popular">
+								<h2 class="title">Popular recipes</h2>
+								<ul class="popular-list"></ul>
+							</div>
+						</div>
+						<div>
+							<div class="filter">
+								<div class="search">
+									<label class="filter-label" for="ilterSearch"
+										>Search</label
+									>
+									<input
+										class="input"
+										type="text"
+										id="filterSearch"
+										placeholder="Enter Text"
+									/>
+									<svg class="loop">
+										<use href="assets/sprite.svg#icon-loop"></use>
+									</svg>
+								</div>
+								<div class="time">
+									<label class="filter-label" for="filterTime"
+										>Time</label
+									>
+									<div class="options-wrapper">
+										<select
+											class="options"
+											name="filterTime"
+											id="filterTime"
+										>
+											<option value="10">10 min</option>
+											<option value="20">20 min</option>
+											<option value="30">30 min</option>
+											<option value="40">40 min</option>
+											<option value="50">50 min</option>
+											<option value="60">60 min</option>
+										</select>
+										<svg class="arrow">
+											<use
+												href="assets/sprite.svg#icon-arrow"
+											></use>
+										</svg>
+									</div>
+								</div>
+								<div class="area">
+									<label class="filter-label" for="filterArea"
+										>Area</label
+									>
+									<div class="options-wrapper">
+										<select
+											class="options"
+											name="filterArea"
+											id="filterArea"
+										>
+											<option value="French">French</option>
+											<option value="Spanish">Spanish</option>
+											<option value="Italian">Italian</option>
+											<option value="English">English</option>
+											<option value="Norwegian">Norwegian</option>
+											<option value="Ukrainian">Ukrainian</option>
+										</select>
+										<svg class="arrow">
+											<use
+												href="assets/sprite.svg#icon-arrow"
+											></use>
+										</svg>
+									</div>
+								</div>
+								<div class="ingredients">
+									<label class="filter-label" for="filterIngredients"
+										>Ingredients</label
+									>
+									<div class="options-wrapper">
+										<select
+											class="options"
+											name="filteIngredients"
+											id="filteIngredients"
+										>
+											<option value="Cabbage">Cabbage</option>
+											<option value="Cucumbar">Cucumbar</option>
+											<option value="Tomato">Tomato</option>
+											<option value="Corn">Corn</option>
+											<option value="Radish">Radish</option>
+											<option value="Parsley">Parsley</option>
+										</select>
+										<svg class="arrow">
+											<use
+												href="assets/sprite.svg#icon-arrow"
+											></use>
+										</svg>
+									</div>
+								</div>
+							</div>
+							<div class="all-recipes">
+								<ul class="recipe-list"></ul>
+							</div>
+							<div class="pagination"></div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+	<script defer src="main.js"></script></body>
+</html>
