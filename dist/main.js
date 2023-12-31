@@ -161,6 +161,128 @@ getPopular();
 
 /***/ }),
 
+/***/ "./src/js/recipe-modal.js":
+/*!********************************!*\
+  !*** ./src/js/recipe-modal.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+
+const recModalOpen = document.querySelector(".recipe-list");
+const modal = document.querySelector(".backdrop");
+const openModal = async e => {
+  if (e.target.nodeName !== "BUTTON") return;
+  const recipeId = e.target.id;
+  const data = await getData(recipeId);
+  modal.insertAdjacentHTML("beforeend", createMarkUp(data));
+  modal.classList.remove("is-hidden");
+  document.body.classList.add("no-scroll");
+  const recModalClose = document.querySelector(".btn-close");
+  recModalClose.addEventListener("click", () => closeModal(recModalClose));
+};
+const getData = async id => {
+  try {
+    const fetch = await (0,axios__WEBPACK_IMPORTED_MODULE_0__["default"])(`/recipes/${id}`);
+    return fetch;
+  } catch (err) {
+    console.log(err);
+  }
+};
+const createMarkUp = _ref => {
+  let {
+    data
+  } = _ref;
+  console.log(data);
+  const {
+    ingredients,
+    youtube,
+    time,
+    rating,
+    title,
+    description,
+    tags
+  } = data;
+  const url = youtube.replace("watch?v=", "embed/");
+  const tagsMarkUp = tags.length < 2 ? "" : tags.map(tag => `<li class="item">#${tag}</li>`).join("");
+  const ingredientsMarkUp = ingredients.map(_ref2 => {
+    let {
+      name,
+      measure
+    } = _ref2;
+    return `<li class="item">
+    <p>${name}</p>
+    <p class="count">${measure}</p>
+</li>`;
+  }).join("");
+  return `
+    <div class="recipe-modal">
+        <button class="btn-close" type="button">
+            <svg class="close-svg">
+                <use href="assets/sprite.svg#icon-reset"></use>
+            </svg>
+        </button>
+        <h2 class="title">${title}</h2>
+        <iframe
+            class="video"
+            src=${url}
+            title="YouTube video player"
+            frameborder="0"
+            
+        ></iframe>
+        <div class="tag-info">
+            <ul class="tag-list">
+                ${tagsMarkUp}
+            </ul>
+            <div class="score">
+                <p class="modal-score-text">${rating}</p>
+                <div class="stars">
+                    <svg class="star-svg active">
+                        <use href="assets/sprite.svg#icon-star"></use>
+                    </svg>
+                    <svg class="star-svg active">
+                        <use href="assets/sprite.svg#icon-star"></use>
+                    </svg>
+                    <svg class="star-svg active">
+                        <use href="assets/sprite.svg#icon-star"></use>
+                    </svg>
+                    <svg class="star-svg active">
+                        <use href="assets/sprite.svg#icon-star"></use>
+                    </svg>
+                    <svg class="star-svg">
+                        <use href="assets/sprite.svg#icon-star"></use>
+                    </svg>
+                </div>
+                <p class="modal-score-text">${time} min</p>
+            </div>
+        </div>
+        <ul class="ing-list">
+            ${ingredientsMarkUp}
+        </ul>
+        <p class="text">
+            ${description}
+        </p>
+        <div class="buttons">
+            <button class="btn-add" type="button">
+                Add to favorite
+            </button>
+            <button class="btn-rating" type="button">
+                Give a rating
+            </button>
+        </div>
+    </div>`;
+};
+recModalOpen.addEventListener("click", openModal);
+const closeModal = btn => {
+  modal.innerHTML = "";
+  modal.classList.add("is-hidden");
+  document.body.classList.remove("no-scroll");
+  btn.removeEventListener("click", closeModal);
+};
+
+/***/ }),
+
 /***/ "./src/js/recipes.js":
 /*!***************************!*\
   !*** ./src/js/recipes.js ***!
@@ -191,10 +313,11 @@ const createMarkUp = _ref => {
       rating,
       title,
       description,
-      preview
+      preview,
+      _id
     } = _ref2;
     return `<li class="recipe-card">
-            <button class="heart">
+            <button class="heart" id=${_id}>
                 <svg class="heart-svg">
                 <use
                     href="assets/sprite.svg#icon-heart"
@@ -237,7 +360,7 @@ const createMarkUp = _ref => {
                         </svg>
                     </div>
                 </div>
-                <button class="recipe-btn" type="button">
+                <button class="recipe-btn" type="button" id=${_id}>
                     See recipe
                 </button>
             </div>
@@ -312,7 +435,7 @@ var ___HTML_LOADER_REPLACEMENT_0___ = _node_modules_html_loader_dist_runtime_get
 var ___HTML_LOADER_REPLACEMENT_1___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_1___, { hash: "#icon-cart" });
 var ___HTML_LOADER_REPLACEMENT_2___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_1___, { hash: "#icon-loop" });
 var ___HTML_LOADER_REPLACEMENT_3___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_1___, { hash: "#icon-arrow" });
-var code = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n\t<head>\r\n\t\t<meta charset=\"UTF-8\" />\r\n\t\t<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n\t\t<meta\r\n\t\t\tname=\"viewport\"\r\n\t\t\tcontent=\"width=device-width, initial-scale=1.0\"\r\n\t\t/>\r\n\t\t<title>Tasty treats</title>\r\n\t</head>\r\n\t<body>\r\n\t\t<header class=\"header\">\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t<nav class=\"header-nav\">\r\n\t\t\t\t\t\t<ul class=\"nav-list\">\r\n\t\t\t\t\t\t\t<li><a href=\"\" class=\"link\">Home</a></li>\r\n\t\t\t\t\t\t\t<li><a href=\"\" class=\"link\">Favorites</a></li>\r\n\t\t\t\t\t\t</ul>\r\n\t\t\t\t\t\t<a href=\"\" class=\"nav-logo\"\r\n\t\t\t\t\t\t\t><img\r\n\t\t\t\t\t\t\t\tsrc=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n\t\t\t\t\t\t\t\talt=\"tasty treats logo\"\r\n\t\t\t\t\t\t\t\tclass=\"src\"\r\n\t\t\t\t\t\t/></a>\r\n\t\t\t\t\t</nav>\r\n\t\t\t\t\t<div class=\"nav-tech\">\r\n\t\t\t\t\t\t<svg class=\"cart-svg\">\r\n\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"></use>\r\n\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t<div class=\"theme-wrapper\">\r\n\t\t\t\t\t\t\t<div class=\"theme-circle\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</header>\r\n\t\t<main>\r\n\t\t\t<section class=\"hero\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"hero-content\">\r\n\t\t\t\t\t\t\t<h1 class=\"title\">\r\n\t\t\t\t\t\t\t\tLearn to Cook\r\n\t\t\t\t\t\t\t\t<span class=\"accent\">Tasty Treats'</span> Customizable\r\n\t\t\t\t\t\t\t\tMasterclass\r\n\t\t\t\t\t\t\t</h1>\r\n\t\t\t\t\t\t\t<p class=\"text\">\r\n\t\t\t\t\t\t\t\tTastyTreats - Customize Your Meal with Ingredient\r\n\t\t\t\t\t\t\t\tOptions and Step-by-Step Video Guides.\r\n\t\t\t\t\t\t\t</p>\r\n\t\t\t\t\t\t\t<button type=\"button\" class=\"primary-btn\">\r\n\t\t\t\t\t\t\t\tOrder now\r\n\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div class=\"master-wrapper swiper-container\">\r\n\t\t\t\t\t\t\t<ul class=\"master-list swiper-wrapper\"></ul>\r\n\t\t\t\t\t\t\t<div class=\"pagination\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t\t<section class=\"recipes\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"aside\">\r\n\t\t\t\t\t\t\t<div class=\"categories\">\r\n\t\t\t\t\t\t\t\t<button class=\"cats-all\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\tAll Categories\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t<ul class=\"cats-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"popular\">\r\n\t\t\t\t\t\t\t\t<h2 class=\"title\">Popular recipes</h2>\r\n\t\t\t\t\t\t\t\t<ul class=\"popular-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div>\r\n\t\t\t\t\t\t\t<div class=\"filter\">\r\n\t\t\t\t\t\t\t\t<div class=\"search\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"ilterSearch\"\r\n\t\t\t\t\t\t\t\t\t\t>Search</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"text\"\r\n\t\t\t\t\t\t\t\t\t\tid=\"filterSearch\"\r\n\t\t\t\t\t\t\t\t\t\tplaceholder=\"Enter Text\"\r\n\t\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t\t<svg class=\"loop\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"time\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"filterTime\"\r\n\t\t\t\t\t\t\t\t\t\t>Time</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\">\r\n\t\t\t\t\t\t\t\t\t\t<select\r\n\t\t\t\t\t\t\t\t\t\t\tclass=\"options\"\r\n\t\t\t\t\t\t\t\t\t\t\tname=\"filterTime\"\r\n\t\t\t\t\t\t\t\t\t\t\tid=\"filterTime\"\r\n\t\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"10\">10 min</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"20\">20 min</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"30\">30 min</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"40\">40 min</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"50\">50 min</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"60\">60 min</option>\r\n\t\t\t\t\t\t\t\t\t\t</select>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"area\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"filterArea\"\r\n\t\t\t\t\t\t\t\t\t\t>Area</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\">\r\n\t\t\t\t\t\t\t\t\t\t<select\r\n\t\t\t\t\t\t\t\t\t\t\tclass=\"options\"\r\n\t\t\t\t\t\t\t\t\t\t\tname=\"filterArea\"\r\n\t\t\t\t\t\t\t\t\t\t\tid=\"filterArea\"\r\n\t\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"French\">French</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Spanish\">Spanish</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Italian\">Italian</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"English\">English</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Norwegian\">Norwegian</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Ukrainian\">Ukrainian</option>\r\n\t\t\t\t\t\t\t\t\t\t</select>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"ingredients\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"filterIngredients\"\r\n\t\t\t\t\t\t\t\t\t\t>Ingredients</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\">\r\n\t\t\t\t\t\t\t\t\t\t<select\r\n\t\t\t\t\t\t\t\t\t\t\tclass=\"options\"\r\n\t\t\t\t\t\t\t\t\t\t\tname=\"filteIngredients\"\r\n\t\t\t\t\t\t\t\t\t\t\tid=\"filteIngredients\"\r\n\t\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Cabbage\">Cabbage</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Cucumbar\">Cucumbar</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Tomato\">Tomato</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Corn\">Corn</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Radish\">Radish</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Parsley\">Parsley</option>\r\n\t\t\t\t\t\t\t\t\t\t</select>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"all-recipes\">\r\n\t\t\t\t\t\t\t\t<ul class=\"recipe-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"pagination\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t</main>\r\n\t</body>\r\n</html>\r\n";
+var code = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n\t<head>\r\n\t\t<meta charset=\"UTF-8\" />\r\n\t\t<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n\t\t<meta\r\n\t\t\tname=\"viewport\"\r\n\t\t\tcontent=\"width=device-width, initial-scale=1.0\"\r\n\t\t/>\r\n\t\t<title>Tasty treats</title>\r\n\t</head>\r\n\t<body>\r\n\t\t<header class=\"header\">\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t<nav class=\"header-nav\">\r\n\t\t\t\t\t\t<ul class=\"nav-list\">\r\n\t\t\t\t\t\t\t<li><a href=\"\" class=\"link\">Home</a></li>\r\n\t\t\t\t\t\t\t<li><a href=\"\" class=\"link\">Favorites</a></li>\r\n\t\t\t\t\t\t</ul>\r\n\t\t\t\t\t\t<a href=\"\" class=\"nav-logo\"\r\n\t\t\t\t\t\t\t><img\r\n\t\t\t\t\t\t\t\tsrc=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n\t\t\t\t\t\t\t\talt=\"tasty treats logo\"\r\n\t\t\t\t\t\t\t\tclass=\"src\"\r\n\t\t\t\t\t\t/></a>\r\n\t\t\t\t\t</nav>\r\n\t\t\t\t\t<div class=\"nav-tech\">\r\n\t\t\t\t\t\t<svg class=\"cart-svg\">\r\n\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"></use>\r\n\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t<div class=\"theme-wrapper\">\r\n\t\t\t\t\t\t\t<div class=\"theme-circle\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</header>\r\n\t\t<main>\r\n\t\t\t<section class=\"hero\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"hero-content\">\r\n\t\t\t\t\t\t\t<h1 class=\"title\">\r\n\t\t\t\t\t\t\t\tLearn to Cook\r\n\t\t\t\t\t\t\t\t<span class=\"accent\">Tasty Treats'</span> Customizable\r\n\t\t\t\t\t\t\t\tMasterclass\r\n\t\t\t\t\t\t\t</h1>\r\n\t\t\t\t\t\t\t<p class=\"text\">\r\n\t\t\t\t\t\t\t\tTastyTreats - Customize Your Meal with Ingredient\r\n\t\t\t\t\t\t\t\tOptions and Step-by-Step Video Guides.\r\n\t\t\t\t\t\t\t</p>\r\n\t\t\t\t\t\t\t<button type=\"button\" class=\"primary-btn\">\r\n\t\t\t\t\t\t\t\tOrder now\r\n\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div class=\"master-wrapper swiper-container\">\r\n\t\t\t\t\t\t\t<ul class=\"master-list swiper-wrapper\"></ul>\r\n\t\t\t\t\t\t\t<div class=\"pagination\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t\t<section class=\"recipes\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"aside\">\r\n\t\t\t\t\t\t\t<div class=\"categories\">\r\n\t\t\t\t\t\t\t\t<button class=\"cats-all\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\tAll Categories\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t<ul class=\"cats-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"popular\">\r\n\t\t\t\t\t\t\t\t<h2 class=\"title\">Popular recipes</h2>\r\n\t\t\t\t\t\t\t\t<ul class=\"popular-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div>\r\n\t\t\t\t\t\t\t<div class=\"filter\">\r\n\t\t\t\t\t\t\t\t<div class=\"search\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"ilterSearch\"\r\n\t\t\t\t\t\t\t\t\t\t>Search</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"text\"\r\n\t\t\t\t\t\t\t\t\t\tid=\"filterSearch\"\r\n\t\t\t\t\t\t\t\t\t\tplaceholder=\"Enter Text\"\r\n\t\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t\t<svg class=\"loop\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"time\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"filterTime\"\r\n\t\t\t\t\t\t\t\t\t\t>Time</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\">\r\n\t\t\t\t\t\t\t\t\t\t<select\r\n\t\t\t\t\t\t\t\t\t\t\tclass=\"options\"\r\n\t\t\t\t\t\t\t\t\t\t\tname=\"filterTime\"\r\n\t\t\t\t\t\t\t\t\t\t\tid=\"filterTime\"\r\n\t\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"10\">10 min</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"20\">20 min</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"30\">30 min</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"40\">40 min</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"50\">50 min</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"60\">60 min</option>\r\n\t\t\t\t\t\t\t\t\t\t</select>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"area\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"filterArea\"\r\n\t\t\t\t\t\t\t\t\t\t>Area</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\">\r\n\t\t\t\t\t\t\t\t\t\t<select\r\n\t\t\t\t\t\t\t\t\t\t\tclass=\"options\"\r\n\t\t\t\t\t\t\t\t\t\t\tname=\"filterArea\"\r\n\t\t\t\t\t\t\t\t\t\t\tid=\"filterArea\"\r\n\t\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"French\">French</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Spanish\">Spanish</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Italian\">Italian</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"English\">English</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Norwegian\">Norwegian</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Ukrainian\">Ukrainian</option>\r\n\t\t\t\t\t\t\t\t\t\t</select>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"ingredients\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"filterIngredients\"\r\n\t\t\t\t\t\t\t\t\t\t>Ingredients</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\">\r\n\t\t\t\t\t\t\t\t\t\t<select\r\n\t\t\t\t\t\t\t\t\t\t\tclass=\"options\"\r\n\t\t\t\t\t\t\t\t\t\t\tname=\"filteIngredients\"\r\n\t\t\t\t\t\t\t\t\t\t\tid=\"filteIngredients\"\r\n\t\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Cabbage\">Cabbage</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Cucumbar\">Cucumbar</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Tomato\">Tomato</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Corn\">Corn</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Radish\">Radish</option>\r\n\t\t\t\t\t\t\t\t\t\t\t<option value=\"Parsley\">Parsley</option>\r\n\t\t\t\t\t\t\t\t\t\t</select>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"all-recipes\">\r\n\t\t\t\t\t\t\t\t<ul class=\"recipe-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"pagination\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t</main>\r\n\t\t<div class=\"backdrop is-hidden\"></div>\r\n\t</body>\r\n</html>\r\n";
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (code);
 
@@ -14914,6 +15037,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _js_categories__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./js/categories */ "./src/js/categories.js");
 /* harmony import */ var _js_popular__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./js/popular */ "./src/js/popular.js");
 /* harmony import */ var _js_recipes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./js/recipes */ "./src/js/recipes.js");
+/* harmony import */ var _js_recipe_modal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./js/recipe-modal */ "./src/js/recipe-modal.js");
+
 
 
 
