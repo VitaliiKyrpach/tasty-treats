@@ -20,8 +20,9 @@ const createMarkUp = ({ data: { results } }) => {
 				title,
 				description,
 				preview,
+				_id,
 			}) => `<li class="recipe-card">
-            <button class="heart">
+            <button class="heart" id=${_id}>
                 <svg class="heart-svg">
                 <use
                     href="assets/sprite.svg#icon-heart"
@@ -64,7 +65,7 @@ const createMarkUp = ({ data: { results } }) => {
                         </svg>
                     </div>
                 </div>
-                <button class="recipe-btn" type="button">
+                <button class="recipe-btn" type="button" id=${_id}>
                     See recipe
                 </button>
             </div>
