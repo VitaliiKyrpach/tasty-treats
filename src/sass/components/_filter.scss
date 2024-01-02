@@ -13,11 +13,41 @@
 	background-color: transparent;
 	cursor: pointer;
 }
+%dropdown {
+	position: absolute;
+	left: 0;
+	top: 101%;
+	width: 100%;
+	height: 180px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 14px 18px;
+	background-color: $color-primary-light;
+	border-radius: 14px;
+	box-shadow: 0px 4px 36px 0px rgba(0, 0, 0, 0.02);
+	overflow-y: auto;
+	z-index: 1;
+	cursor: default;
+	&::-webkit-scrollbar {
+		width: 6px;
+		position: absolute;
+		right: 60px;
+	}
+	&::-webkit-scrollbar-thumb {
+		background-color: $color-secondary-lightest; /* color of the scroll thumb */
+		border-radius: 12px; /* roundness of the scroll thumb */
+	}
+}
 .options-wrapper {
 	position: relative;
 	width: 100%;
+	@extend %select;
+	-moz-appearance: none;
+	-webkit-appearance: none;
 }
 .filter {
+	position: relative;
 	display: flex;
 	gap: 16px;
 	margin-bottom: 44px;
@@ -38,14 +68,6 @@
 	display: block;
 	text-align: start;
 	margin-bottom: 8px;
-}
-.options {
-	@extend %select;
-	-moz-appearance: none;
-	-webkit-appearance: none;
-}
-.options.simple::part(button) {
-	background-color: aqua;
 }
 .time {
 	width: 125px;
@@ -71,4 +93,53 @@
 	width: 18px;
 	height: 18px;
 	fill: $color-secondary-lighter;
+}
+.filter-btn {
+	font-family: "Inter", sans-serif;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.25;
+	text-align: left;
+	width: 95%;
+	padding: 0;
+	color: $color-secondary-light;
+	background-color: transparent;
+	border: none;
+	text-overflow: ellipsis; /* enables ellipsis */
+	white-space: nowrap;
+	overflow: hidden;
+	cursor: pointer;
+	&:hover {
+		color: $color-secondary-dark;
+	}
+}
+.area-list,
+.ingredients-list,
+.time-list {
+	@extend %dropdown;
+}
+
+.reset-filter-btn {
+	position: absolute;
+	bottom: -30px;
+	right: 0;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+}
+.reset-svg {
+	width: 14px;
+	height: 14px;
+	fill: $color-accent;
+}
+.reset-text {
+	color: $color-secondary-lighter;
+	font-family: "Inter", sans-serif;
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1.33;
+	width: 86px;
 }

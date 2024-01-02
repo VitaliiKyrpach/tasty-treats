@@ -14,7 +14,7 @@ const createMarkUp = ({ data }) => {
 	return data
 		.map(
 			({ name }) => `<li>
-            <button class="btn" type="button">${name}</button>
+            <button class="btn" type="button" data-option='option-category'>${name}</button>
         </li>`
 		)
 		.join("");

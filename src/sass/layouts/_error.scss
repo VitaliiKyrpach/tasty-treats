@@ -1,0 +1,19 @@
+.error {
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+	align-items: center;
+	margin: 50px auto;
+}
+.error-svg {
+	width: 97px;
+	height: 83px;
+}
+.error-text {
+	width: 480px;
+	color: $color-secondary-dark;
+	text-align: center;
+	font-family: "Inter", sans-serif;
+	font-size: 16px;
+	line-height: 1.5; /* 150% */
+}

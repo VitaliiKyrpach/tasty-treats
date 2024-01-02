@@ -1,4 +1,5 @@
 import axios from "axios";
+import { openModal } from "./recipe-modal";
 
 const popList = document.querySelector(".popular-list");
 
@@ -14,7 +15,12 @@ const getData = async () => {
 const createMarkUp = ({ data }) => {
 	return data
 		.map(
-			({ preview, title, description }) => `<li class="card">
+			({
+				preview,
+				title,
+				description,
+				_id,
+			}) => `<li class="card" id=${_id} data-type="popular-card">
             <img class="img" src=${preview} alt=${title} />
             <div class="popular-content">
                 <h3 class="title">${title}</h3>
@@ -32,3 +38,9 @@ const getPopular = async () => {
 	popList.insertAdjacentHTML("beforeend", createMarkUp(data));
 };
 getPopular();
+
+const openPopular = (e) => {
+	openModal(e);
+};
+
+popList.addEventListener("click", openPopular);

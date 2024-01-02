@@ -53,7 +53,7 @@
 		&:hover {
 			color: $color-primary-dark;
 		}
-		.active {
+		&.cat-active {
 			color: $color-accent;
 		}
 	}

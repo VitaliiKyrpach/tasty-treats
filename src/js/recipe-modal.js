@@ -1,8 +1,13 @@
 import axios from "axios";
+import createStars from "./createStars";
 const recModalOpen = document.querySelector(".recipe-list");
 const modal = document.querySelector(".backdrop");
-const openModal = async (e) => {
-	if (e.target.nodeName !== "BUTTON") return;
+export const openModal = async (e) => {
+	if (
+		e.target.dataset.type !== "recipe-btn" &&
+		e.target.dataset.type !== "popular-card"
+	)
+		return;
 	const recipeId = e.target.id;
 	const data = await getData(recipeId);
 	modal.insertAdjacentHTML("beforeend", createMarkUp(data));
@@ -24,7 +29,6 @@ const getData = async (id) => {
 };
 
 const createMarkUp = ({ data }) => {
-	console.log(data);
 	const {
 		ingredients,
 		youtube,
@@ -48,7 +52,7 @@ const createMarkUp = ({ data }) => {
 </li>`
 		)
 		.join("");
-
+	const stars = createStars(rating);
 	return `
     <div class="recipe-modal">
         <button class="btn-close" type="button">
@@ -71,21 +75,7 @@ const createMarkUp = ({ data }) => {
             <div class="score">
                 <p class="modal-score-text">${rating}</p>
                 <div class="stars">
-                    <svg class="star-svg active">
-                        <use href="assets/sprite.svg#icon-star"></use>
-                    </svg>
-                    <svg class="star-svg active">
-                        <use href="assets/sprite.svg#icon-star"></use>
-                    </svg>
-                    <svg class="star-svg active">
-                        <use href="assets/sprite.svg#icon-star"></use>
-                    </svg>
-                    <svg class="star-svg active">
-                        <use href="assets/sprite.svg#icon-star"></use>
-                    </svg>
-                    <svg class="star-svg">
-                        <use href="assets/sprite.svg#icon-star"></use>
-                    </svg>
+                    ${stars}
                 </div>
                 <p class="modal-score-text">${time} min</p>
             </div>

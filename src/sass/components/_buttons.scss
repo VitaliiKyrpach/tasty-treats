@@ -10,6 +10,34 @@
 	cursor: pointer;
 	transition: color 150ms ease, background-color 150ms ease;
 }
+%pag-button {
+	width: 44px;
+	height: 44px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+	border: 1px solid;
+}
+%pag-arrow-jump {
+	display: flex;
+	@extend %pag-button;
+	.svg {
+		flex-shrink: 0;
+		margin: -8px;
+		width: 24px;
+		height: 24px;
+		pointer-events: none;
+	}
+}
+%pag-arrow-step {
+	@extend %pag-button;
+	.svg {
+		width: 24px;
+		height: 24px;
+		pointer-events: none;
+	}
+}
 .primary-btn {
 	@extend %button;
 	color: $color-secondary-dark;
@@ -35,5 +63,52 @@
 	&:hover {
 		color: $color-primary-light;
 		background-color: $color-accent;
+	}
+}
+.pag-arrow-first {
+	@extend %pag-arrow-jump;
+	background-color: $color-secondary-dark;
+	.svg {
+		fill: $color-third-light;
+	}
+}
+.pag-arrow-prev {
+	@extend %pag-arrow-step;
+	background-color: $color-secondary-dark;
+	.svg {
+		fill: $color-third-light;
+	}
+}
+.pag-arrow-last {
+	@extend %pag-arrow-jump;
+	transform: rotate(180deg);
+	background-color: $color-accent;
+	border-color: $color-accent;
+	.svg {
+		fill: $color-secondary-dark;
+	}
+}
+.pag-arrow-next {
+	@extend %pag-arrow-step;
+	transform: rotate(180deg);
+	background-color: $color-accent;
+	border-color: $color-accent;
+	.svg {
+		fill: $color-secondary-dark;
+	}
+}
+.pag-page {
+	@extend %pag-button;
+	border-color: $color-secondary-light;
+	font-family: "Inter", sans-serif;
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 1.22;
+	&.current {
+		border-color: $color-accent;
+		background-color: $color-accent;
+	}
+	&.hidden {
+		display: none;
 	}
 }

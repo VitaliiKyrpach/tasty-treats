@@ -10,6 +10,7 @@
 }
 .popular-content {
 	overflow: hidden;
+	pointer-events: none;
 }
 .popular-list {
 	display: flex;
@@ -20,11 +21,14 @@
 		gap: 16px;
 		height: 67px;
 		overflow: hidden;
+		cursor: pointer;
+		transition: transform 150ms ease;
 		.img {
 			flex-shrink: 0;
 			width: 64px;
 			height: 64px;
 			border-radius: 10px;
+			pointer-events: none;
 		}
 		.title {
 			font-size: 14px;
@@ -33,6 +37,7 @@
 			text-overflow: ellipsis; /* enables ellipsis */
 			white-space: nowrap; /* keeps the text in a single line */
 			overflow: hidden;
+			pointer-events: none;
 		}
 		.text {
 			color: $color-primary-dark;
@@ -42,6 +47,11 @@
 			display: -webkit-box;
 			-webkit-box-orient: vertical;
 			-webkit-line-clamp: 3; /* start showing ellipsis when 3rd line is reached */
+			pointer-events: none;
+		}
+		&:hover {
+			transform: scale(1.1);
+			transform-origin: right;
 		}
 	}
 }

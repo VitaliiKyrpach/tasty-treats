@@ -1,11 +1,25 @@
 import axios from "axios";
-
+import createStars from "./createStars";
+import emptyResult from "./emptyResult";
 const recipeList = document.querySelector(".recipe-list");
 
-const getData = async () => {
+const InitParams = {
+	title: "",
+	category: "",
+	time: "",
+	area: "",
+	ingredient: "",
+};
+
+const getData = async (page = 1) => {
 	try {
-		const fetch = await axios("/recipes");
-		console.log(fetch.data.results);
+		const LSparams =
+			JSON.parse(localStorage.getItem("params")) ?? InitParams;
+		const params = { ...LSparams, page, limit: 9 };
+		const fetch = await axios("/recipes", {
+			params,
+		});
+		console.log(fetch.data);
 		return fetch;
 	} catch (err) {
 		console.log(err);
@@ -14,14 +28,9 @@ const getData = async () => {
 
 const createMarkUp = ({ data: { results } }) => {
 	return results
-		.map(
-			({
-				rating,
-				title,
-				description,
-				preview,
-				_id,
-			}) => `<li class="recipe-card">
+		.map(({ rating, title, description, preview, _id }) => {
+			const stars = createStars(rating);
+			return `<li class="recipe-card">
             <button class="heart" id=${_id}>
                 <svg class="heart-svg">
                 <use
@@ -38,44 +47,27 @@ const createMarkUp = ({ data: { results } }) => {
                 <div class="score">
                     <p class="score-text">${rating}</p>
                     <div class="stars">
-                        <svg class="star-svg active">
-                            <use
-                                href="assets/sprite.svg#icon-star"
-                            ></use>
-                        </svg>
-                        <svg class="star-svg active">
-                            <use
-                                href="assets/sprite.svg#icon-star"
-                            ></use>
-                        </svg>
-                        <svg class="star-svg active">
-                            <use
-                                href="assets/sprite.svg#icon-star"
-                            ></use>
-                        </svg>
-                        <svg class="star-svg active">
-                            <use
-                                href="assets/sprite.svg#icon-star"
-                            ></use>
-                        </svg>
-                        <svg class="star-svg">
-                            <use
-                                href="assets/sprite.svg#icon-star"
-                            ></use>
-                        </svg>
+                        ${stars}
                     </div>
                 </div>
-                <button class="recipe-btn" type="button" id=${_id}>
+                <button class="recipe-btn" type="button" id=${_id} data-type="recipe-btn">
                     See recipe
                 </button>
             </div>
-        </li>`
-		)
+        </li>`;
+		})
 		.join("");
 };
 
-const getRecipes = async () => {
-	const data = await getData();
+export const getRecipes = async (page) => {
+	const data = await getData(page);
+	recipeList.innerHTML = "";
+	if (data.data.totalPages === null) {
+		const text =
+			"Sorry, there are no recipes found according to your requirements. Sorry, there are no recipes found according to your requirements. Please try changing the filters";
+		recipeList.insertAdjacentHTML("beforeend", emptyResult(text));
+	}
 	recipeList.insertAdjacentHTML("beforeend", createMarkUp(data));
+	return data;
 };
-getRecipes();
+// getRecipes();
