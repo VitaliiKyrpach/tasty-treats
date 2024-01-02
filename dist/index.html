@@ -93,82 +93,131 @@
 									</svg>
 								</div>
 								<div class="time">
-									<label class="filter-label" for="filterTime"
-										>Time</label
-									>
-									<div class="options-wrapper">
-										<select
-											class="options"
-											name="filterTime"
-											id="filterTime"
-										>
-											<option value="10">10 min</option>
-											<option value="20">20 min</option>
-											<option value="30">30 min</option>
-											<option value="40">40 min</option>
-											<option value="50">50 min</option>
-											<option value="60">60 min</option>
-										</select>
+									<p class="filter-label">Time</p>
+									<div class="options-wrapper" data-type="time">
 										<svg class="arrow">
 											<use
 												href="assets/sprite.svg#icon-arrow"
 											></use>
 										</svg>
+										<p class="pick-time">.....</p>
+										<ul class="time-list is-hidden"></ul>
 									</div>
 								</div>
 								<div class="area">
-									<label class="filter-label" for="filterArea"
-										>Area</label
-									>
-									<div class="options-wrapper">
-										<select
-											class="options"
-											name="filterArea"
-											id="filterArea"
-										>
-											<option value="French">French</option>
-											<option value="Spanish">Spanish</option>
-											<option value="Italian">Italian</option>
-											<option value="English">English</option>
-											<option value="Norwegian">Norwegian</option>
-											<option value="Ukrainian">Ukrainian</option>
-										</select>
+									<p class="filter-label">Area</p>
+									<div class="options-wrapper" data-type="area">
 										<svg class="arrow">
 											<use
 												href="assets/sprite.svg#icon-arrow"
 											></use>
 										</svg>
+										<p class="pick-area">.....</p>
+										<ul class="area-list is-hidden"></ul>
 									</div>
 								</div>
 								<div class="ingredients">
-									<label class="filter-label" for="filterIngredients"
-										>Ingredients</label
+									<p class="filter-label">Ingredients</p>
+									<div
+										class="options-wrapper"
+										data-type="ingredients"
 									>
-									<div class="options-wrapper">
-										<select
-											class="options"
-											name="filteIngredients"
-											id="filteIngredients"
-										>
-											<option value="Cabbage">Cabbage</option>
-											<option value="Cucumbar">Cucumbar</option>
-											<option value="Tomato">Tomato</option>
-											<option value="Corn">Corn</option>
-											<option value="Radish">Radish</option>
-											<option value="Parsley">Parsley</option>
-										</select>
 										<svg class="arrow">
 											<use
 												href="assets/sprite.svg#icon-arrow"
 											></use>
 										</svg>
+										<p class="pick-ingredient">.....</p>
+										<ul class="ingredients-list is-hidden"></ul>
 									</div>
 								</div>
+								<button class="reset-filter-btn" type="button">
+									<svg class="reset-svg">
+										<use href="assets/sprite.svg#icon-reset"></use>
+									</svg>
+									<p class="reset-text">Reset the filter</p>
+								</button>
 							</div>
 							<div class="all-recipes">
 								<ul class="recipe-list"></ul>
 							</div>
-							<div class="pagination"></div>
+							<div class="pagination-recipe">
+								<div class="steps">
+									<button
+										class="pag-arrow-first"
+										type="button"
+										data-type="first"
+									>
+										<svg class="svg">
+											<use
+												href="assets/sprite.svg#icon-arrow"
+											></use>
+										</svg>
+										<svg class="svg">
+											<use
+												href="assets/sprite.svg#icon-arrow"
+											></use>
+										</svg>
+									</button>
+									<button
+										class="pag-arrow-prev"
+										type="button"
+										data-type="prev"
+									>
+										<svg class="svg">
+											<use
+												href="assets/sprite.svg#icon-arrow"
+											></use>
+										</svg>
+									</button>
+								</div>
+								<div class="pages">
+									<button
+										class="pag-page dots-prev hidden"
+										type="button"
+										data-type="dots"
+									>
+										...
+									</button>
+									<div class="numbers"></div>
+									<button
+										class="pag-page dots-next"
+										type="button"
+										data-type="dots"
+									>
+										...
+									</button>
+								</div>
+								<div class="steps">
+									<button
+										class="pag-arrow-next"
+										type="button"
+										data-type="next"
+									>
+										<svg class="svg">
+											<use
+												href="assets/sprite.svg#icon-arrow"
+											></use>
+										</svg>
+									</button>
+									<button
+										class="pag-arrow-last"
+										type="button"
+										data-type="last"
+									>
+										<svg class="svg">
+											<use
+												href="assets/sprite.svg#icon-arrow"
+											></use>
+										</svg>
+										<svg class="svg">
+											<use
+												href="assets/sprite.svg#icon-arrow"
+											></use>
+										</svg>
+									</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
