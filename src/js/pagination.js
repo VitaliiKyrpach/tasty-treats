@@ -12,7 +12,22 @@ const createMarkUp = (page, totalPages) => {
 	let numRow = "";
 	let currentClass = "";
 
-	if (page == 1) {
+	if (page == 1 && totalPages < 4) {
+		for (let i = 1; i <= totalPages; i++) {
+			if (page == i) currentClass = "current";
+			else {
+				currentClass = "";
+			}
+			numRow += `<button
+			    class="pag-page num ${currentClass}"
+			    type="button"
+			    data-type="count"
+			>
+			    ${i}
+			</button>`;
+		}
+	}
+	if (page == 1 && totalPages > 3) {
 		for (let i = 1; i < 4; i++) {
 			if (page == i) currentClass = "current";
 			else {
@@ -44,7 +59,23 @@ const createMarkUp = (page, totalPages) => {
 			</button>`;
 		}
 	}
-	if (page == totalPages) {
+	if (page == totalPages && totalPages < 3) {
+		let beforePage = +totalPages - 1;
+		for (let i = beforePage; i <= totalPages; i++) {
+			if (page == i) currentClass = "current";
+			else {
+				currentClass = "";
+			}
+			numRow += `<button
+			    class="pag-page num ${currentClass}"
+			    type="button"
+			    data-type="count"
+			>
+			    ${i}
+			</button>`;
+		}
+	}
+	if (page == totalPages && totalPages > 2) {
 		let beforePage = +totalPages - 2;
 		for (let i = beforePage; i <= totalPages; i++) {
 			if (page == i) currentClass = "current";
@@ -65,7 +96,7 @@ const createMarkUp = (page, totalPages) => {
 
 export const onStartPag = async () => {
 	const data = await getRecipes(page);
-
+	localStorage.setItem("totalPages", data.data.totalPages);
 	if (data.data.totalPages < 2) {
 		pagination.classList.add("is-hidden");
 	} else {

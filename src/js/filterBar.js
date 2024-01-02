@@ -20,13 +20,14 @@ const params = {
 	area: "",
 	ingredient: "",
 };
-searchInput.value = LSparams.title ? LSparams.title : "";
+searchInput.value = LSparams && LSparams.value ? LSparams.title : "";
 // console.log(searchInput);
-areaLabel.textContent = LSparams.area ? LSparams.area : ".....";
-timeLabel.textContent = LSparams.time ? LSparams.time : ".....";
-ingLabel.textContent = LSparams.ingredient
-	? LSparams.ingredient
-	: ".....";
+areaLabel.textContent =
+	LSparams && LSparams.area ? LSparams.area : ".....";
+timeLabel.textContent =
+	LSparams && LSparams.time ? LSparams.time : ".....";
+ingLabel.textContent =
+	LSparams && LSparams.ingredient ? LSparams.ingredient : ".....";
 
 const handlePick = (e) => {
 	// console.log(e.target.textContent);
@@ -77,8 +78,8 @@ const resetFilter = () => {
 	// console.log(params);
 };
 const handleChange = (e) => {
-	// console.log(e.target.value);
-	params.title = e.target.value.trim();
+	console.log(e.target.value);
+	params.title = e.target.value.trim;
 	localStorage.setItem("params", JSON.stringify(params));
 	onStartPag();
 };
