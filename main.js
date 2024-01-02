@@ -202,11 +202,11 @@ const params = {
   area: "",
   ingredient: ""
 };
-searchInput.value = LSparams.title ? LSparams.title : "";
+searchInput.value = LSparams && LSparams.value ? LSparams.title : "";
 // console.log(searchInput);
-areaLabel.textContent = LSparams.area ? LSparams.area : ".....";
-timeLabel.textContent = LSparams.time ? LSparams.time : ".....";
-ingLabel.textContent = LSparams.ingredient ? LSparams.ingredient : ".....";
+areaLabel.textContent = LSparams && LSparams.area ? LSparams.area : ".....";
+timeLabel.textContent = LSparams && LSparams.time ? LSparams.time : ".....";
+ingLabel.textContent = LSparams && LSparams.ingredient ? LSparams.ingredient : ".....";
 const handlePick = e => {
   // console.log(e.target.textContent);
   if (e.target.nodeName !== "BUTTON") return;
@@ -255,8 +255,8 @@ const resetFilter = () => {
   // console.log(params);
 };
 const handleChange = e => {
-  // console.log(e.target.value);
-  params.title = e.target.value.trim();
+  console.log(e.target.value);
+  params.title = e.target.value.trim;
   localStorage.setItem("params", JSON.stringify(params));
   (0,_pagination__WEBPACK_IMPORTED_MODULE_0__.onStartPag)();
 };
@@ -384,7 +384,21 @@ let page = JSON.parse(localStorage.getItem("currentPage")) ?? 1;
 const createMarkUp = (page, totalPages) => {
   let numRow = "";
   let currentClass = "";
-  if (page == 1) {
+  if (page == 1 && totalPages < 4) {
+    for (let i = 1; i <= totalPages; i++) {
+      if (page == i) currentClass = "current";else {
+        currentClass = "";
+      }
+      numRow += `<button
+			    class="pag-page num ${currentClass}"
+			    type="button"
+			    data-type="count"
+			>
+			    ${i}
+			</button>`;
+    }
+  }
+  if (page == 1 && totalPages > 3) {
     for (let i = 1; i < 4; i++) {
       if (page == i) currentClass = "current";else {
         currentClass = "";
@@ -414,7 +428,22 @@ const createMarkUp = (page, totalPages) => {
 			</button>`;
     }
   }
-  if (page == totalPages) {
+  if (page == totalPages && totalPages < 3) {
+    let beforePage = +totalPages - 1;
+    for (let i = beforePage; i <= totalPages; i++) {
+      if (page == i) currentClass = "current";else {
+        currentClass = "";
+      }
+      numRow += `<button
+			    class="pag-page num ${currentClass}"
+			    type="button"
+			    data-type="count"
+			>
+			    ${i}
+			</button>`;
+    }
+  }
+  if (page == totalPages && totalPages > 2) {
     let beforePage = +totalPages - 2;
     for (let i = beforePage; i <= totalPages; i++) {
       if (page == i) currentClass = "current";else {
@@ -433,6 +462,7 @@ const createMarkUp = (page, totalPages) => {
 };
 const onStartPag = async () => {
   const data = await (0,_recipes__WEBPACK_IMPORTED_MODULE_0__.getRecipes)(page);
+  localStorage.setItem("totalPages", data.data.totalPages);
   if (data.data.totalPages < 2) {
     pagination.classList.add("is-hidden");
   } else {
