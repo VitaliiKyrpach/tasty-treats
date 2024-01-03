@@ -8,13 +8,13 @@ let totalPages = localStorage.getItem("totalPages");
 
 let page = JSON.parse(localStorage.getItem("currentPage")) ?? 1;
 
-const hendleDots =(page, totalPages)=>{
+const hendleDots = (page, totalPages) => {
 	if (page > 2 && totalPages > 3) dotsPrev.classList.remove("hidden");
 	else dotsPrev.classList.add("hidden");
-	if( totalPages > 3 && page < totalPages -1 ) dotsNext.classList.remove("hidden")
+	if (totalPages > 3 && page < totalPages - 1)
+		dotsNext.classList.remove("hidden");
 	else dotsNext.classList.add("hidden");
-	console.log(totalPages - 1)
-}
+};
 
 const createMarkUp = (page, totalPages) => {
 	let numRow = "";
@@ -111,7 +111,7 @@ export const onStartPag = async () => {
 		pagination.classList.remove("is-hidden");
 		createMarkUp(page, data.data.totalPages);
 	}
-	hendleDots(page, data.data.totalPages)
+	hendleDots(page, data.data.totalPages);
 };
 
 onStartPag();
@@ -139,8 +139,7 @@ const onClick = (e) => {
 
 	createMarkUp(page, totalPages);
 
-	
-	hendleDots(page, totalPages)
+	hendleDots(page, totalPages);
 	// if (page >= totalPages - 1 ) dotsNext.classList.add("hidden");
 	// else dotsNext.classList.remove("hidden");
 	getRecipes(page);

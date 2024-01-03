@@ -27,14 +27,20 @@ const getData = async (page = 1) => {
 };
 
 const createMarkUp = ({ data: { results } }) => {
+	const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
+	let addedClass = "";
 	return results
 		.map(({ rating, title, description, preview, _id }) => {
 			const stars = createStars(rating);
+			added.includes(_id)
+				? (addedClass = "added")
+				: (addedClass = "");
+
 			return `<li class="recipe-card">
-            <button class="heart" id=${_id}>
-                <svg class="heart-svg">
+            <button class="heart" >
+                <svg class="heart-svg ${addedClass}" id=${_id} data-type="heart-btn">
                 <use
-                    href="assets/sprite.svg#icon-heart"
+                    href="assets/sprite.svg#icon-heart" class='heart-use'
                 ></use>
                     </svg>    
             </button>

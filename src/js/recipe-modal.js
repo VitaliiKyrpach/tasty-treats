@@ -1,21 +1,25 @@
 import axios from "axios";
 import createStars from "./createStars";
+import { addToFavorites } from "./addToFavorites";
 const recModalOpen = document.querySelector(".recipe-list");
 const modal = document.querySelector(".backdrop");
-export const openModal = async (e) => {
-	if (
-		e.target.dataset.type !== "recipe-btn" &&
-		e.target.dataset.type !== "popular-card"
-	)
-		return;
-	const recipeId = e.target.id;
+export const openModal = async (recipeId) => {
+	// if (
+	// 	e.target.dataset.type !== "recipe-btn" &&
+	// 	e.target.dataset.type !== "popular-card"
+	// )
+	// 	return;
+	// console.log("openModal works");
+	// const recipeId = e.target.id;
 	const data = await getData(recipeId);
 	modal.insertAdjacentHTML("beforeend", createMarkUp(data));
 	modal.classList.remove("is-hidden");
 	document.body.classList.add("no-scroll");
+	const addBtn = document.querySelector(".btn-add");
+	addBtn.addEventListener("click", handleAddBtn);
 	const recModalClose = document.querySelector(".btn-close");
 	recModalClose.addEventListener("click", () =>
-		closeModal(recModalClose)
+		closeModal(recModalClose, addBtn)
 	);
 };
 
@@ -37,6 +41,7 @@ const createMarkUp = ({ data }) => {
 		title,
 		description,
 		tags,
+		_id,
 	} = data;
 	const url = youtube.replace("watch?v=", "embed/");
 	const tagsMarkUp =
@@ -52,6 +57,11 @@ const createMarkUp = ({ data }) => {
 </li>`
 		)
 		.join("");
+	const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
+	let addedToFav = "";
+	added.includes(_id)
+		? (addedToFav = "Remove from")
+		: (addedToFav = "Add to");
 	const stars = createStars(rating);
 	return `
     <div class="recipe-modal">
@@ -87,8 +97,8 @@ const createMarkUp = ({ data }) => {
             ${description}
         </p>
         <div class="buttons">
-            <button class="btn-add" type="button">
-                Add to favorite
+            <button class="btn-add" type="button" id=${_id}>
+                ${addedToFav} favorite
             </button>
             <button class="btn-rating" type="button">
                 Give a rating
@@ -96,11 +106,22 @@ const createMarkUp = ({ data }) => {
         </div>
     </div>`;
 };
-recModalOpen.addEventListener("click", openModal);
+// recModalOpen.addEventListener("click", openModal);
 
-const closeModal = (btn) => {
+const handleAddBtn = (e) => {
+	console.log(e.target.id);
+	addToFavorites(e.target);
+	const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
+	console.log(added.includes(e.target));
+	added.includes(e.target.id)
+		? (e.target.textContent = "Remove from favorite")
+		: (e.target.textContent = "Add to favorite");
+};
+
+const closeModal = (close, add) => {
 	modal.innerHTML = "";
 	modal.classList.add("is-hidden");
 	document.body.classList.remove("no-scroll");
-	btn.removeEventListener("click", closeModal);
+	close.removeEventListener("click", closeModal);
+	add.removeEventListener("click", handleAddBtn);
 };

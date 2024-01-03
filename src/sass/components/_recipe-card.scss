@@ -60,9 +60,16 @@
 	height: 22px;
 	stroke: $color-primary-light;
 	fill: none;
-	&.full {
+	&:active {
+		transform: scale(1.2);
+	}
+	&.added {
 		fill: $color-primary-light;
 	}
+	// pointer-events: none;
+}
+.heart-use {
+	pointer-events: none;
 }
 .recipe-btn {
 	font-family: "Inter", sans-serif;
