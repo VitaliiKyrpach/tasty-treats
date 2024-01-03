@@ -79,7 +79,7 @@ const resetFilter = () => {
 };
 const handleChange = (e) => {
 	console.log(e.target.value);
-	params.title = e.target.value.trim;
+	params.title = e.target.value.trim();
 	localStorage.setItem("params", JSON.stringify(params));
 	onStartPag();
 };
