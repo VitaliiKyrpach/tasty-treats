@@ -1,6 +1,35 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/js/addToFavorites.js":
+/*!**********************************!*\
+  !*** ./src/js/addToFavorites.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addToFavorites: () => (/* binding */ addToFavorites)
+/* harmony export */ });
+const addToFavorites = target => {
+  let idArr = JSON.parse(localStorage.getItem("favorites")) ?? [];
+  console.log(target.id);
+  if (!idArr.includes(target.id)) {
+    idArr.push(target.id);
+    console.log("added");
+  } else {
+    const newArr = idArr.filter(item => item !== target.id);
+    idArr = newArr;
+    console.log("delete");
+  }
+  target.classList.toggle("added");
+  console.log(idArr);
+  localStorage.setItem("favorites", JSON.stringify(idArr));
+};
+
+/***/ }),
+
 /***/ "./src/js/categories.js":
 /*!******************************!*\
   !*** ./src/js/categories.js ***!
@@ -362,6 +391,29 @@ labelArr.forEach(label => label.addEventListener("click", handleFilters));
 
 /***/ }),
 
+/***/ "./src/js/handleRecipe.js":
+/*!********************************!*\
+  !*** ./src/js/handleRecipe.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _recipe_modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./recipe-modal */ "./src/js/recipe-modal.js");
+/* harmony import */ var _addToFavorites__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./addToFavorites */ "./src/js/addToFavorites.js");
+
+
+const recipes = document.querySelector(".recipe-list");
+const handleRecipe = e => {
+  // console.log(e.target);
+  const recipeId = e.target.id;
+  if (e.target.dataset.type == "recipe-btn" || e.target.dataset.type == "popular-card") (0,_recipe_modal__WEBPACK_IMPORTED_MODULE_0__.openModal)(recipeId);
+  if (e.target.dataset.type == "heart-btn") (0,_addToFavorites__WEBPACK_IMPORTED_MODULE_1__.addToFavorites)(e.target);
+};
+recipes.addEventListener("click", handleRecipe);
+
+/***/ }),
+
 /***/ "./src/js/pagination.js":
 /*!******************************!*\
   !*** ./src/js/pagination.js ***!
@@ -384,7 +436,6 @@ let page = JSON.parse(localStorage.getItem("currentPage")) ?? 1;
 const hendleDots = (page, totalPages) => {
   if (page > 2 && totalPages > 3) dotsPrev.classList.remove("hidden");else dotsPrev.classList.add("hidden");
   if (totalPages > 3 && page < totalPages - 1) dotsNext.classList.remove("hidden");else dotsNext.classList.add("hidden");
-  console.log(totalPages - 1);
 };
 const createMarkUp = (page, totalPages) => {
   let numRow = "";
@@ -564,25 +615,34 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   openModal: () => (/* binding */ openModal)
 /* harmony export */ });
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
 /* harmony import */ var _createStars__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./createStars */ "./src/js/createStars.js");
+/* harmony import */ var _addToFavorites__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./addToFavorites */ "./src/js/addToFavorites.js");
+
 
 
 const recModalOpen = document.querySelector(".recipe-list");
 const modal = document.querySelector(".backdrop");
-const openModal = async e => {
-  if (e.target.dataset.type !== "recipe-btn" && e.target.dataset.type !== "popular-card") return;
-  const recipeId = e.target.id;
+const openModal = async recipeId => {
+  // if (
+  // 	e.target.dataset.type !== "recipe-btn" &&
+  // 	e.target.dataset.type !== "popular-card"
+  // )
+  // 	return;
+  // console.log("openModal works");
+  // const recipeId = e.target.id;
   const data = await getData(recipeId);
   modal.insertAdjacentHTML("beforeend", createMarkUp(data));
   modal.classList.remove("is-hidden");
   document.body.classList.add("no-scroll");
+  const addBtn = document.querySelector(".btn-add");
+  addBtn.addEventListener("click", handleAddBtn);
   const recModalClose = document.querySelector(".btn-close");
-  recModalClose.addEventListener("click", () => closeModal(recModalClose));
+  recModalClose.addEventListener("click", () => closeModal(recModalClose, addBtn));
 };
 const getData = async id => {
   try {
-    const fetch = await (0,axios__WEBPACK_IMPORTED_MODULE_1__["default"])(`/recipes/${id}`);
+    const fetch = await (0,axios__WEBPACK_IMPORTED_MODULE_2__["default"])(`/recipes/${id}`);
     return fetch;
   } catch (err) {
     console.log(err);
@@ -599,7 +659,8 @@ const createMarkUp = _ref => {
     rating,
     title,
     description,
-    tags
+    tags,
+    _id
   } = data;
   const url = youtube.replace("watch?v=", "embed/");
   const tagsMarkUp = tags.length < 2 ? "" : tags.map(tag => `<li class="item">#${tag}</li>`).join("");
@@ -613,6 +674,9 @@ const createMarkUp = _ref => {
     <p class="count">${measure}</p>
 </li>`;
   }).join("");
+  const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
+  let addedToFav = "";
+  added.includes(_id) ? addedToFav = "Remove from" : addedToFav = "Add to";
   const stars = (0,_createStars__WEBPACK_IMPORTED_MODULE_0__["default"])(rating);
   return `
     <div class="recipe-modal">
@@ -648,8 +712,8 @@ const createMarkUp = _ref => {
             ${description}
         </p>
         <div class="buttons">
-            <button class="btn-add" type="button">
-                Add to favorite
+            <button class="btn-add" type="button" id=${_id}>
+                ${addedToFav} favorite
             </button>
             <button class="btn-rating" type="button">
                 Give a rating
@@ -657,12 +721,21 @@ const createMarkUp = _ref => {
         </div>
     </div>`;
 };
-recModalOpen.addEventListener("click", openModal);
-const closeModal = btn => {
+// recModalOpen.addEventListener("click", openModal);
+
+const handleAddBtn = e => {
+  console.log(e.target.id);
+  (0,_addToFavorites__WEBPACK_IMPORTED_MODULE_1__.addToFavorites)(e.target);
+  const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
+  console.log(added.includes(e.target));
+  added.includes(e.target.id) ? e.target.textContent = "Remove from favorite" : e.target.textContent = "Add to favorite";
+};
+const closeModal = (close, add) => {
   modal.innerHTML = "";
   modal.classList.add("is-hidden");
   document.body.classList.remove("no-scroll");
-  btn.removeEventListener("click", closeModal);
+  close.removeEventListener("click", closeModal);
+  add.removeEventListener("click", handleAddBtn);
 };
 
 /***/ }),
@@ -716,6 +789,8 @@ const createMarkUp = _ref => {
       results
     }
   } = _ref;
+  const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
+  let addedClass = "";
   return results.map(_ref2 => {
     let {
       rating,
@@ -725,11 +800,12 @@ const createMarkUp = _ref => {
       _id
     } = _ref2;
     const stars = (0,_createStars__WEBPACK_IMPORTED_MODULE_0__["default"])(rating);
+    added.includes(_id) ? addedClass = "added" : addedClass = "";
     return `<li class="recipe-card">
-            <button class="heart" id=${_id}>
-                <svg class="heart-svg">
+            <button class="heart" >
+                <svg class="heart-svg ${addedClass}" id=${_id} data-type="heart-btn">
                 <use
-                    href="assets/sprite.svg#icon-heart"
+                    href="assets/sprite.svg#icon-heart" class='heart-use'
                 ></use>
                     </svg>    
             </button>
@@ -15907,6 +15983,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _js_pagination__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./js/pagination */ "./src/js/pagination.js");
 /* harmony import */ var _js_filters__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./js/filters */ "./src/js/filters.js");
 /* harmony import */ var _js_filterBar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./js/filterBar */ "./src/js/filterBar.js");
+/* harmony import */ var _js_handleRecipe__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./js/handleRecipe */ "./src/js/handleRecipe.js");
+
 
 
 
