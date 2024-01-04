@@ -16,31 +16,26 @@ __webpack_require__.r(__webpack_exports__);
 
 const addToFavorites = async target => {
   let favArr = JSON.parse(localStorage.getItem("favorites")) ?? [];
-  console.log(target.id);
-  // if (!idArr.includes(target.id)) {
-  // 	idArr.push(target.id);
-  // 	console.log("added");
-  // } else {
-  // 	const newArr = idArr.filter((item) => item !== target.id);
-  // 	idArr = newArr;
-  // 	console.log("delete");
-  // }
-  const isAdded = favArr.find(item => item.id == target.id);
+  // console.log(target.id);
+  // console.group(favArr);
+
+  const isAdded = favArr.find(item => item._id == target.id);
   if (!isAdded) {
     const data = await getData(target.id);
     const card = {
-      id: data._id,
+      _id: data._id,
       title: data.title,
       description: data.description,
       preview: data.preview,
-      rating: data.rating
+      rating: data.rating,
+      category: data.category
     };
     favArr.push(card);
     localStorage.setItem("favorites", JSON.stringify(favArr));
-    console.log('added');
+    console.log("added");
   } else {
-    const newArr = favArr.filter(item => item.id !== target.id);
-    console.log('deleted');
+    const newArr = favArr.filter(item => item._id !== target.id);
+    console.log("deleted");
     localStorage.setItem("favorites", JSON.stringify(newArr));
   }
   target.classList.toggle("added");
@@ -218,11 +213,6 @@ const getEvents = async () => {
   eventList.insertAdjacentHTML("beforeend", createMarkUp(data));
 };
 getEvents();
-// <img
-//     class="elips-img"
-//     src="./images/ellipse.png"
-//     alt="gradient"
-// />
 
 /***/ }),
 
@@ -624,7 +614,7 @@ const getPopular = async () => {
 };
 getPopular();
 const openPopular = e => {
-  (0,_recipe_modal__WEBPACK_IMPORTED_MODULE_0__.openModal)(e);
+  (0,_recipe_modal__WEBPACK_IMPORTED_MODULE_0__.openModal)(e.target.id);
 };
 popList.addEventListener("click", openPopular);
 
@@ -647,17 +637,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const recModalOpen = document.querySelector(".recipe-list");
 const modal = document.querySelector(".backdrop");
 const openModal = async recipeId => {
-  // if (
-  // 	e.target.dataset.type !== "recipe-btn" &&
-  // 	e.target.dataset.type !== "popular-card"
-  // )
-  // 	return;
-  // console.log("openModal works");
-  // const recipeId = e.target.id;
+  // console.log(recipeId);
+
   const data = await getData(recipeId);
+  // console.log(data);
   modal.insertAdjacentHTML("beforeend", createMarkUp(data));
   modal.classList.remove("is-hidden");
   document.body.classList.add("no-scroll");
@@ -669,6 +654,7 @@ const openModal = async recipeId => {
 const getData = async id => {
   try {
     const fetch = await (0,axios__WEBPACK_IMPORTED_MODULE_2__["default"])(`/recipes/${id}`);
+    // console.log(fetch);
     return fetch;
   } catch (err) {
     console.log(err);
@@ -702,7 +688,7 @@ const createMarkUp = _ref => {
   }).join("");
   const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
   let addedToFav = "";
-  added.includes(_id) ? addedToFav = "Remove from" : addedToFav = "Add to";
+  added.find(item => item._id == _id) ? addedToFav = "Remove from" : addedToFav = "Add to";
   const stars = (0,_createStars__WEBPACK_IMPORTED_MODULE_0__["default"])(rating);
   return `
     <div class="recipe-modal">
@@ -747,14 +733,12 @@ const createMarkUp = _ref => {
         </div>
     </div>`;
 };
-// recModalOpen.addEventListener("click", openModal);
-
-const handleAddBtn = e => {
-  console.log(e.target.id);
-  (0,_addToFavorites__WEBPACK_IMPORTED_MODULE_1__.addToFavorites)(e.target);
+const handleAddBtn = async e => {
+  // console.log(e.target.id);
+  await (0,_addToFavorites__WEBPACK_IMPORTED_MODULE_1__.addToFavorites)(e.target);
   const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
-  console.log(added.includes(e.target));
-  added.includes(e.target.id) ? e.target.textContent = "Remove from favorite" : e.target.textContent = "Add to favorite";
+  // console.log(added);
+  added.find(item => item._id == e.target.id) ? e.target.textContent = "Remove from favorite" : e.target.textContent = "Add to favorite";
 };
 const closeModal = (close, add) => {
   modal.innerHTML = "";
@@ -775,6 +759,7 @@ const closeModal = (close, add) => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createMarkUp: () => (/* binding */ createMarkUp),
 /* harmony export */   getRecipes: () => (/* binding */ getRecipes)
 /* harmony export */ });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
@@ -809,24 +794,19 @@ const getData = async function () {
     console.log(err);
   }
 };
-const createMarkUp = _ref => {
-  let {
-    data: {
-      results
-    }
-  } = _ref;
+const createMarkUp = results => {
   const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
   let addedClass = "";
-  return results.map(_ref2 => {
+  return results.map(_ref => {
     let {
       rating,
       title,
       description,
       preview,
       _id
-    } = _ref2;
+    } = _ref;
     const stars = (0,_createStars__WEBPACK_IMPORTED_MODULE_0__["default"])(rating);
-    added.find(item => item.id == _id) ? addedClass = "added" : addedClass = "";
+    added.find(item => item._id == _id) ? addedClass = "added" : addedClass = "";
     return `<li class="recipe-card">
             <button class="heart" >
                 <svg class="heart-svg ${addedClass}" id=${_id} data-type="heart-btn">
@@ -856,12 +836,13 @@ const createMarkUp = _ref => {
 };
 const getRecipes = async page => {
   const data = await getData(page);
+  // console.log(data.data.results);
   recipeList.innerHTML = "";
   if (data.data.totalPages === null) {
     const text = "Sorry, there are no recipes found according to your requirements. Sorry, there are no recipes found according to your requirements. Please try changing the filters";
     recipeList.insertAdjacentHTML("beforeend", (0,_emptyResult__WEBPACK_IMPORTED_MODULE_1__["default"])(text));
   }
-  recipeList.insertAdjacentHTML("beforeend", createMarkUp(data));
+  recipeList.insertAdjacentHTML("beforeend", createMarkUp(data.data.results));
   return data;
 };
 // getRecipes();
@@ -931,7 +912,7 @@ var ___HTML_LOADER_REPLACEMENT_1___ = _node_modules_html_loader_dist_runtime_get
 var ___HTML_LOADER_REPLACEMENT_2___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_1___, { hash: "#icon-loop" });
 var ___HTML_LOADER_REPLACEMENT_3___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_1___, { hash: "#icon-arrow" });
 var ___HTML_LOADER_REPLACEMENT_4___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_1___, { hash: "#icon-reset" });
-var code = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n\t<head>\r\n\t\t<meta charset=\"UTF-8\" />\r\n\t\t<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n\t\t<meta\r\n\t\t\tname=\"viewport\"\r\n\t\t\tcontent=\"width=device-width, initial-scale=1.0\"\r\n\t\t/>\r\n\t\t<title>Tasty treats</title>\r\n\t</head>\r\n\t<body>\r\n\t\t<header class=\"header\">\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t<nav class=\"header-nav\">\r\n\t\t\t\t\t\t<ul class=\"nav-list\">\r\n\t\t\t\t\t\t\t<li><a href=\"./index.html\" class=\"link current\">Home</a></li>\r\n\t\t\t\t\t\t\t<li><a href=\"./favorites.html\" class=\"link\">Favorites</a></li>\r\n\t\t\t\t\t\t</ul>\r\n\t\t\t\t\t\t<a href=\"\" class=\"nav-logo\"\r\n\t\t\t\t\t\t\t><img\r\n\t\t\t\t\t\t\t\tsrc=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n\t\t\t\t\t\t\t\talt=\"tasty treats logo\"\r\n\t\t\t\t\t\t\t\tclass=\"src\"\r\n\t\t\t\t\t\t/></a>\r\n\t\t\t\t\t</nav>\r\n\t\t\t\t\t<div class=\"nav-tech\">\r\n\t\t\t\t\t\t<svg class=\"cart-svg\">\r\n\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"></use>\r\n\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t<div class=\"theme-wrapper\">\r\n\t\t\t\t\t\t\t<div class=\"theme-circle\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</header>\r\n\t\t<main>\r\n\t\t\t<section class=\"hero\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"hero-content\">\r\n\t\t\t\t\t\t\t<h1 class=\"title\">\r\n\t\t\t\t\t\t\t\tLearn to Cook\r\n\t\t\t\t\t\t\t\t<span class=\"accent\">Tasty Treats'</span> Customizable\r\n\t\t\t\t\t\t\t\tMasterclass\r\n\t\t\t\t\t\t\t</h1>\r\n\t\t\t\t\t\t\t<p class=\"text\">\r\n\t\t\t\t\t\t\t\tTastyTreats - Customize Your Meal with Ingredient\r\n\t\t\t\t\t\t\t\tOptions and Step-by-Step Video Guides.\r\n\t\t\t\t\t\t\t</p>\r\n\t\t\t\t\t\t\t<button type=\"button\" class=\"primary-btn\">\r\n\t\t\t\t\t\t\t\tOrder now\r\n\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div class=\"master-wrapper swiper-container\">\r\n\t\t\t\t\t\t\t<ul class=\"master-list swiper-wrapper\"></ul>\r\n\t\t\t\t\t\t\t<div class=\"pagination\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t\t<section class=\"recipes\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"aside\">\r\n\t\t\t\t\t\t\t<div class=\"categories\">\r\n\t\t\t\t\t\t\t\t<button class=\"cats-all\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\tAll Categories\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t<ul class=\"cats-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"popular\">\r\n\t\t\t\t\t\t\t\t<h2 class=\"title\">Popular recipes</h2>\r\n\t\t\t\t\t\t\t\t<ul class=\"popular-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div>\r\n\t\t\t\t\t\t\t<div class=\"filter\">\r\n\t\t\t\t\t\t\t\t<div class=\"search\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"ilterSearch\"\r\n\t\t\t\t\t\t\t\t\t\t>Search</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"text\"\r\n\t\t\t\t\t\t\t\t\t\tid=\"filterSearch\"\r\n\t\t\t\t\t\t\t\t\t\tplaceholder=\"Enter Text\"\r\n\t\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t\t<svg class=\"loop\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"time\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Time</p>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\" data-type=\"time\">\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-time\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"time-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"area\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Area</p>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\" data-type=\"area\">\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-area\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"area-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"ingredients\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Ingredients</p>\r\n\t\t\t\t\t\t\t\t\t<div\r\n\t\t\t\t\t\t\t\t\t\tclass=\"options-wrapper\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"ingredients\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-ingredient\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"ingredients-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<button class=\"reset-filter-btn\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\t<svg class=\"reset-svg\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_4___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t<p class=\"reset-text\">Reset the filter</p>\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"all-recipes\">\r\n\t\t\t\t\t\t\t\t<ul class=\"recipe-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"pagination-recipe\">\r\n\t\t\t\t\t\t\t\t<div class=\"steps\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-first\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"first\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-prev hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"prev\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"pages\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-page dots-prev hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"dots\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t...\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<div class=\"numbers\"></div>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-page dots-next\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"dots\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t...\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"steps\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-next hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"next\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-last\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"last\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t</main>\r\n\t\t<div class=\"backdrop is-hidden\"></div>\r\n\t</body>\r\n</html>\r\n";
+var code = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n\t<head>\r\n\t\t<meta charset=\"UTF-8\" />\r\n\t\t<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n\t\t<meta\r\n\t\t\tname=\"viewport\"\r\n\t\t\tcontent=\"width=device-width, initial-scale=1.0\"\r\n\t\t/>\r\n\t\t<title>Tasty treats</title>\r\n\t</head>\r\n\t<body>\r\n\t\t<header class=\"header\">\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t<nav class=\"header-nav\">\r\n\t\t\t\t\t\t<ul class=\"nav-list\">\r\n\t\t\t\t\t\t\t<li>\r\n\t\t\t\t\t\t\t\t<a href=\"./index.html\" class=\"link current\">Home</a>\r\n\t\t\t\t\t\t\t</li>\r\n\t\t\t\t\t\t\t<li>\r\n\t\t\t\t\t\t\t\t<a href=\"./favorites.html\" class=\"link\">Favorites</a>\r\n\t\t\t\t\t\t\t</li>\r\n\t\t\t\t\t\t</ul>\r\n\t\t\t\t\t\t<a href=\"\" class=\"nav-logo\"\r\n\t\t\t\t\t\t\t><img\r\n\t\t\t\t\t\t\t\tsrc=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n\t\t\t\t\t\t\t\talt=\"tasty treats logo\"\r\n\t\t\t\t\t\t\t\tclass=\"src\"\r\n\t\t\t\t\t\t/></a>\r\n\t\t\t\t\t</nav>\r\n\t\t\t\t\t<div class=\"nav-tech\">\r\n\t\t\t\t\t\t<svg class=\"cart-svg\">\r\n\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"></use>\r\n\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t<div class=\"theme-wrapper\">\r\n\t\t\t\t\t\t\t<div class=\"theme-circle\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</header>\r\n\t\t<main>\r\n\t\t\t<section class=\"hero\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"hero-content\">\r\n\t\t\t\t\t\t\t<h1 class=\"title\">\r\n\t\t\t\t\t\t\t\tLearn to Cook\r\n\t\t\t\t\t\t\t\t<span class=\"accent\">Tasty Treats'</span> Customizable\r\n\t\t\t\t\t\t\t\tMasterclass\r\n\t\t\t\t\t\t\t</h1>\r\n\t\t\t\t\t\t\t<p class=\"text\">\r\n\t\t\t\t\t\t\t\tTastyTreats - Customize Your Meal with Ingredient\r\n\t\t\t\t\t\t\t\tOptions and Step-by-Step Video Guides.\r\n\t\t\t\t\t\t\t</p>\r\n\t\t\t\t\t\t\t<button type=\"button\" class=\"primary-btn\">\r\n\t\t\t\t\t\t\t\tOrder now\r\n\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div class=\"master-wrapper swiper-container\">\r\n\t\t\t\t\t\t\t<ul class=\"master-list swiper-wrapper\"></ul>\r\n\t\t\t\t\t\t\t<div class=\"pagination\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t\t<section class=\"recipes\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"aside\">\r\n\t\t\t\t\t\t\t<div class=\"categories\">\r\n\t\t\t\t\t\t\t\t<button class=\"cats-all\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\tAll Categories\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t<ul class=\"cats-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"popular\">\r\n\t\t\t\t\t\t\t\t<h2 class=\"title\">Popular recipes</h2>\r\n\t\t\t\t\t\t\t\t<ul class=\"popular-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div>\r\n\t\t\t\t\t\t\t<div class=\"filter\">\r\n\t\t\t\t\t\t\t\t<div class=\"search\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"ilterSearch\"\r\n\t\t\t\t\t\t\t\t\t\t>Search</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"text\"\r\n\t\t\t\t\t\t\t\t\t\tid=\"filterSearch\"\r\n\t\t\t\t\t\t\t\t\t\tplaceholder=\"Enter Text\"\r\n\t\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t\t<svg class=\"loop\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"time\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Time</p>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\" data-type=\"time\">\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-time\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"time-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"area\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Area</p>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\" data-type=\"area\">\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-area\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"area-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"ingredients\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Ingredients</p>\r\n\t\t\t\t\t\t\t\t\t<div\r\n\t\t\t\t\t\t\t\t\t\tclass=\"options-wrapper\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"ingredients\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-ingredient\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"ingredients-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<button class=\"reset-filter-btn\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\t<svg class=\"reset-svg\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_4___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t<p class=\"reset-text\">Reset the filter</p>\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"all-recipes\">\r\n\t\t\t\t\t\t\t\t<ul class=\"recipe-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"pagination-recipe\">\r\n\t\t\t\t\t\t\t\t<div class=\"steps\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-first\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"first\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-prev hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"prev\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"pages\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-page dots-prev hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"dots\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t...\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<div class=\"numbers\"></div>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-page dots-next\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"dots\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t...\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"steps\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-next hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"next\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-last\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"last\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t</main>\r\n\t\t<div class=\"backdrop is-hidden\"></div>\r\n\t</body>\r\n</html>\r\n";
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (code);
 
