@@ -24,6 +24,9 @@
     &:active {
       color: $color-accent;
     }
+    &.current{
+      color: $color-accent;
+    }
   }
 }
 .nav-logo {

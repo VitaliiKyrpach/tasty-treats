@@ -11,19 +11,28 @@ module.exports = {
 	mode,
 	target,
 	devtool,
-	entry: path.resolve(__dirname, "src", "index.js"),
+	entry: {index: path.resolve(__dirname, "src", "index.js"),
+	favorites: path.resolve(__dirname, "src", "favorites.js")},
 	output: {
 		path: path.resolve(__dirname, "dist"),
-		filename: "main.js",
+		filename: "[name].js",
 		assetModuleFilename: "assets/[name][ext]",
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
 			template: path.resolve(__dirname, "src", "index.html"),
+			chunks: ['index'],
 			inject: "body",
+			filename: 'index.html'
+		}),
+		new HtmlWebpackPlugin({
+			template: path.resolve(__dirname, "src", "favorites.html"),
+			chunks: ['favorites'],
+			inject: 'body',
+			filename: 'favorites.html'
 		}),
 		new MiniCssExtractPlugin({
-			filename: "main.css",
+			filename: "[name].css",
 		}),
 	],
 	module: {

@@ -32,7 +32,7 @@ const createMarkUp = ({ data: { results } }) => {
 	return results
 		.map(({ rating, title, description, preview, _id }) => {
 			const stars = createStars(rating);
-			added.includes(_id)
+			added.find(item=> item.id == _id)
 				? (addedClass = "added")
 				: (addedClass = "");
 
