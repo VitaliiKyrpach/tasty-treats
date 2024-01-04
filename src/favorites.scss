@@ -3,12 +3,14 @@
 @import "./sass/utils/base";
 @import "./sass/utils/utils";
 
+@import "./sass/components/banner";
 @import "./sass/components/buttons";
 @import "./sass/components/hero-card";
 @import "./sass/components/filter";
 @import "./sass/components/recipe-card";
 
 @import "./sass/layouts/header";
+@import "./sass/layouts/filters-fav";
 @import "./sass/layouts/recipes";
 @import "./sass/layouts/recipe-modal";
 @import "./sass/layouts/pagination";

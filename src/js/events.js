@@ -60,8 +60,3 @@ const getEvents = async () => {
 	eventList.insertAdjacentHTML("beforeend", createMarkUp(data));
 };
 getEvents();
-// <img
-//     class="elips-img"
-//     src="./images/ellipse.png"
-//     alt="gradient"
-// />

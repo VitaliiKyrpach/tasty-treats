@@ -1,17 +1,13 @@
 import axios from "axios";
 import createStars from "./createStars";
 import { addToFavorites } from "./addToFavorites";
-const recModalOpen = document.querySelector(".recipe-list");
+
 const modal = document.querySelector(".backdrop");
 export const openModal = async (recipeId) => {
-	// if (
-	// 	e.target.dataset.type !== "recipe-btn" &&
-	// 	e.target.dataset.type !== "popular-card"
-	// )
-	// 	return;
-	// console.log("openModal works");
-	// const recipeId = e.target.id;
+	// console.log(recipeId);
+
 	const data = await getData(recipeId);
+	// console.log(data);
 	modal.insertAdjacentHTML("beforeend", createMarkUp(data));
 	modal.classList.remove("is-hidden");
 	document.body.classList.add("no-scroll");
@@ -26,6 +22,7 @@ export const openModal = async (recipeId) => {
 const getData = async (id) => {
 	try {
 		const fetch = await axios(`/recipes/${id}`);
+		// console.log(fetch);
 		return fetch;
 	} catch (err) {
 		console.log(err);
@@ -59,7 +56,7 @@ const createMarkUp = ({ data }) => {
 		.join("");
 	const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
 	let addedToFav = "";
-	added.includes(_id)
+	added.find((item) => item._id == _id)
 		? (addedToFav = "Remove from")
 		: (addedToFav = "Add to");
 	const stars = createStars(rating);
@@ -106,14 +103,13 @@ const createMarkUp = ({ data }) => {
         </div>
     </div>`;
 };
-// recModalOpen.addEventListener("click", openModal);
 
-const handleAddBtn = (e) => {
-	console.log(e.target.id);
-	addToFavorites(e.target);
+const handleAddBtn = async (e) => {
+	// console.log(e.target.id);
+	await addToFavorites(e.target);
 	const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
-	console.log(added.includes(e.target));
-	added.includes(e.target.id)
+	// console.log(added);
+	added.find((item) => item._id == e.target.id)
 		? (e.target.textContent = "Remove from favorite")
 		: (e.target.textContent = "Add to favorite");
 };

@@ -40,7 +40,7 @@ const getPopular = async () => {
 getPopular();
 
 const openPopular = (e) => {
-	openModal(e);
+	openModal(e.target.id);
 };
 
 popList.addEventListener("click", openPopular);

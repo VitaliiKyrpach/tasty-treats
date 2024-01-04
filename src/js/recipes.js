@@ -26,13 +26,13 @@ const getData = async (page = 1) => {
 	}
 };
 
-const createMarkUp = ({ data: { results } }) => {
+export const createMarkUp = (results) => {
 	const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
 	let addedClass = "";
 	return results
 		.map(({ rating, title, description, preview, _id }) => {
 			const stars = createStars(rating);
-			added.find(item=> item.id == _id)
+			added.find((item) => item._id == _id)
 				? (addedClass = "added")
 				: (addedClass = "");
 
@@ -67,13 +67,17 @@ const createMarkUp = ({ data: { results } }) => {
 
 export const getRecipes = async (page) => {
 	const data = await getData(page);
+	// console.log(data.data.results);
 	recipeList.innerHTML = "";
 	if (data.data.totalPages === null) {
 		const text =
 			"Sorry, there are no recipes found according to your requirements. Sorry, there are no recipes found according to your requirements. Please try changing the filters";
 		recipeList.insertAdjacentHTML("beforeend", emptyResult(text));
 	}
-	recipeList.insertAdjacentHTML("beforeend", createMarkUp(data));
+	recipeList.insertAdjacentHTML(
+		"beforeend",
+		createMarkUp(data.data.results)
+	);
 	return data;
 };
 // getRecipes();

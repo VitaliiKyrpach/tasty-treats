@@ -1,0 +1,20 @@
+.filters-fav {
+	display: flex;
+	gap: 15px;
+	margin-bottom: 32px;
+}
+.filterFav-btn {
+	font-family: "Inter", sans-serif;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.25; /* 125% */
+	color: $color-secondary-light;
+	background-color: transparent;
+	padding: 14px 18px;
+	border-radius: 15px;
+	border: 1px solid $color-secondary-lightest;
+	cursor: pointer;
+	&:hover {
+		color: $color-secondary-dark;
+	}
+}

@@ -15,7 +15,13 @@
 .recipe-list {
 	display: flex;
 	flex-wrap: wrap;
-	row-gap: 20px;
+	row-gap: 32px;
+	column-gap: 16px;
+}
+.recipe-list-fav {
+	display: flex;
+	flex-wrap: wrap;
+	row-gap: 32px;
 	column-gap: 16px;
 }
 .all-recipes {
