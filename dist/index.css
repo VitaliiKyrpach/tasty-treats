@@ -570,6 +570,16 @@ ul {
   align-items: center;
 }
 
+.header-fav {
+  padding-top: 43px;
+  padding-bottom: 36px;
+}
+.header-fav .wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .header-nav {
   display: flex;
   justify-content: space-between;
@@ -715,7 +725,14 @@ ul {
 .recipe-list {
   display: flex;
   flex-wrap: wrap;
-  row-gap: 20px;
+  row-gap: 32px;
+  column-gap: 16px;
+}
+
+.recipe-list-fav {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 32px;
   column-gap: 16px;
 }
 
