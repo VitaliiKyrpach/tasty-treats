@@ -16,7 +16,6 @@ const createMarkUp = () => {
 			    </li>`;
 		})
 		.join("");
-	console.log(markUp);
 	return (
 		' <li><button class="filterFav-btn" type="button" id="all cats">All categories</button></li>' +
 		markUp
