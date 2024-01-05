@@ -119,7 +119,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const filterList = document.querySelector(".filters-fav");
 const createMarkUp = () => {
-  const category = localStorage.getItem("filterFav");
+  const category = localStorage.getItem("filterFav") ?? "all";
   let catActive = "";
   let allActive = "";
   category == "all" ? allActive = "fav-active" : allActive = "";
@@ -141,26 +141,35 @@ const createMarkUp = () => {
   }).join("");
   return `<li><button class="filterFav-btn ${allActive}" type="button" id="all">All categories</button></li>` + markUp;
 };
-const createFilters = () => {
+const createFilters = function () {
+  let totalPages = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+  console.log(totalPages);
   filterList.innerHTML = "";
-  filterList.insertAdjacentHTML("beforeend", createMarkUp());
+  if (totalPages) filterList.insertAdjacentHTML("beforeend", createMarkUp());
 };
-createFilters();
 const onStartPage = () => {
   let page = JSON.parse(localStorage.getItem("currentPageFav")) ?? 1;
   const data = JSON.parse(localStorage.getItem("favorites"));
-  const category = localStorage.getItem("filterFav") ?? "all";
-  let filtered;
-  if (category == "all") {
-    filtered = data;
+  console.log(data);
+  if (!data) {
+    (0,_pagination_fav__WEBPACK_IMPORTED_MODULE_0__.onStartFavPag)();
   } else {
-    filtered = data.filter(item => item.category == category);
+    console.log("not working");
+    const category = localStorage.getItem("filterFav") ?? "all";
+    let filtered;
+    if (category == "all") {
+      filtered = data;
+    } else {
+      filtered = data.filter(item => item.category == category);
+    }
+    const totalPages = Math.ceil(filtered.length / 12);
+    (0,_pagination_fav__WEBPACK_IMPORTED_MODULE_0__.onStartFavPag)(page, totalPages);
+    createFilters(totalPages);
   }
-  const totalPages = Math.ceil(filtered.length / 12);
-  (0,_pagination_fav__WEBPACK_IMPORTED_MODULE_0__.onStartFavPag)(page, totalPages);
 };
 onStartPage();
 const handleFilters = e => {
+  console.log(e);
   if (e.target.nodeName !== "BUTTON") return;
   const oldActive = document.querySelector(".fav-active");
   if (oldActive) oldActive.classList.remove("fav-active");
@@ -224,7 +233,7 @@ const dotsPrev = document.querySelector(".dots-prev");
 const dotsNext = document.querySelector(".dots-next");
 const numbers = document.querySelector(".numbers");
 let page = JSON.parse(localStorage.getItem("currentPageFav")) ?? 1;
-const data = JSON.parse(localStorage.getItem("favorites"));
+const data = JSON.parse(localStorage.getItem("favorites")) ?? 0;
 const totalPages = Math.ceil(data.length / 12);
 const handleDots = (page, totalPages) => {
   if (page > 2 && totalPages > 3) dotsPrev.classList.remove("hidden");else dotsPrev.classList.add("hidden");
@@ -309,7 +318,10 @@ const createMarkUp = (page, totalPages) => {
   }
   numbers.innerHTML = numRow;
 };
-const onStartFavPag = (page, totalPages) => {
+const onStartFavPag = function () {
+  let page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+  let totalPages = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  console.log("here");
   (0,_recipes_fav__WEBPACK_IMPORTED_MODULE_0__.createCards)(page, totalPages);
   if (totalPages < 2) {
     paginationFav.classList.add("is-hidden");
@@ -500,11 +512,13 @@ const createCards = (page, totalPages) => {
     filtered = data.filter(item => item.category == category);
   }
   recipeListFav.innerHTML = "";
-  if (totalPages === null) {
+  console.log(totalPages);
+  if (!totalPages) {
     const text = "It appears that you haven't added any recipes to your favorites yet. To get started, you can add recipes that you like to your favorites for easier access in the future.";
     recipeListFav.insertAdjacentHTML("beforeend", (0,_emptyResult__WEBPACK_IMPORTED_MODULE_0__["default"])(text));
+  } else {
+    recipeListFav.insertAdjacentHTML("beforeend", createMarkUpFav(page, filtered, totalPages));
   }
-  recipeListFav.insertAdjacentHTML("beforeend", createMarkUpFav(page, filtered, totalPages));
 };
 const createMarkUpFav = (page, results, totalPages) => {
   const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
@@ -556,10 +570,10 @@ const deleteFromFavorites = target => {
   console.log("deleted");
   localStorage.setItem("favorites", JSON.stringify(newArr));
   target.classList.remove("added");
-  const page = localStorage.getItem("currentPageFav");
+  const page = localStorage.getItem("currentPageFav") ?? 1;
   const totalPages = Math.ceil(newArr.length / 12);
   (0,_pagination_fav__WEBPACK_IMPORTED_MODULE_4__.onStartFavPag)(page, totalPages);
-  (0,_filterFav__WEBPACK_IMPORTED_MODULE_2__.createFilters)();
+  (0,_filterFav__WEBPACK_IMPORTED_MODULE_2__.createFilters)(totalPages);
 };
 recipeListFav.addEventListener("click", handleRecipeFav);
 
