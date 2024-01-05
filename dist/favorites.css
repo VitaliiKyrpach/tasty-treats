@@ -836,7 +836,7 @@ ul {
   gap: 8px;
 }
 
-.pagination-recipe {
+.pagination-recipe, .pagination-fav {
   display: flex;
   justify-content: center;
   gap: 24px;

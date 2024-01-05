@@ -132,7 +132,6 @@ const createMarkUp = () => {
 				    <button class="filterFav-btn" type="button" id=${item}>${item}</button>
 			    </li>`;
   }).join("");
-  console.log(markUp);
   return ' <li><button class="filterFav-btn" type="button" id="all cats">All categories</button></li>' + markUp;
 };
 const createFilters = () => {
@@ -140,6 +139,151 @@ const createFilters = () => {
   filterBar.insertAdjacentHTML("beforeend", createMarkUp());
 };
 createFilters();
+
+/***/ }),
+
+/***/ "./src/js/pagination-fav.js":
+/*!**********************************!*\
+  !*** ./src/js/pagination-fav.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   onStartFavPag: () => (/* binding */ onStartFavPag)
+/* harmony export */ });
+/* harmony import */ var _recipes_fav__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./recipes-fav */ "./src/js/recipes-fav.js");
+
+const paginationFav = document.querySelector(".pagination-fav");
+const dotsPrev = document.querySelector(".dots-prev");
+const dotsNext = document.querySelector(".dots-next");
+const numbers = document.querySelector(".numbers");
+let page = JSON.parse(localStorage.getItem("currentPageFav")) ?? 1;
+const data = JSON.parse(localStorage.getItem("favorites"));
+const totalPages = Math.ceil(data.length / 12);
+console.log(totalPages);
+const hendleDots = (page, totalPages) => {
+  if (page > 2 && totalPages > 3) dotsPrev.classList.remove("hidden");else dotsPrev.classList.add("hidden");
+  if (totalPages > 3 && page < totalPages - 1) dotsNext.classList.remove("hidden");else dotsNext.classList.add("hidden");
+};
+const createMarkUp = (page, totalPages) => {
+  let numRow = "";
+  let currentClass = "";
+  if (page == 1 && totalPages < 4) {
+    for (let i = 1; i <= totalPages; i++) {
+      if (page == i) currentClass = "current";else {
+        currentClass = "";
+      }
+      numRow += `<button
+			    class="pag-page num ${currentClass}"
+			    type="button"
+			    data-type="count"
+			>
+			    ${i}
+			</button>`;
+    }
+  }
+  if (page == 1 && totalPages > 3) {
+    for (let i = 1; i < 4; i++) {
+      if (page == i) currentClass = "current";else {
+        currentClass = "";
+      }
+      numRow += `<button
+			    class="pag-page num ${currentClass}"
+			    type="button"
+			    data-type="count"
+			>
+			    ${i}
+			</button>`;
+    }
+  }
+  if (page > 1 && page < totalPages) {
+    let beforePage = +page - 1;
+    let afterPage = +page + 1;
+    for (let i = beforePage; i <= afterPage; i++) {
+      if (page == i) currentClass = "current";else {
+        currentClass = "";
+      }
+      numRow += `<button
+			    class="pag-page num ${currentClass}"
+			    type="button"
+			    data-type="count"
+			>
+			    ${i}
+			</button>`;
+    }
+  }
+  if (page == totalPages && totalPages < 3) {
+    let beforePage = +totalPages - 1;
+    for (let i = beforePage; i <= totalPages; i++) {
+      if (page == i) currentClass = "current";else {
+        currentClass = "";
+      }
+      numRow += `<button
+			    class="pag-page num ${currentClass}"
+			    type="button"
+			    data-type="count"
+			>
+			    ${i}
+			</button>`;
+    }
+  }
+  if (page == totalPages && totalPages > 2) {
+    let beforePage = +totalPages - 2;
+    for (let i = beforePage; i <= totalPages; i++) {
+      if (page == i) currentClass = "current";else {
+        currentClass = "";
+      }
+      numRow += `<button
+			    class="pag-page num ${currentClass}"
+			    type="button"
+			    data-type="count"
+			>
+			    ${i}
+			</button>`;
+    }
+  }
+  numbers.innerHTML = numRow;
+};
+const onStartFavPag = () => {
+  (0,_recipes_fav__WEBPACK_IMPORTED_MODULE_0__.createCards)(page, totalPages);
+  if (totalPages < 2) {
+    paginationFav.classList.add("is-hidden");
+  } else {
+    paginationFav.classList.remove("is-hidden");
+    createMarkUp(page, totalPages);
+  }
+  hendleDots(page, totalPages);
+};
+onStartFavPag();
+const onClick = e => {
+  console.log(e.target.dataset.type);
+  // if (
+  // 	e.target.nodeName !== "BUTTON" ||
+  // 	e.target.dataset.type == "dots" ||
+  // 	e.target.outerText == page ||
+  // 	(e.target.dataset.type == "next" && page == totalPages) ||
+  // 	(e.target.dataset.type == "last" && page == totalPages) ||
+  // 	(e.target.dataset.type == "first" && page == 1) ||
+  // 	(e.target.dataset.type == "prev" && page == 1)
+  // )
+  // 	return;
+  // if (e.target.dataset.type == "count") {
+  // 	page = Number(e.target.outerText);
+  // }
+  // if (e.target.dataset.type == "next" && page !== totalPages) page++;
+  // if (e.target.dataset.type == "prev" && page !== 1) page--;
+  // if (e.target.dataset.type == "first") page = 1;
+  // if (e.target.dataset.type == "last") page = totalPages;
+
+  // createMarkUp(page, totalPages);
+
+  // hendleDots(page, totalPages);
+
+  // getRecipes(page);
+  // localStorage.setItem("currentPageFav", page);
+};
+paginationFav.addEventListener("click", onClick);
 
 /***/ }),
 
@@ -279,27 +423,74 @@ const closeModal = (close, add) => {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createCards: () => (/* binding */ createCards)
+/* harmony export */ });
 /* harmony import */ var _emptyResult__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./emptyResult */ "./src/js/emptyResult.js");
-/* harmony import */ var _recipes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./recipes */ "./src/js/recipes.js");
-/* harmony import */ var _recipe_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./recipe-modal */ "./src/js/recipe-modal.js");
-/* harmony import */ var _filterFav__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./filterFav */ "./src/js/filterFav.js");
+/* harmony import */ var _recipe_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./recipe-modal */ "./src/js/recipe-modal.js");
+/* harmony import */ var _filterFav__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filterFav */ "./src/js/filterFav.js");
+/* harmony import */ var _createStars__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./createStars */ "./src/js/createStars.js");
 
 
 
 
 const recipeListFav = document.querySelector(".recipe-list-fav");
-const createCards = results => {
+const createCards = (page, totalPages) => {
+  const data = JSON.parse(localStorage.getItem("favorites"));
   recipeListFav.innerHTML = "";
-  recipeListFav.insertAdjacentHTML("beforeend", (0,_recipes__WEBPACK_IMPORTED_MODULE_1__.createMarkUp)(results));
+  if (totalPages === null) {
+    const text = "Sorry, there are no recipes found according to your requirements. Sorry, there are no recipes found according to your requirements. Please try changing the filters";
+    recipeListFav.insertAdjacentHTML("beforeend", (0,_emptyResult__WEBPACK_IMPORTED_MODULE_0__["default"])(text));
+  }
+  recipeListFav.insertAdjacentHTML("beforeend", createMarkUpFav(page, data));
 };
-const onStart = () => {
-  const results = JSON.parse(localStorage.getItem("favorites"));
-  createCards(results);
+const createMarkUpFav = (page, results) => {
+  const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
+  let markUp = '';
+  let addedClass = "";
+  const start = (page - 1) * 12;
+  const end = page * 12;
+  for (let i = start; i < end; i++) {
+    const stars = (0,_createStars__WEBPACK_IMPORTED_MODULE_3__["default"])(results[i].rating);
+    added.find(item => item._id == results[i]._id) ? addedClass = "added" : addedClass = "";
+    markUp += `<li class="recipe-card">
+				<button class="heart" >
+					<svg class="heart-svg ${addedClass}" id=${results[i]._id} data-type="heart-btn">
+					<use
+						href="assets/sprite.svg#icon-heart" class='heart-use'
+					></use>
+						</svg>    
+				</button>
+				<img class="recipe-img" src=${results[i].preview} alt="" />
+				<h3 class="title">${results[i].title}</h3>
+				<p class="text">
+					${results[i].description}
+				</p>
+				<div class="info">
+					<div class="score">
+						<p class="score-text">${results[i].rating}</p>
+						<div class="stars">
+							${stars}
+						</div>
+					</div>
+					<button class="recipe-btn" type="button" id=${results[i]._id} data-type="recipe-btn">
+						See recipe
+					</button>
+				</div>
+			</li>`;
+  }
+  return markUp;
 };
-onStart();
+
+// const onStart = () => {
+// 	const data = JSON.parse(localStorage.getItem("favorites"));
+// 	createCards(page, results);
+// };
+// onStart();
+
 const handleRecipeFav = e => {
   const recipeId = e.target.id;
-  if (e.target.dataset.type == "recipe-btn") (0,_recipe_modal__WEBPACK_IMPORTED_MODULE_2__.openModal)(recipeId);
+  if (e.target.dataset.type == "recipe-btn") (0,_recipe_modal__WEBPACK_IMPORTED_MODULE_1__.openModal)(recipeId);
   if (e.target.dataset.type == "heart-btn") deleteFromFavorites(e.target);
 };
 const deleteFromFavorites = target => {
@@ -308,108 +499,10 @@ const deleteFromFavorites = target => {
   console.log("deleted");
   localStorage.setItem("favorites", JSON.stringify(newArr));
   target.classList.remove("added");
-  createCards(newArr);
-  (0,_filterFav__WEBPACK_IMPORTED_MODULE_3__.createFilters)();
+  createCards(page, totalPages);
+  (0,_filterFav__WEBPACK_IMPORTED_MODULE_2__.createFilters)();
 };
 recipeListFav.addEventListener("click", handleRecipeFav);
-
-/***/ }),
-
-/***/ "./src/js/recipes.js":
-/*!***************************!*\
-  !*** ./src/js/recipes.js ***!
-  \***************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   createMarkUp: () => (/* binding */ createMarkUp),
-/* harmony export */   getRecipes: () => (/* binding */ getRecipes)
-/* harmony export */ });
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
-/* harmony import */ var _createStars__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./createStars */ "./src/js/createStars.js");
-/* harmony import */ var _emptyResult__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./emptyResult */ "./src/js/emptyResult.js");
-
-
-
-const recipeList = document.querySelector(".recipe-list");
-const InitParams = {
-  title: "",
-  category: "",
-  time: "",
-  area: "",
-  ingredient: ""
-};
-const getData = async function () {
-  let page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-  try {
-    const LSparams = JSON.parse(localStorage.getItem("params")) ?? InitParams;
-    const params = {
-      ...LSparams,
-      page,
-      limit: 9
-    };
-    const fetch = await (0,axios__WEBPACK_IMPORTED_MODULE_2__["default"])("/recipes", {
-      params
-    });
-    console.log(fetch.data);
-    return fetch;
-  } catch (err) {
-    console.log(err);
-  }
-};
-const createMarkUp = results => {
-  const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
-  let addedClass = "";
-  return results.map(_ref => {
-    let {
-      rating,
-      title,
-      description,
-      preview,
-      _id
-    } = _ref;
-    const stars = (0,_createStars__WEBPACK_IMPORTED_MODULE_0__["default"])(rating);
-    added.find(item => item._id == _id) ? addedClass = "added" : addedClass = "";
-    return `<li class="recipe-card">
-            <button class="heart" >
-                <svg class="heart-svg ${addedClass}" id=${_id} data-type="heart-btn">
-                <use
-                    href="assets/sprite.svg#icon-heart" class='heart-use'
-                ></use>
-                    </svg>    
-            </button>
-            <img class="recipe-img" src=${preview} alt="" />
-            <h3 class="title">${title}</h3>
-            <p class="text">
-                ${description}
-            </p>
-            <div class="info">
-                <div class="score">
-                    <p class="score-text">${rating}</p>
-                    <div class="stars">
-                        ${stars}
-                    </div>
-                </div>
-                <button class="recipe-btn" type="button" id=${_id} data-type="recipe-btn">
-                    See recipe
-                </button>
-            </div>
-        </li>`;
-  }).join("");
-};
-const getRecipes = async page => {
-  const data = await getData(page);
-  // console.log(data.data.results);
-  recipeList.innerHTML = "";
-  if (data.data.totalPages === null) {
-    const text = "Sorry, there are no recipes found according to your requirements. Sorry, there are no recipes found according to your requirements. Please try changing the filters";
-    recipeList.insertAdjacentHTML("beforeend", (0,_emptyResult__WEBPACK_IMPORTED_MODULE_1__["default"])(text));
-  }
-  recipeList.insertAdjacentHTML("beforeend", createMarkUp(data.data.results));
-  return data;
-};
-// getRecipes();
 
 /***/ }),
 
@@ -432,7 +525,8 @@ var ___HTML_LOADER_IMPORT_1___ = new URL(/* asset import */ __webpack_require__(
 // Module
 var ___HTML_LOADER_REPLACEMENT_0___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_0___);
 var ___HTML_LOADER_REPLACEMENT_1___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_1___, { hash: "#icon-cart" });
-var code = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Favorites</title>\r\n</head>\r\n<body>\r\n    <header class=\"header-fav\">\r\n        <div class=\"container\">\r\n            <div class=\"wrapper\">\r\n                <nav class=\"header-nav\">\r\n                    <ul class=\"nav-list\">\r\n                        <li><a href=\"./index.html\" class=\"link\">Home</a></li>\r\n                        <li><a href=\"#\" class=\"link current\">Favorites</a></li>\r\n                    </ul>\r\n                    <a href=\"\" class=\"nav-logo\"\r\n                        ><img\r\n                            src=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n                            alt=\"tasty treats logo\"\r\n                            class=\"src\"\r\n                    /></a>\r\n                </nav>\r\n                <div class=\"nav-tech\">\r\n                    <svg class=\"cart-svg\">\r\n                        <use href=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"></use>\r\n                    </svg>\r\n                    <div class=\"theme-wrapper\">\r\n                        <div class=\"theme-circle\"></div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </header>\r\n    <main>\r\n        <section class=\"favorites\">\r\n            <div class=\"container\">\r\n                <div class=\"banner\">\r\n                </div>\r\n                    <ul class=\"filters-fav\"></ul>\r\n            <ul class=\"recipe-list-fav\"></ul>\r\n        </div></main>\r\n        </section>\r\n        <div class=\"backdrop is-hidden\"></div>\r\n</body>\r\n</html>";
+var ___HTML_LOADER_REPLACEMENT_2___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_1___, { hash: "#icon-arrow" });
+var code = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Favorites</title>\r\n</head>\r\n<body>\r\n    <header class=\"header-fav\">\r\n        <div class=\"container\">\r\n            <div class=\"wrapper\">\r\n                <nav class=\"header-nav\">\r\n                    <ul class=\"nav-list\">\r\n                        <li><a href=\"./index.html\" class=\"link\">Home</a></li>\r\n                        <li><a href=\"#\" class=\"link current\">Favorites</a></li>\r\n                    </ul>\r\n                    <a href=\"\" class=\"nav-logo\"\r\n                        ><img\r\n                            src=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n                            alt=\"tasty treats logo\"\r\n                            class=\"src\"\r\n                    /></a>\r\n                </nav>\r\n                <div class=\"nav-tech\">\r\n                    <svg class=\"cart-svg\">\r\n                        <use href=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"></use>\r\n                    </svg>\r\n                    <div class=\"theme-wrapper\">\r\n                        <div class=\"theme-circle\"></div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </header>\r\n    <main>\r\n        <section class=\"favorites\">\r\n            <div class=\"container\">\r\n                <div class=\"banner\">\r\n                </div>\r\n                    <ul class=\"filters-fav\"></ul>\r\n            <ul class=\"recipe-list-fav\"></ul>\r\n            <div class=\"pagination-fav\">\r\n                <div class=\"steps\">\r\n                    <button\r\n                        class=\"pag-arrow-first\"\r\n                        type=\"button\"\r\n                        data-type=\"first\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                    <button\r\n                        class=\"pag-arrow-prev hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"prev\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                </div>\r\n                <div class=\"pages\">\r\n                    <button\r\n                        class=\"pag-page dots-prev hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"dots\"\r\n                    >\r\n                        ...\r\n                    </button>\r\n                    <div class=\"numbers\"></div>\r\n                    <button\r\n                        class=\"pag-page dots-next\"\r\n                        type=\"button\"\r\n                        data-type=\"dots\"\r\n                    >\r\n                        ...\r\n                    </button>\r\n                </div>\r\n                <div class=\"steps\">\r\n                    <button\r\n                        class=\"pag-arrow-next hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"next\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                    <button\r\n                        class=\"pag-arrow-last\"\r\n                        type=\"button\"\r\n                        data-type=\"last\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                </div>\r\n            </div>\r\n        </div></main>\r\n        </section>\r\n        <div class=\"backdrop is-hidden\"></div>\r\n</body>\r\n</html>";
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (code);
 
@@ -4733,17 +4827,19 @@ var __webpack_exports__ = {};
   !*** ./src/favorites.js ***!
   \**************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
 /* harmony import */ var _favorites_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./favorites.html */ "./src/favorites.html");
 /* harmony import */ var _favorites_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./favorites.scss */ "./src/favorites.scss");
 /* harmony import */ var _js_recipes_fav__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/recipes-fav */ "./src/js/recipes-fav.js");
 /* harmony import */ var _js_filterFav__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/filterFav */ "./src/js/filterFav.js");
+/* harmony import */ var _js_pagination_fav__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./js/pagination-fav */ "./src/js/pagination-fav.js");
 
 
 
 
 
-axios__WEBPACK_IMPORTED_MODULE_4__["default"].defaults.baseURL = "https://tasty-treats-backend.p.goit.global/api";
+
+axios__WEBPACK_IMPORTED_MODULE_5__["default"].defaults.baseURL = "https://tasty-treats-backend.p.goit.global/api";
 })();
 
 /******/ })()
