@@ -1,6 +1,13 @@
 import axios from "axios";
-
 const catsList = document.querySelector(".cats-list");
+
+const initParams = {
+	title: "",
+	category: "",
+	time: "",
+	area: "",
+	ingredient: "",
+};
 const getData = async () => {
 	try {
 		const fetch = await axios("/categories");
@@ -11,7 +18,8 @@ const getData = async () => {
 };
 
 const createMarkUp = ({ data }) => {
-	const params = JSON.parse(localStorage.getItem("params"));
+	const params =
+		JSON.parse(localStorage.getItem("params")) ?? initParams;
 	let catActive = "";
 	return data
 		.map(({ name }) => {
