@@ -81,7 +81,7 @@ const createMarkUp = _ref => {
   let {
     data
   } = _ref;
-  const params = JSON.parse(localStorage.getItem("params")) ?? initParams.category;
+  const params = JSON.parse(localStorage.getItem("params")) ?? initParams;
   let catActive = "";
   return data.map(_ref2 => {
     let {
