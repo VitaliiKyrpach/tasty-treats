@@ -2,6 +2,14 @@
 	display: flex;
 	gap: 15px;
 	margin-bottom: 32px;
+	overflow-x: hidden;
+	cursor: grab;
+	&:active {
+		cursor: grabbing;
+	}
+	li {
+		flex-shrink: 0;
+	}
 }
 .filterFav-btn {
 	font-family: "Inter", sans-serif;
@@ -17,4 +25,9 @@
 	&:hover {
 		color: $color-secondary-dark;
 	}
+}
+.fav-active {
+	color: $color-primary-light;
+	background-color: $color-accent;
+	border-color: $color-accent;
 }

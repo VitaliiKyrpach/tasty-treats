@@ -115,8 +115,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   createFilters: () => (/* binding */ createFilters)
 /* harmony export */ });
-const filterBar = document.querySelector(".filters-fav");
+/* harmony import */ var _pagination_fav__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./pagination-fav */ "./src/js/pagination-fav.js");
+
+const filterList = document.querySelector(".filters-fav");
 const createMarkUp = () => {
+  const category = localStorage.getItem("filterFav");
+  let catActive = "";
+  let allActive = "";
+  category == "all" ? allActive = "fav-active" : allActive = "";
   const data = JSON.parse(localStorage.getItem("favorites"));
   const filtersAll = [];
   data.map(_ref => {
@@ -128,17 +134,76 @@ const createMarkUp = () => {
   const filtersUnique = filtersAll.filter((filter, i, array) => array.indexOf(filter) === i);
   filtersUnique.sort();
   const markUp = filtersUnique.map(item => {
+    if (item == category) catActive = "fav-active";else catActive = "";
     return `<li>
-				    <button class="filterFav-btn" type="button" id=${item}>${item}</button>
+				    <button class="filterFav-btn ${catActive}" type="button" id=${item}>${item}</button>
 			    </li>`;
   }).join("");
-  return ' <li><button class="filterFav-btn" type="button" id="all cats">All categories</button></li>' + markUp;
+  return `<li><button class="filterFav-btn ${allActive}" type="button" id="all">All categories</button></li>` + markUp;
 };
 const createFilters = () => {
-  filterBar.innerHTML = "";
-  filterBar.insertAdjacentHTML("beforeend", createMarkUp());
+  filterList.innerHTML = "";
+  filterList.insertAdjacentHTML("beforeend", createMarkUp());
 };
 createFilters();
+const onStartPage = () => {
+  let page = JSON.parse(localStorage.getItem("currentPageFav")) ?? 1;
+  const data = JSON.parse(localStorage.getItem("favorites"));
+  const category = localStorage.getItem("filterFav") ?? "all";
+  let filtered;
+  if (category == "all") {
+    filtered = data;
+  } else {
+    filtered = data.filter(item => item.category == category);
+  }
+  const totalPages = Math.ceil(filtered.length / 12);
+  (0,_pagination_fav__WEBPACK_IMPORTED_MODULE_0__.onStartFavPag)(page, totalPages);
+};
+onStartPage();
+const handleFilters = e => {
+  if (e.target.nodeName !== "BUTTON") return;
+  const oldActive = document.querySelector(".fav-active");
+  if (oldActive) oldActive.classList.remove("fav-active");
+  e.target.classList.add("fav-active");
+  const filterFav = e.target.id;
+  let page = 1;
+  localStorage.setItem("currentPageFav", page);
+  const data = JSON.parse(localStorage.getItem("favorites"));
+  let filtered;
+  localStorage.setItem("filterFav", filterFav);
+  if (e.target.id == "all") {
+    filtered = data;
+  } else {
+    filtered = data.filter(item => item.category == filterFav);
+  }
+  const totalPages = Math.ceil(filtered.length / 12);
+  (0,_pagination_fav__WEBPACK_IMPORTED_MODULE_0__.onStartFavPag)(page, totalPages);
+  console.log(e.target.id);
+};
+filterList.addEventListener("click", handleFilters);
+let isDragging = false;
+let startX;
+let scrollLeft;
+filterList.addEventListener("mousemove", onDrag);
+filterList.addEventListener("mousedown", dragStart);
+document.addEventListener("mouseup", dragStop);
+function dragStop() {
+  isDragging = false;
+}
+function dragStart(e) {
+  if (e.target.nodeName == "BUTTON") return;
+  isDragging = true;
+  startX = e.pageX - filterList.offsetLeft;
+  scrollLeft = filterList.scrollLeft;
+}
+function onDrag(e) {
+  if (!isDragging) return;
+  // filterList.scrollLeft -= e.movementX;
+  e.preventDefault();
+  const x = e.pageX - filterList.offsetLeft;
+  const walk = (x - startX) * 3; //scroll-fast
+  filterList.scrollLeft = scrollLeft - walk;
+}
 
 /***/ }),
 
@@ -161,8 +226,7 @@ const numbers = document.querySelector(".numbers");
 let page = JSON.parse(localStorage.getItem("currentPageFav")) ?? 1;
 const data = JSON.parse(localStorage.getItem("favorites"));
 const totalPages = Math.ceil(data.length / 12);
-console.log(totalPages);
-const hendleDots = (page, totalPages) => {
+const handleDots = (page, totalPages) => {
   if (page > 2 && totalPages > 3) dotsPrev.classList.remove("hidden");else dotsPrev.classList.add("hidden");
   if (totalPages > 3 && page < totalPages - 1) dotsNext.classList.remove("hidden");else dotsNext.classList.add("hidden");
 };
@@ -245,43 +309,32 @@ const createMarkUp = (page, totalPages) => {
   }
   numbers.innerHTML = numRow;
 };
-const onStartFavPag = () => {
+const onStartFavPag = (page, totalPages) => {
   (0,_recipes_fav__WEBPACK_IMPORTED_MODULE_0__.createCards)(page, totalPages);
   if (totalPages < 2) {
     paginationFav.classList.add("is-hidden");
+    console.log("hidden");
   } else {
     paginationFav.classList.remove("is-hidden");
     createMarkUp(page, totalPages);
+    console.log("shown");
   }
-  hendleDots(page, totalPages);
+  handleDots(page, totalPages);
 };
-onStartFavPag();
 const onClick = e => {
   console.log(e.target.dataset.type);
-  // if (
-  // 	e.target.nodeName !== "BUTTON" ||
-  // 	e.target.dataset.type == "dots" ||
-  // 	e.target.outerText == page ||
-  // 	(e.target.dataset.type == "next" && page == totalPages) ||
-  // 	(e.target.dataset.type == "last" && page == totalPages) ||
-  // 	(e.target.dataset.type == "first" && page == 1) ||
-  // 	(e.target.dataset.type == "prev" && page == 1)
-  // )
-  // 	return;
-  // if (e.target.dataset.type == "count") {
-  // 	page = Number(e.target.outerText);
-  // }
-  // if (e.target.dataset.type == "next" && page !== totalPages) page++;
-  // if (e.target.dataset.type == "prev" && page !== 1) page--;
-  // if (e.target.dataset.type == "first") page = 1;
-  // if (e.target.dataset.type == "last") page = totalPages;
-
-  // createMarkUp(page, totalPages);
-
-  // hendleDots(page, totalPages);
-
-  // getRecipes(page);
-  // localStorage.setItem("currentPageFav", page);
+  if (e.target.nodeName !== "BUTTON" || e.target.dataset.type == "dots" || e.target.outerText == page || e.target.dataset.type == "next" && page == totalPages || e.target.dataset.type == "last" && page == totalPages || e.target.dataset.type == "first" && page == 1 || e.target.dataset.type == "prev" && page == 1) return;
+  if (e.target.dataset.type == "count") {
+    page = Number(e.target.outerText);
+  }
+  if (e.target.dataset.type == "next" && page !== totalPages) page++;
+  if (e.target.dataset.type == "prev" && page !== 1) page--;
+  if (e.target.dataset.type == "first") page = 1;
+  if (e.target.dataset.type == "last") page = totalPages;
+  createMarkUp(page, totalPages);
+  handleDots(page, totalPages);
+  (0,_recipes_fav__WEBPACK_IMPORTED_MODULE_0__.createCards)(page, totalPages);
+  localStorage.setItem("currentPageFav", page);
 };
 paginationFav.addEventListener("click", onClick);
 
@@ -430,6 +483,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _recipe_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./recipe-modal */ "./src/js/recipe-modal.js");
 /* harmony import */ var _filterFav__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filterFav */ "./src/js/filterFav.js");
 /* harmony import */ var _createStars__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./createStars */ "./src/js/createStars.js");
+/* harmony import */ var _pagination_fav__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pagination-fav */ "./src/js/pagination-fav.js");
+
 
 
 
@@ -437,19 +492,28 @@ __webpack_require__.r(__webpack_exports__);
 const recipeListFav = document.querySelector(".recipe-list-fav");
 const createCards = (page, totalPages) => {
   const data = JSON.parse(localStorage.getItem("favorites"));
+  const category = localStorage.getItem("filterFav") ?? "all";
+  let filtered;
+  if (category == "all") {
+    filtered = data;
+  } else {
+    filtered = data.filter(item => item.category == category);
+  }
   recipeListFav.innerHTML = "";
   if (totalPages === null) {
-    const text = "Sorry, there are no recipes found according to your requirements. Sorry, there are no recipes found according to your requirements. Please try changing the filters";
+    const text = "It appears that you haven't added any recipes to your favorites yet. To get started, you can add recipes that you like to your favorites for easier access in the future.";
     recipeListFav.insertAdjacentHTML("beforeend", (0,_emptyResult__WEBPACK_IMPORTED_MODULE_0__["default"])(text));
   }
-  recipeListFav.insertAdjacentHTML("beforeend", createMarkUpFav(page, data));
+  recipeListFav.insertAdjacentHTML("beforeend", createMarkUpFav(page, filtered, totalPages));
 };
-const createMarkUpFav = (page, results) => {
+const createMarkUpFav = (page, results, totalPages) => {
   const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
-  let markUp = '';
+  let markUp = "";
   let addedClass = "";
   const start = (page - 1) * 12;
-  const end = page * 12;
+  let end;
+  page == totalPages ? end = results.length : end = page * 12;
+  console.log(page, results, totalPages);
   for (let i = start; i < end; i++) {
     const stars = (0,_createStars__WEBPACK_IMPORTED_MODULE_3__["default"])(results[i].rating);
     added.find(item => item._id == results[i]._id) ? addedClass = "added" : addedClass = "";
@@ -481,13 +545,6 @@ const createMarkUpFav = (page, results) => {
   }
   return markUp;
 };
-
-// const onStart = () => {
-// 	const data = JSON.parse(localStorage.getItem("favorites"));
-// 	createCards(page, results);
-// };
-// onStart();
-
 const handleRecipeFav = e => {
   const recipeId = e.target.id;
   if (e.target.dataset.type == "recipe-btn") (0,_recipe_modal__WEBPACK_IMPORTED_MODULE_1__.openModal)(recipeId);
@@ -499,7 +556,9 @@ const deleteFromFavorites = target => {
   console.log("deleted");
   localStorage.setItem("favorites", JSON.stringify(newArr));
   target.classList.remove("added");
-  createCards(page, totalPages);
+  const page = localStorage.getItem("currentPageFav");
+  const totalPages = Math.ceil(newArr.length / 12);
+  (0,_pagination_fav__WEBPACK_IMPORTED_MODULE_4__.onStartFavPag)(page, totalPages);
   (0,_filterFav__WEBPACK_IMPORTED_MODULE_2__.createFilters)();
 };
 recipeListFav.addEventListener("click", handleRecipeFav);
@@ -4830,9 +4889,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
 /* harmony import */ var _favorites_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./favorites.html */ "./src/favorites.html");
 /* harmony import */ var _favorites_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./favorites.scss */ "./src/favorites.scss");
-/* harmony import */ var _js_recipes_fav__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/recipes-fav */ "./src/js/recipes-fav.js");
-/* harmony import */ var _js_filterFav__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/filterFav */ "./src/js/filterFav.js");
-/* harmony import */ var _js_pagination_fav__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./js/pagination-fav */ "./src/js/pagination-fav.js");
+/* harmony import */ var _js_filterFav__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/filterFav */ "./src/js/filterFav.js");
+/* harmony import */ var _js_pagination_fav__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/pagination-fav */ "./src/js/pagination-fav.js");
+/* harmony import */ var _js_recipes_fav__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./js/recipes-fav */ "./src/js/recipes-fav.js");
 
 
 

@@ -6,11 +6,10 @@ const dotsNext = document.querySelector(".dots-next");
 const numbers = document.querySelector(".numbers");
 
 let page = JSON.parse(localStorage.getItem("currentPageFav")) ?? 1;
-const data = JSON.parse(localStorage.getItem("favorites"))
-const totalPages = Math.ceil(data.length / 12)
-console.log(totalPages)
+const data = JSON.parse(localStorage.getItem("favorites"));
+const totalPages = Math.ceil(data.length / 12);
 
-const hendleDots = (page, totalPages) => {
+const handleDots = (page, totalPages) => {
 	if (page > 2 && totalPages > 3) dotsPrev.classList.remove("hidden");
 	else dotsPrev.classList.add("hidden");
 	if (totalPages > 3 && page < totalPages - 1)
@@ -104,45 +103,45 @@ const createMarkUp = (page, totalPages) => {
 	numbers.innerHTML = numRow;
 };
 
-export const onStartFavPag =()=>{
-    createCards(page, totalPages)
-    if (totalPages < 2) {
+export const onStartFavPag = (page, totalPages) => {
+	createCards(page, totalPages);
+	if (totalPages < 2) {
 		paginationFav.classList.add("is-hidden");
+		console.log("hidden");
 	} else {
 		paginationFav.classList.remove("is-hidden");
 		createMarkUp(page, totalPages);
+		console.log("shown");
 	}
-	hendleDots(page, totalPages);
-}
-
-onStartFavPag()
+	handleDots(page, totalPages);
+};
 
 const onClick = (e) => {
-    console.log(e.target.dataset.type)
-	// if (
-	// 	e.target.nodeName !== "BUTTON" ||
-	// 	e.target.dataset.type == "dots" ||
-	// 	e.target.outerText == page ||
-	// 	(e.target.dataset.type == "next" && page == totalPages) ||
-	// 	(e.target.dataset.type == "last" && page == totalPages) ||
-	// 	(e.target.dataset.type == "first" && page == 1) ||
-	// 	(e.target.dataset.type == "prev" && page == 1)
-	// )
-	// 	return;
-	// if (e.target.dataset.type == "count") {
-	// 	page = Number(e.target.outerText);
-	// }
-	// if (e.target.dataset.type == "next" && page !== totalPages) page++;
-	// if (e.target.dataset.type == "prev" && page !== 1) page--;
-	// if (e.target.dataset.type == "first") page = 1;
-	// if (e.target.dataset.type == "last") page = totalPages;
+	console.log(e.target.dataset.type);
+	if (
+		e.target.nodeName !== "BUTTON" ||
+		e.target.dataset.type == "dots" ||
+		e.target.outerText == page ||
+		(e.target.dataset.type == "next" && page == totalPages) ||
+		(e.target.dataset.type == "last" && page == totalPages) ||
+		(e.target.dataset.type == "first" && page == 1) ||
+		(e.target.dataset.type == "prev" && page == 1)
+	)
+		return;
+	if (e.target.dataset.type == "count") {
+		page = Number(e.target.outerText);
+	}
+	if (e.target.dataset.type == "next" && page !== totalPages) page++;
+	if (e.target.dataset.type == "prev" && page !== 1) page--;
+	if (e.target.dataset.type == "first") page = 1;
+	if (e.target.dataset.type == "last") page = totalPages;
 
-	// createMarkUp(page, totalPages);
+	createMarkUp(page, totalPages);
 
-	// hendleDots(page, totalPages);
+	handleDots(page, totalPages);
 
-	// getRecipes(page);
-	// localStorage.setItem("currentPageFav", page);
+	createCards(page, totalPages);
+	localStorage.setItem("currentPageFav", page);
 };
 
 paginationFav.addEventListener("click", onClick);

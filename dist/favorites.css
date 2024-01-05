@@ -658,6 +658,14 @@ ul {
   display: flex;
   gap: 15px;
   margin-bottom: 32px;
+  overflow-x: hidden;
+  cursor: grab;
+}
+.filters-fav:active {
+  cursor: grabbing;
+}
+.filters-fav li {
+  flex-shrink: 0;
 }
 
 .filterFav-btn {
@@ -674,6 +682,12 @@ ul {
 }
 .filterFav-btn:hover {
   color: #050505;
+}
+
+.fav-active {
+  color: #f8f8f8;
+  background-color: #9bb537;
+  border-color: #9bb537;
 }
 
 .recipes {
@@ -704,6 +718,7 @@ ul {
   flex-wrap: wrap;
   row-gap: 32px;
   column-gap: 16px;
+  margin-bottom: 64px;
 }
 
 .all-recipes {

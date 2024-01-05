@@ -11,12 +11,16 @@ const getData = async () => {
 };
 
 const createMarkUp = ({ data }) => {
+	const params = JSON.parse(localStorage.getItem("params"));
+	let catActive = "";
 	return data
-		.map(
-			({ name }) => `<li>
-            <button class="btn" type="button" data-option='option-category'>${name}</button>
-        </li>`
-		)
+		.map(({ name }) => {
+			if (params.category == name) catActive = "cat-active";
+			else catActive = "";
+			return `<li>
+            <button class="btn ${catActive}" type="button" data-option='option-category'>${name}</button>
+        </li>`;
+		})
 		.join("");
 };
 

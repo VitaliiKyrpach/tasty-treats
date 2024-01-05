@@ -74,12 +74,15 @@ const createMarkUp = _ref => {
   let {
     data
   } = _ref;
+  const params = JSON.parse(localStorage.getItem("params"));
+  let catActive = "";
   return data.map(_ref2 => {
     let {
       name
     } = _ref2;
+    if (params.category == name) catActive = "cat-active";else catActive = "";
     return `<li>
-            <button class="btn" type="button" data-option='option-category'>${name}</button>
+            <button class="btn ${catActive}" type="button" data-option='option-category'>${name}</button>
         </li>`;
   }).join("");
 };
