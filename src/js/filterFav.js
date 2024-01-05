@@ -3,7 +3,7 @@ import { onStartFavPag } from "./pagination-fav";
 const filterList = document.querySelector(".filters-fav");
 
 const createMarkUp = () => {
-	const category = localStorage.getItem("filterFav");
+	const category = localStorage.getItem("filterFav") ?? "all";
 	let catActive = "";
 	let allActive = "";
 	category == "all" ? (allActive = "fav-active") : (allActive = "");
@@ -30,30 +30,38 @@ const createMarkUp = () => {
 	);
 };
 
-export const createFilters = () => {
+export const createFilters = (totalPages = 0) => {
+	console.log(totalPages);
 	filterList.innerHTML = "";
-	filterList.insertAdjacentHTML("beforeend", createMarkUp());
+	if (totalPages)
+		filterList.insertAdjacentHTML("beforeend", createMarkUp());
 };
-
-createFilters();
 
 const onStartPage = () => {
 	let page = JSON.parse(localStorage.getItem("currentPageFav")) ?? 1;
 	const data = JSON.parse(localStorage.getItem("favorites"));
-	const category = localStorage.getItem("filterFav") ?? "all";
-	let filtered;
-	if (category == "all") {
-		filtered = data;
+	console.log(data);
+	if (!data) {
+		onStartFavPag();
 	} else {
-		filtered = data.filter((item) => item.category == category);
+		console.log("not working");
+		const category = localStorage.getItem("filterFav") ?? "all";
+		let filtered;
+		if (category == "all") {
+			filtered = data;
+		} else {
+			filtered = data.filter((item) => item.category == category);
+		}
+		const totalPages = Math.ceil(filtered.length / 12);
+		onStartFavPag(page, totalPages);
+		createFilters(totalPages);
 	}
-	const totalPages = Math.ceil(filtered.length / 12);
-	onStartFavPag(page, totalPages);
 };
 
 onStartPage();
 
 const handleFilters = (e) => {
+	console.log(e);
 	if (e.target.nodeName !== "BUTTON") return;
 	const oldActive = document.querySelector(".fav-active");
 	if (oldActive) oldActive.classList.remove("fav-active");

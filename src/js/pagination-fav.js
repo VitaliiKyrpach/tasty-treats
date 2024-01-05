@@ -6,7 +6,7 @@ const dotsNext = document.querySelector(".dots-next");
 const numbers = document.querySelector(".numbers");
 
 let page = JSON.parse(localStorage.getItem("currentPageFav")) ?? 1;
-const data = JSON.parse(localStorage.getItem("favorites"));
+const data = JSON.parse(localStorage.getItem("favorites")) ?? 0;
 const totalPages = Math.ceil(data.length / 12);
 
 const handleDots = (page, totalPages) => {
@@ -103,7 +103,8 @@ const createMarkUp = (page, totalPages) => {
 	numbers.innerHTML = numRow;
 };
 
-export const onStartFavPag = (page, totalPages) => {
+export const onStartFavPag = (page = 1, totalPages = 0) => {
+	console.log("here");
 	createCards(page, totalPages);
 	if (totalPages < 2) {
 		paginationFav.classList.add("is-hidden");

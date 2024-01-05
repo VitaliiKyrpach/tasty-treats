@@ -15,15 +15,17 @@ export const createCards = (page, totalPages) => {
 		filtered = data.filter((item) => item.category == category);
 	}
 	recipeListFav.innerHTML = "";
-	if (totalPages === null) {
+	console.log(totalPages);
+	if (!totalPages) {
 		const text =
 			"It appears that you haven't added any recipes to your favorites yet. To get started, you can add recipes that you like to your favorites for easier access in the future.";
 		recipeListFav.insertAdjacentHTML("beforeend", emptyResult(text));
+	} else {
+		recipeListFav.insertAdjacentHTML(
+			"beforeend",
+			createMarkUpFav(page, filtered, totalPages)
+		);
 	}
-	recipeListFav.insertAdjacentHTML(
-		"beforeend",
-		createMarkUpFav(page, filtered, totalPages)
-	);
 };
 
 const createMarkUpFav = (page, results, totalPages) => {
@@ -81,10 +83,10 @@ const deleteFromFavorites = (target) => {
 	console.log("deleted");
 	localStorage.setItem("favorites", JSON.stringify(newArr));
 	target.classList.remove("added");
-	const page = localStorage.getItem("currentPageFav");
+	const page = localStorage.getItem("currentPageFav") ?? 1;
 	const totalPages = Math.ceil(newArr.length / 12);
 	onStartFavPag(page, totalPages);
-	createFilters();
+	createFilters(totalPages);
 };
 
 recipeListFav.addEventListener("click", handleRecipeFav);
