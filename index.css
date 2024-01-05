@@ -734,6 +734,7 @@ ul {
   flex-wrap: wrap;
   row-gap: 32px;
   column-gap: 16px;
+  margin-bottom: 64px;
 }
 
 .all-recipes {
