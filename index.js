@@ -62,6 +62,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
 
 const catsList = document.querySelector(".cats-list");
+const initParams = {
+  title: "",
+  category: "",
+  time: "",
+  area: "",
+  ingredient: ""
+};
 const getData = async () => {
   try {
     const fetch = await (0,axios__WEBPACK_IMPORTED_MODULE_0__["default"])("/categories");
@@ -74,7 +81,7 @@ const createMarkUp = _ref => {
   let {
     data
   } = _ref;
-  const params = JSON.parse(localStorage.getItem("params"));
+  const params = JSON.parse(localStorage.getItem("params")) ?? initParams.category;
   let catActive = "";
   return data.map(_ref2 => {
     let {
