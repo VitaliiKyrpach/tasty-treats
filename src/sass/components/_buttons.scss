@@ -49,7 +49,7 @@
 }
 .btn-add {
 	@extend %button;
-	color: $color-primary-light;
+	color: $color-modal-add;
 	background-color: $color-accent;
 	&:hover {
 		color: $color-secondary-dark;
@@ -67,14 +67,14 @@
 }
 .pag-arrow-first {
 	@extend %pag-arrow-jump;
-	background-color: $color-secondary-dark;
+	background-color: #050505;
 	.svg {
 		fill: $color-third-light;
 	}
 }
 .pag-arrow-prev {
 	@extend %pag-arrow-step;
-	background-color: $color-secondary-dark;
+	background-color: #050505;
 	.svg {
 		fill: $color-third-light;
 	}
@@ -85,7 +85,7 @@
 	background-color: $color-accent;
 	border-color: $color-accent;
 	.svg {
-		fill: $color-secondary-dark;
+		fill: #050505;
 	}
 }
 .pag-arrow-next {
@@ -94,7 +94,7 @@
 	background-color: $color-accent;
 	border-color: $color-accent;
 	.svg {
-		fill: $color-secondary-dark;
+		fill: #050505;
 	}
 }
 .pag-page {
@@ -104,6 +104,8 @@
 	font-size: 18px;
 	font-weight: 600;
 	line-height: 1.22;
+	color: $color-secondary-dark;
+	background-color: transparent;
 	&.current {
 		border-color: $color-accent;
 		background-color: $color-accent;

@@ -1,6 +1,8 @@
 import "./index.html";
 import "./main.scss";
 
+import "./js/loader";
+import "./js/themes";
 import "./js/swiper";
 import "./js/events";
 import "./js/categories";

@@ -18,7 +18,7 @@
 		font-weight: 600;
 		line-height: 1.28;
 		text-transform: uppercase;
-		color: $color-primary-light;
+		color: $color-card-title;
 		margin-bottom: 8px;
 		text-overflow: ellipsis; /* enables ellipsis */
 		white-space: nowrap; /* keeps the text in a single line */
@@ -27,7 +27,7 @@
 	.text {
 		font-size: 12px;
 		line-height: 1.33;
-		color: $color-primary-light;
+		color: $color-card-text;
 		margin-bottom: 16px;
 		overflow: hidden;
 		display: -webkit-box;
@@ -58,13 +58,13 @@
 .heart-svg {
 	width: 22px;
 	height: 22px;
-	stroke: $color-primary-light;
+	stroke: $color-card-heart;
 	fill: none;
 	&:active {
 		transform: scale(1.2);
 	}
 	&.added {
-		fill: $color-primary-light;
+		fill: $color-card-heart;
 	}
 	// pointer-events: none;
 }
@@ -76,7 +76,7 @@
 	font-size: 12px;
 	font-weight: 500;
 	line-height: 1.25;
-	color: $color-primary-light;
+	color: $color-card-title;
 	background-color: $color-accent;
 	border: none;
 	border-radius: 8px;
@@ -89,7 +89,7 @@
 }
 .score-text {
 	font-weight: 500;
-	color: $color-primary-light;
+	color: $color-card-rating;
 }
 .stars {
 	display: flex;

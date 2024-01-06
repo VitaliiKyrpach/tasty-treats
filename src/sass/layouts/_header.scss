@@ -46,6 +46,12 @@
 		width: 93px;
 	}
 }
+.logo-light {
+	display: $display-logo-light;
+}
+.logo-dark {
+	display: $display-logo-dark;
+}
 .nav-tech {
 	display: flex;
 	gap: 24px;
@@ -65,10 +71,17 @@
 	border-radius: 11px;
 	padding: 1px;
 	box-shadow: 4px 4px 8px $color-secondary-light;
+	&.dark {
+		background-color: $color-accent;
+		justify-content: end;
+	}
 }
 .theme-circle {
 	width: 18px;
 	height: 18px;
 	border-radius: 50%;
 	background-color: $color-primary-light;
+	&.dark {
+		background-color: $color-primary-dark;
+	}
 }
