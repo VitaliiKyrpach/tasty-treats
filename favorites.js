@@ -1,5 +1,4 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./src/js/addToFavorites.js":
@@ -8,6 +7,7 @@
   \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   addToFavorites: () => (/* binding */ addToFavorites)
@@ -57,6 +57,7 @@ const getData = async id => {
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -87,6 +88,7 @@ const createStars = rating => {
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -111,6 +113,7 @@ const emptyResult = text => {
   \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   createFilters: () => (/* binding */ createFilters)
@@ -222,6 +225,7 @@ function onDrag(e) {
   \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   onStartFavPag: () => (/* binding */ onStartFavPag)
@@ -358,6 +362,7 @@ paginationFav.addEventListener("click", onClick);
   \********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   openModal: () => (/* binding */ openModal)
@@ -487,6 +492,7 @@ const closeModal = (close, add) => {
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   createCards: () => (/* binding */ createCards)
@@ -579,12 +585,50 @@ recipeListFav.addEventListener("click", handleRecipeFav);
 
 /***/ }),
 
+/***/ "./src/js/themes.js":
+/*!**************************!*\
+  !*** ./src/js/themes.js ***!
+  \**************************/
+/***/ (() => {
+
+document.addEventListener("DOMContentLoaded", () => {
+  init();
+});
+const toggleBtn = document.querySelector(".theme-wrapper");
+function init() {
+  if (localStorage.getItem("theme")) {
+    document.documentElement.setAttribute("theme", "dark");
+    toggleBtn.classList.add("dark");
+    toggleBtn.firstElementChild.classList.add("dark");
+  } else {
+    document.documentElement.removeAttribute("theme");
+    toggleBtn.classList.remove("dark");
+    toggleBtn.firstElementChild.classList.remove("dark");
+  }
+}
+toggleBtn.addEventListener("click", function () {
+  if (document.documentElement.hasAttribute("theme")) {
+    document.documentElement.removeAttribute("theme");
+    toggleBtn.classList.remove("dark");
+    toggleBtn.firstElementChild.classList.remove("dark");
+    localStorage.removeItem("theme");
+  } else {
+    document.documentElement.setAttribute("theme", "dark");
+    toggleBtn.classList.add("dark");
+    toggleBtn.firstElementChild.classList.add("dark");
+    localStorage.setItem("theme", 1);
+  }
+});
+
+/***/ }),
+
 /***/ "./src/favorites.html":
 /*!****************************!*\
   !*** ./src/favorites.html ***!
   \****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -594,12 +638,14 @@ __webpack_require__.r(__webpack_exports__);
 // Imports
 
 var ___HTML_LOADER_IMPORT_0___ = new URL(/* asset import */ __webpack_require__(/*! ./images/logo.svg */ "./src/images/logo.svg"), __webpack_require__.b);
-var ___HTML_LOADER_IMPORT_1___ = new URL(/* asset import */ __webpack_require__(/*! ./images/sprite.svg */ "./src/images/sprite.svg"), __webpack_require__.b);
+var ___HTML_LOADER_IMPORT_1___ = new URL(/* asset import */ __webpack_require__(/*! ./images/logo-dark.svg */ "./src/images/logo-dark.svg"), __webpack_require__.b);
+var ___HTML_LOADER_IMPORT_2___ = new URL(/* asset import */ __webpack_require__(/*! ./images/sprite.svg */ "./src/images/sprite.svg"), __webpack_require__.b);
 // Module
 var ___HTML_LOADER_REPLACEMENT_0___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_0___);
-var ___HTML_LOADER_REPLACEMENT_1___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_1___, { hash: "#icon-cart" });
-var ___HTML_LOADER_REPLACEMENT_2___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_1___, { hash: "#icon-arrow" });
-var code = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Favorites</title>\r\n</head>\r\n<body>\r\n    <header class=\"header-fav\">\r\n        <div class=\"container\">\r\n            <div class=\"wrapper\">\r\n                <nav class=\"header-nav\">\r\n                    <ul class=\"nav-list\">\r\n                        <li><a href=\"./index.html\" class=\"link\">Home</a></li>\r\n                        <li><a href=\"#\" class=\"link current\">Favorites</a></li>\r\n                    </ul>\r\n                    <a href=\"\" class=\"nav-logo\"\r\n                        ><img\r\n                            src=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n                            alt=\"tasty treats logo\"\r\n                            class=\"src\"\r\n                    /></a>\r\n                </nav>\r\n                <div class=\"nav-tech\">\r\n                    <svg class=\"cart-svg\">\r\n                        <use href=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"></use>\r\n                    </svg>\r\n                    <div class=\"theme-wrapper\">\r\n                        <div class=\"theme-circle\"></div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </header>\r\n    <main>\r\n        <section class=\"favorites\">\r\n            <div class=\"container\">\r\n                <div class=\"banner\">\r\n                </div>\r\n                    <ul class=\"filters-fav\"></ul>\r\n            <ul class=\"recipe-list-fav\"></ul>\r\n            <div class=\"pagination-fav\">\r\n                <div class=\"steps\">\r\n                    <button\r\n                        class=\"pag-arrow-first\"\r\n                        type=\"button\"\r\n                        data-type=\"first\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                    <button\r\n                        class=\"pag-arrow-prev hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"prev\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                </div>\r\n                <div class=\"pages\">\r\n                    <button\r\n                        class=\"pag-page dots-prev hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"dots\"\r\n                    >\r\n                        ...\r\n                    </button>\r\n                    <div class=\"numbers\"></div>\r\n                    <button\r\n                        class=\"pag-page dots-next\"\r\n                        type=\"button\"\r\n                        data-type=\"dots\"\r\n                    >\r\n                        ...\r\n                    </button>\r\n                </div>\r\n                <div class=\"steps\">\r\n                    <button\r\n                        class=\"pag-arrow-next hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"next\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                    <button\r\n                        class=\"pag-arrow-last\"\r\n                        type=\"button\"\r\n                        data-type=\"last\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                </div>\r\n            </div>\r\n        </div></main>\r\n        </section>\r\n        <div class=\"backdrop is-hidden\"></div>\r\n</body>\r\n</html>";
+var ___HTML_LOADER_REPLACEMENT_1___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_1___);
+var ___HTML_LOADER_REPLACEMENT_2___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_2___, { hash: "#icon-cart" });
+var ___HTML_LOADER_REPLACEMENT_3___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_2___, { hash: "#icon-arrow" });
+var code = "<!DOCTYPE html>\r\n<html lang=\"en\" class=\"light\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Favorites</title>\r\n</head>\r\n<body>\r\n    <header class=\"header-fav\">\r\n        <div class=\"container\">\r\n            <div class=\"wrapper\">\r\n                <nav class=\"header-nav\">\r\n                    <ul class=\"nav-list\">\r\n                        <li><a href=\"./index.html\" class=\"link\">Home</a></li>\r\n                        <li><a href=\"#\" class=\"link current\">Favorites</a></li>\r\n                    </ul>\r\n                    <a href=\"\" class=\"nav-logo\"\r\n                        ><img\r\n                        src=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n                        alt=\"tasty treats logo\"\r\n                        class=\"src logo-light\"\r\n                    />\r\n                    <img\r\n                        src=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"\r\n                        alt=\"tasty treats logo\"\r\n                        class=\"src logo-dark\"\r\n                    /></a>\r\n                </nav>\r\n                <div class=\"nav-tech\">\r\n                    <svg class=\"cart-svg\">\r\n                        <use href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"></use>\r\n                    </svg>\r\n                    <div class=\"theme-wrapper\">\r\n                        <div class=\"theme-circle\"></div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </header>\r\n    <main>\r\n        <section class=\"favorites\">\r\n            <div class=\"container\">\r\n                <div class=\"banner\">\r\n                </div>\r\n                    <ul class=\"filters-fav\"></ul>\r\n            <ul class=\"recipe-list-fav\"></ul>\r\n            <div class=\"pagination-fav\">\r\n                <div class=\"steps\">\r\n                    <button\r\n                        class=\"pag-arrow-first\"\r\n                        type=\"button\"\r\n                        data-type=\"first\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                    <button\r\n                        class=\"pag-arrow-prev hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"prev\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                </div>\r\n                <div class=\"pages\">\r\n                    <button\r\n                        class=\"pag-page dots-prev hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"dots\"\r\n                    >\r\n                        ...\r\n                    </button>\r\n                    <div class=\"numbers\"></div>\r\n                    <button\r\n                        class=\"pag-page dots-next\"\r\n                        type=\"button\"\r\n                        data-type=\"dots\"\r\n                    >\r\n                        ...\r\n                    </button>\r\n                </div>\r\n                <div class=\"steps\">\r\n                    <button\r\n                        class=\"pag-arrow-next hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"next\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                    <button\r\n                        class=\"pag-arrow-last\"\r\n                        type=\"button\"\r\n                        data-type=\"last\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                </div>\r\n            </div>\r\n        </div></main>\r\n        </section>\r\n        <div class=\"backdrop is-hidden\"></div>\r\n</body>\r\n</html>";
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (code);
 
@@ -611,6 +657,7 @@ var code = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset
   \*********************************************************/
 /***/ ((module) => {
 
+"use strict";
 
 
 module.exports = function (url, options) {
@@ -646,9 +693,21 @@ module.exports = function (url, options) {
   \****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
+
+/***/ }),
+
+/***/ "./src/images/logo-dark.svg":
+/*!**********************************!*\
+  !*** ./src/images/logo-dark.svg ***!
+  \**********************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "assets/logo-dark.svg";
 
 /***/ }),
 
@@ -658,6 +717,7 @@ __webpack_require__.r(__webpack_exports__);
   \*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+"use strict";
 module.exports = __webpack_require__.p + "assets/logo.svg";
 
 /***/ }),
@@ -668,6 +728,7 @@ module.exports = __webpack_require__.p + "assets/logo.svg";
   \*******************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+"use strict";
 module.exports = __webpack_require__.p + "assets/sprite.svg";
 
 /***/ }),
@@ -678,6 +739,7 @@ module.exports = __webpack_require__.p + "assets/sprite.svg";
   \*****************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -773,6 +835,7 @@ const isResolvedHandle = (adapter) => _utils_js__WEBPACK_IMPORTED_MODULE_2__["de
   \************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1060,6 +1123,7 @@ const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
   \*****************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1180,6 +1244,7 @@ axios.default = axios;
   \******************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1316,6 +1381,7 @@ class CancelToken {
   \********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1357,6 +1423,7 @@ _utils_js__WEBPACK_IMPORTED_MODULE_1__["default"].inherits(CanceledError, _core_
   \***************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ isCancel)
@@ -1376,6 +1443,7 @@ function isCancel(value) {
   \**********************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1599,6 +1667,7 @@ _utils_js__WEBPACK_IMPORTED_MODULE_3__["default"].forEach(['post', 'put', 'patch
   \***************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1714,6 +1783,7 @@ AxiosError.from = (error, code, config, request, response, customProps) => {
   \*****************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2028,6 +2098,7 @@ _utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].freezeMethods(AxiosHeaders);
   \***********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2114,6 +2185,7 @@ class InterceptorManager {
   \******************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ buildFullPath)
@@ -2151,6 +2223,7 @@ function buildFullPath(baseURL, requestedURL) {
   \********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ dispatchRequest)
@@ -2252,6 +2325,7 @@ function dispatchRequest(config) {
   \****************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ mergeConfig)
@@ -2374,6 +2448,7 @@ function mergeConfig(config1, config2) {
   \***********************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ settle)
@@ -2416,6 +2491,7 @@ function settle(resolve, reject, response) {
   \******************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ transformData)
@@ -2461,6 +2537,7 @@ function transformData(fns, response) {
   \**************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2641,6 +2718,7 @@ _utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].forEach(['delete', 'get', 'hea
   \*********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2662,6 +2740,7 @@ __webpack_require__.r(__webpack_exports__);
   \********************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   VERSION: () => (/* binding */ VERSION)
@@ -2676,6 +2755,7 @@ const VERSION = "1.6.3";
   \****************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2749,6 +2829,7 @@ prototype.toString = function toString(encoder) {
   \**********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2834,6 +2915,7 @@ Object.entries(HttpStatusCode).forEach(([key, value]) => {
   \************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ bind)
@@ -2855,6 +2937,7 @@ function bind(fn, thisArg) {
   \****************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ buildURL)
@@ -2934,6 +3017,7 @@ function buildURL(url, params, options) {
   \*******************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ combineURLs)
@@ -2963,6 +3047,7 @@ function combineURLs(baseURL, relativeURL) {
   \***************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -3021,6 +3106,7 @@ __webpack_require__.r(__webpack_exports__);
   \**********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -3128,6 +3214,7 @@ function formDataToJSON(formData) {
   \*********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ isAbsoluteURL)
@@ -3157,6 +3244,7 @@ function isAbsoluteURL(url) {
   \********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ isAxiosError)
@@ -3186,6 +3274,7 @@ function isAxiosError(payload) {
   \***********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -3269,6 +3358,7 @@ __webpack_require__.r(__webpack_exports__);
   \************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -3285,6 +3375,7 @@ __webpack_require__.r(__webpack_exports__);
   \********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -3355,6 +3446,7 @@ const ignoreDuplicateOf = _utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].toOb
   \*********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ parseProtocol)
@@ -3375,6 +3467,7 @@ function parseProtocol(url) {
   \*******************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -3444,6 +3537,7 @@ function speedometer(samplesCount, min) {
   \**************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ spread)
@@ -3486,6 +3580,7 @@ function spread(callback) {
   \******************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -3722,6 +3817,7 @@ function toFormData(obj, formData, options) {
   \************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ toURLEncodedForm)
@@ -3757,6 +3853,7 @@ function toURLEncodedForm(data, options) {
   \*****************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -3864,6 +3961,7 @@ function assertOptions(options, schema, allowUnknown) {
   \*****************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -3881,6 +3979,7 @@ __webpack_require__.r(__webpack_exports__);
   \*********************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -3898,6 +3997,7 @@ __webpack_require__.r(__webpack_exports__);
   \****************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -3917,6 +4017,7 @@ __webpack_require__.r(__webpack_exports__);
   \**********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -3947,6 +4048,7 @@ __webpack_require__.r(__webpack_exports__);
   \*********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   hasBrowserEnv: () => (/* binding */ hasBrowserEnv),
@@ -4006,6 +4108,7 @@ const hasStandardBrowserWebWorkerEnv = (() => {
   \**************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -4029,6 +4132,7 @@ __webpack_require__.r(__webpack_exports__);
   \*****************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -4894,25 +4998,29 @@ const isThenable = (thing) =>
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 /*!**************************!*\
   !*** ./src/favorites.js ***!
   \**************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
 /* harmony import */ var _favorites_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./favorites.html */ "./src/favorites.html");
 /* harmony import */ var _favorites_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./favorites.scss */ "./src/favorites.scss");
-/* harmony import */ var _js_filterFav__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/filterFav */ "./src/js/filterFav.js");
-/* harmony import */ var _js_pagination_fav__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/pagination-fav */ "./src/js/pagination-fav.js");
-/* harmony import */ var _js_recipes_fav__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./js/recipes-fav */ "./src/js/recipes-fav.js");
+/* harmony import */ var _js_themes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/themes */ "./src/js/themes.js");
+/* harmony import */ var _js_themes__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_js_themes__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _js_filterFav__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/filterFav */ "./src/js/filterFav.js");
+/* harmony import */ var _js_pagination_fav__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./js/pagination-fav */ "./src/js/pagination-fav.js");
+/* harmony import */ var _js_recipes_fav__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./js/recipes-fav */ "./src/js/recipes-fav.js");
 
 
 
 
 
 
-axios__WEBPACK_IMPORTED_MODULE_5__["default"].defaults.baseURL = "https://tasty-treats-backend.p.goit.global/api";
+
+axios__WEBPACK_IMPORTED_MODULE_6__["default"].defaults.baseURL = "https://tasty-treats-backend.p.goit.global/api";
 })();
 
 /******/ })()
