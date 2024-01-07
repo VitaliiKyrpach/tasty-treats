@@ -146,18 +146,18 @@ const createMarkUp = () => {
 };
 const createFilters = function () {
   let totalPages = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-  console.log(totalPages);
+  // console.log(totalPages);
   filterList.innerHTML = "";
   if (totalPages) filterList.insertAdjacentHTML("beforeend", createMarkUp());
 };
 const onStartPage = () => {
   let page = JSON.parse(localStorage.getItem("currentPageFav")) ?? 1;
   const data = JSON.parse(localStorage.getItem("favorites"));
-  console.log(data);
+  // console.log(data);
   if (!data) {
     (0,_pagination_fav__WEBPACK_IMPORTED_MODULE_0__.onStartFavPag)();
   } else {
-    console.log("not working");
+    // console.log("not working");
     const category = localStorage.getItem("filterFav") ?? "all";
     let filtered;
     if (category == "all") {
@@ -193,28 +193,29 @@ const handleFilters = e => {
   console.log(e.target.id);
 };
 filterList.addEventListener("click", handleFilters);
-let isDragging = false;
-let startX;
-let scrollLeft;
-filterList.addEventListener("mousemove", onDrag);
-filterList.addEventListener("mousedown", dragStart);
-document.addEventListener("mouseup", dragStop);
-function dragStop() {
-  isDragging = false;
-}
-function dragStart(e) {
-  if (e.target.nodeName == "BUTTON") return;
-  isDragging = true;
-  startX = e.pageX - filterList.offsetLeft;
-  scrollLeft = filterList.scrollLeft;
-}
-function onDrag(e) {
-  if (!isDragging) return;
-  // filterList.scrollLeft -= e.movementX;
-  e.preventDefault();
-  const x = e.pageX - filterList.offsetLeft;
-  const walk = (x - startX) * 3; //scroll-fast
-  filterList.scrollLeft = scrollLeft - walk;
+if (screen.width > 767) {
+  let isDragging = false;
+  let startX;
+  let scrollLeft;
+  filterList.addEventListener("mousemove", onDrag);
+  filterList.addEventListener("mousedown", dragStart);
+  document.addEventListener("mouseup", dragStop);
+  function dragStop() {
+    isDragging = false;
+  }
+  function dragStart(e) {
+    if (e.target.nodeName == "BUTTON") return;
+    isDragging = true;
+    startX = e.pageX - filterList.offsetLeft;
+    scrollLeft = filterList.scrollLeft;
+  }
+  function onDrag(e) {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - filterList.offsetLeft;
+    const walk = (x - startX) * 3;
+    filterList.scrollLeft = scrollLeft - walk;
+  }
 }
 
 /***/ }),
@@ -325,15 +326,15 @@ const createMarkUp = (page, totalPages) => {
 const onStartFavPag = function () {
   let page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
   let totalPages = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  console.log("here");
+  // console.log("here");
   (0,_recipes_fav__WEBPACK_IMPORTED_MODULE_0__.createCards)(page, totalPages);
   if (totalPages < 2) {
     paginationFav.classList.add("is-hidden");
-    console.log("hidden");
+    // console.log("hidden");
   } else {
     paginationFav.classList.remove("is-hidden");
     createMarkUp(page, totalPages);
-    console.log("shown");
+    // console.log("shown");
   }
   handleDots(page, totalPages);
 };
@@ -376,7 +377,7 @@ __webpack_require__.r(__webpack_exports__);
 const modal = document.querySelector(".backdrop");
 const openModal = async recipeId => {
   // console.log(recipeId);
-
+  modal.innerHTML = "";
   const data = await getData(recipeId);
   // console.log(data);
   modal.insertAdjacentHTML("beforeend", createMarkUp(data));
@@ -518,7 +519,7 @@ const createCards = (page, totalPages) => {
     filtered = data.filter(item => item.category == category);
   }
   recipeListFav.innerHTML = "";
-  console.log(totalPages);
+  // console.log(totalPages);
   if (!totalPages) {
     const text = "It appears that you haven't added any recipes to your favorites yet. To get started, you can add recipes that you like to your favorites for easier access in the future.";
     recipeListFav.insertAdjacentHTML("beforeend", (0,_emptyResult__WEBPACK_IMPORTED_MODULE_0__["default"])(text));
@@ -527,13 +528,16 @@ const createCards = (page, totalPages) => {
   }
 };
 const createMarkUpFav = (page, results, totalPages) => {
+  let limit;
+  if (screen.width < 768) limit = 9;
+  if (screen.width > 767) limit = 12;
   const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
   let markUp = "";
   let addedClass = "";
-  const start = (page - 1) * 12;
+  const start = (page - 1) * limit;
   let end;
-  page == totalPages ? end = results.length : end = page * 12;
-  console.log(page, results, totalPages);
+  page == totalPages ? end = results.length : end = page * limit;
+  // console.log(page, results, totalPages);
   for (let i = start; i < end; i++) {
     const stars = (0,_createStars__WEBPACK_IMPORTED_MODULE_3__["default"])(results[i].rating);
     added.find(item => item._id == results[i]._id) ? addedClass = "added" : addedClass = "";
@@ -644,8 +648,9 @@ var ___HTML_LOADER_IMPORT_2___ = new URL(/* asset import */ __webpack_require__(
 var ___HTML_LOADER_REPLACEMENT_0___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_0___);
 var ___HTML_LOADER_REPLACEMENT_1___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_1___);
 var ___HTML_LOADER_REPLACEMENT_2___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_2___, { hash: "#icon-cart" });
-var ___HTML_LOADER_REPLACEMENT_3___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_2___, { hash: "#icon-arrow" });
-var code = "<!DOCTYPE html>\r\n<html lang=\"en\" class=\"light\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Favorites</title>\r\n</head>\r\n<body>\r\n    <header class=\"header-fav\">\r\n        <div class=\"container\">\r\n            <div class=\"wrapper\">\r\n                <nav class=\"header-nav\">\r\n                    <ul class=\"nav-list\">\r\n                        <li><a href=\"./index.html\" class=\"link\">Home</a></li>\r\n                        <li><a href=\"#\" class=\"link current\">Favorites</a></li>\r\n                    </ul>\r\n                    <a href=\"\" class=\"nav-logo\"\r\n                        ><img\r\n                        src=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n                        alt=\"tasty treats logo\"\r\n                        class=\"src logo-light\"\r\n                    />\r\n                    <img\r\n                        src=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"\r\n                        alt=\"tasty treats logo\"\r\n                        class=\"src logo-dark\"\r\n                    /></a>\r\n                </nav>\r\n                <div class=\"nav-tech\">\r\n                    <svg class=\"cart-svg\">\r\n                        <use href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"></use>\r\n                    </svg>\r\n                    <div class=\"theme-wrapper\">\r\n                        <div class=\"theme-circle\"></div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </header>\r\n    <main>\r\n        <section class=\"favorites\">\r\n            <div class=\"container\">\r\n                <div class=\"banner\">\r\n                </div>\r\n                    <ul class=\"filters-fav\"></ul>\r\n            <ul class=\"recipe-list-fav\"></ul>\r\n            <div class=\"pagination-fav\">\r\n                <div class=\"steps\">\r\n                    <button\r\n                        class=\"pag-arrow-first\"\r\n                        type=\"button\"\r\n                        data-type=\"first\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                    <button\r\n                        class=\"pag-arrow-prev hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"prev\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                </div>\r\n                <div class=\"pages\">\r\n                    <button\r\n                        class=\"pag-page dots-prev hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"dots\"\r\n                    >\r\n                        ...\r\n                    </button>\r\n                    <div class=\"numbers\"></div>\r\n                    <button\r\n                        class=\"pag-page dots-next\"\r\n                        type=\"button\"\r\n                        data-type=\"dots\"\r\n                    >\r\n                        ...\r\n                    </button>\r\n                </div>\r\n                <div class=\"steps\">\r\n                    <button\r\n                        class=\"pag-arrow-next hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"next\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                    <button\r\n                        class=\"pag-arrow-last\"\r\n                        type=\"button\"\r\n                        data-type=\"last\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                </div>\r\n            </div>\r\n        </div></main>\r\n        </section>\r\n        <div class=\"backdrop is-hidden\"></div>\r\n</body>\r\n</html>";
+var ___HTML_LOADER_REPLACEMENT_3___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_2___, { hash: "#icon-burger" });
+var ___HTML_LOADER_REPLACEMENT_4___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_2___, { hash: "#icon-arrow" });
+var code = "<!DOCTYPE html>\r\n<html lang=\"en\" class=\"light\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Favorites</title>\r\n</head>\r\n<body>\r\n    <header class=\"header-fav\">\r\n        <div class=\"container\">\r\n            <div class=\"wrapper\">\r\n                <nav class=\"header-nav\">\r\n                    <ul class=\"nav-list\">\r\n                        <li><a href=\"./index.html\" class=\"link\">Home</a></li>\r\n                        <li><a href=\"#\" class=\"link current\">Favorites</a></li>\r\n                    </ul>\r\n                    <div class=\"logo-wrapper\">\r\n                        <a href=\"\" class=\"nav-logo\"\r\n                            ><img\r\n                                src=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n                                alt=\"tasty treats logo\"\r\n                                class=\"src logo-light\"\r\n                            />\r\n                            <img\r\n                                src=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"\r\n                                alt=\"tasty treats logo\"\r\n                                class=\"src logo-dark\"\r\n                            />\r\n                        </a>\r\n                    </div>\r\n                </nav>\r\n                <div class=\"nav-tech\">\r\n                    <svg class=\"cart-svg\">\r\n                        <use href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"></use>\r\n                    </svg>\r\n                    <div class=\"theme-wrapper\">\r\n                        <div class=\"theme-circle\"></div>\r\n                    </div>\r\n                    <button class=\"burger-btn\">\r\n                        <svg class=\"burger-svg\">\r\n                            <use href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"></use>\r\n                        </svg>\r\n                    </button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </header>\r\n    <main>\r\n        <section class=\"favorites\">\r\n            <div class=\"container\">\r\n                <div class=\"banner\">\r\n                </div>\r\n                    <ul class=\"filters-fav\"></ul>\r\n            <ul class=\"recipe-list-fav\"></ul>\r\n            <div class=\"pagination-fav\">\r\n                <div class=\"steps\">\r\n                    <button\r\n                        class=\"pag-arrow-first\"\r\n                        type=\"button\"\r\n                        data-type=\"first\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_4___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_4___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                    <button\r\n                        class=\"pag-arrow-prev hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"prev\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_4___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                </div>\r\n                <div class=\"pages\">\r\n                    <button\r\n                        class=\"pag-page dots-prev hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"dots\"\r\n                    >\r\n                        ...\r\n                    </button>\r\n                    <div class=\"numbers\"></div>\r\n                    <button\r\n                        class=\"pag-page dots-next\"\r\n                        type=\"button\"\r\n                        data-type=\"dots\"\r\n                    >\r\n                        ...\r\n                    </button>\r\n                </div>\r\n                <div class=\"steps\">\r\n                    <button\r\n                        class=\"pag-arrow-next hidden\"\r\n                        type=\"button\"\r\n                        data-type=\"next\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_4___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                    <button\r\n                        class=\"pag-arrow-last\"\r\n                        type=\"button\"\r\n                        data-type=\"last\"\r\n                    >\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_4___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                        <svg class=\"svg\">\r\n                            <use\r\n                                href=\"" + ___HTML_LOADER_REPLACEMENT_4___ + "\"\r\n                            ></use>\r\n                        </svg>\r\n                    </button>\r\n                </div>\r\n            </div>\r\n        </div></main>\r\n        </section>\r\n        <div class=\"backdrop is-hidden\"></div>\r\n</body>\r\n</html>";
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (code);
 
