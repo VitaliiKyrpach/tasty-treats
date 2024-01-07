@@ -31,7 +31,7 @@ const createMarkUp = () => {
 };
 
 export const createFilters = (totalPages = 0) => {
-	console.log(totalPages);
+	// console.log(totalPages);
 	filterList.innerHTML = "";
 	if (totalPages)
 		filterList.insertAdjacentHTML("beforeend", createMarkUp());
@@ -40,11 +40,11 @@ export const createFilters = (totalPages = 0) => {
 const onStartPage = () => {
 	let page = JSON.parse(localStorage.getItem("currentPageFav")) ?? 1;
 	const data = JSON.parse(localStorage.getItem("favorites"));
-	console.log(data);
+	// console.log(data);
 	if (!data) {
 		onStartFavPag();
 	} else {
-		console.log("not working");
+		// console.log("not working");
 		const category = localStorage.getItem("filterFav") ?? "all";
 		let filtered;
 		if (category == "all") {
@@ -83,30 +83,30 @@ const handleFilters = (e) => {
 };
 
 filterList.addEventListener("click", handleFilters);
+if (screen.width > 767) {
+	let isDragging = false;
+	let startX;
+	let scrollLeft;
+	filterList.addEventListener("mousemove", onDrag);
+	filterList.addEventListener("mousedown", dragStart);
+	document.addEventListener("mouseup", dragStop);
 
-let isDragging = false;
-let startX;
-let scrollLeft;
-filterList.addEventListener("mousemove", onDrag);
-filterList.addEventListener("mousedown", dragStart);
-document.addEventListener("mouseup", dragStop);
+	function dragStop() {
+		isDragging = false;
+	}
 
-function dragStop() {
-	isDragging = false;
-}
+	function dragStart(e) {
+		if (e.target.nodeName == "BUTTON") return;
+		isDragging = true;
+		startX = e.pageX - filterList.offsetLeft;
+		scrollLeft = filterList.scrollLeft;
+	}
 
-function dragStart(e) {
-	if (e.target.nodeName == "BUTTON") return;
-	isDragging = true;
-	startX = e.pageX - filterList.offsetLeft;
-	scrollLeft = filterList.scrollLeft;
-}
-
-function onDrag(e) {
-	if (!isDragging) return;
-	// filterList.scrollLeft -= e.movementX;
-	e.preventDefault();
-	const x = e.pageX - filterList.offsetLeft;
-	const walk = (x - startX) * 3; //scroll-fast
-	filterList.scrollLeft = scrollLeft - walk;
+	function onDrag(e) {
+		if (!isDragging) return;
+		e.preventDefault();
+		const x = e.pageX - filterList.offsetLeft;
+		const walk = (x - startX) * 3;
+		filterList.scrollLeft = scrollLeft - walk;
+	}
 }

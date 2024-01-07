@@ -1,5 +1,8 @@
 .categories {
-	margin-bottom: 64px;
+	margin-bottom: 40px;
+	@media screen and (min-width: $bp-tablet) {
+		margin-bottom: 64px;
+	}
 }
 .cats-all {
 	font-family: "Inter", sans-serif;
@@ -11,10 +14,16 @@
 	padding: 14px 28px;
 	border-radius: 15px;
 	border: 1px solid $color-secondary-lightest;
-	margin-bottom: 42px;
+	margin-bottom: 24px;
 	cursor: pointer;
 	transition: color 150ms ease, background-color 150ms ease,
 		border-color 150ms ease;
+	@media screen and (min-width: $bp-tablet) {
+		margin-bottom: 30px;
+	}
+	@media screen and (min-width: $bp-desktop) {
+		margin-bottom: 42px;
+	}
 	&:hover {
 		color: $color-primary-light;
 		background-color: $color-accent;
@@ -24,10 +33,13 @@
 .cats-list {
 	display: flex;
 	flex-direction: column;
-	gap: 24px;
-	height: 416px;
+	gap: 18px;
+	height: 198px;
 	overflow: auto;
-
+	@media screen and (min-width: $bp-tablet) {
+		gap: 24px;
+		height: 416px;
+	}
 	&::-webkit-scrollbar {
 		width: 8px; /* width of the entire scrollbar */
 	}
@@ -42,14 +54,18 @@
 	}
 	.btn {
 		font-family: "Inter", sans-serif;
-		font-size: 16px;
+		font-size: 14px;
 		font-weight: 500;
-		line-height: 1.25;
+		line-height: 1.28;
 		color: $color-secondary-light;
 		background-color: transparent;
 		border: none;
 		padding: 0;
 		cursor: pointer;
+		@media screen and (min-width: $bp-tablet) {
+			font-size: 16px;
+			line-height: 1.25;
+		}
 		&:hover {
 			color: $color-primary-dark;
 		}

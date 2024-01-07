@@ -3,6 +3,12 @@ import createStars from "./createStars";
 import emptyResult from "./emptyResult";
 const recipeList = document.querySelector(".recipe-list");
 
+window.addEventListener("resize", myFunction);
+
+function myFunction() {
+	console.log(screen.width);
+}
+
 const InitParams = {
 	title: "",
 	category: "",
@@ -13,9 +19,13 @@ const InitParams = {
 
 const getData = async (page = 1) => {
 	try {
+		let limit;
+		if (screen.width < 768) limit = 6;
+		if (screen.width > 767 && screen.width < 1280) limit = 8;
+		if (screen.width > 1279) limit = 9;
 		const LSparams =
 			JSON.parse(localStorage.getItem("params")) ?? InitParams;
-		const params = { ...LSparams, page, limit: 9 };
+		const params = { ...LSparams, page, limit };
 		const fetch = await axios("/recipes", {
 			params,
 		});

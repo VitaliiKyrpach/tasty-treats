@@ -2,13 +2,16 @@
 	display: flex;
 	gap: 15px;
 	margin-bottom: 32px;
-	overflow-x: hidden;
+	overflow-x: auto;
 	cursor: grab;
 	&:active {
 		cursor: grabbing;
 	}
 	li {
 		flex-shrink: 0;
+	}
+	&::-webkit-scrollbar {
+		display: none; /* width of the entire scrollbar */
 	}
 }
 .filterFav-btn {

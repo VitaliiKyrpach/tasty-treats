@@ -25,26 +25,36 @@
 								<a href="./favorites.html" class="link">Favorites</a>
 							</li>
 						</ul>
-						<a href="" class="nav-logo"
-							><img
-								src="./images/logo.svg"
-								alt="tasty treats logo"
-								class="src logo-light"
-							/>
-							<img
-								src="./images/logo-dark.svg"
-								alt="tasty treats logo"
-								class="src logo-dark"
-							/>
-						</a>
+						<div class="logo-wrapper">
+							<a href="" class="nav-logo"
+								><img
+									src="./images/logo.svg"
+									alt="tasty treats logo"
+									class="src logo-light"
+								/>
+								<img
+									src="./images/logo-dark.svg"
+									alt="tasty treats logo"
+									class="src logo-dark"
+								/>
+							</a>
+						</div>
 					</nav>
 					<div class="nav-tech">
-						<svg class="cart-svg">
-							<use href="./images/sprite.svg#icon-cart"></use>
-						</svg>
+						<button type="button" class="cart-btn">
+							<svg class="cart-svg">
+								<use href="./images/sprite.svg#icon-cart"></use>
+							</svg>
+						</button>
+
 						<div class="theme-wrapper">
 							<div class="theme-circle"></div>
 						</div>
+						<button class="burger-btn">
+							<svg class="burger-svg">
+								<use href="./images/sprite.svg#icon-burger"></use>
+							</svg>
+						</button>
 					</div>
 				</div>
 			</div>
@@ -80,7 +90,7 @@
 						<div class="aside">
 							<div class="categories">
 								<button class="cats-all" type="button">
-									All Categories
+									All categories
 								</button>
 								<ul class="cats-list"></ul>
 							</div>
@@ -236,6 +246,146 @@
 				</div>
 			</section>
 		</main>
-		<div class="backdrop is-hidden"></div>
+
+		<!-- <div class="order-modal">
+			<h2 class="modal-title">Замовити дзвінок</h2>
+			<div class="modal-form-wrapper">
+				<p class="modal-form-title">
+					Запишіться <span class="accent">безкоштовно</span> та
+					отримайте подарунок
+				</p>
+				<form class="form">
+					<div class="modal-input-group">
+						<input
+							class="input"
+							type="text"
+							name="name"
+							id="customer-name"
+							placeholder=" "
+							required
+						/>
+						<label class="label" for="customer-name"
+							>Ваше ім'я та прізвище</label
+						>
+					</div>
+					<div class="modal-input-group">
+						<input
+							class="input"
+							type="tel"
+							name="phone"
+							id="customer-phone"
+							placeholder=" "
+							required
+						/>
+						<label class="label" for="customer-phone"
+							>Ваш номер телефону</label
+						>
+					</div>
+					<div class="modal-input-group">
+						<input
+							class="input"
+							type="email"
+							name="email"
+							id="customer-email"
+							placeholder=" "
+						/>
+						<label class="label" for="customer-email"
+							>Ваша електронна пошта</label
+						>
+					</div>
+					<button class="button" type="submit">
+						Записатись безкоштовно
+					</button>
+				</form>
+				<p class="form-text">
+					Натискаючи на кнопку я погоджуюсь
+					<a class="form-text-link" href=""
+						>з політикою конфіденційності</a
+					>
+				</p>
+			</div>
+			<svg class="modal-cross">
+				<use href="./images/sprite.svg#icon-cross"></use>
+			</svg>
+		</div> -->
+		<div class="backdrop is-hidden">
+			<div class="rating-modal">
+				<button class="btn-close" type="button">
+					<svg class="close-svg">
+						<use href="./images/sprite.svg#icon-reset"></use>
+					</svg>
+				</button>
+				<h2 class="title">Rating</h2>
+				<form>
+					<div class="stars">
+						<p class="score-text">0</p>
+						<div>
+							<input
+								class="radio-input"
+								type="radio"
+								id="1"
+								name="star"
+								value="1"
+							/>
+							<label for="1"
+								><svg class="star-svg">
+									<use href="./images/sprite.svg#icon-star"></use>
+								</svg>
+							</label>
+							<input
+								class="radio-input"
+								type="radio"
+								id="2"
+								name="star"
+								value="2"
+							/>
+							<label for="2"
+								><svg class="star-svg">
+									<use href="./images/sprite.svg#icon-star"></use>
+								</svg>
+							</label>
+							<input
+								class="radio-input"
+								type="radio"
+								id="3"
+								name="star"
+								value="3"
+							/>
+							<label for="3"
+								><svg class="star-svg">
+									<use href="./images/sprite.svg#icon-star"></use>
+								</svg>
+							</label>
+							<input
+								class="radio-input"
+								type="radio"
+								id="4"
+								name="star"
+								value="4"
+							/>
+							<label for="4"
+								><svg class="star-svg">
+									<use href="./images/sprite.svg#icon-star"></use>
+								</svg>
+							</label>
+							<input
+								class="radio-input"
+								type="radio"
+								id="5"
+								name="star"
+								value="5"
+							/>
+							<label for="5"
+								><svg class="star-svg">
+									<use href="./images/sprite.svg#icon-star"></use>
+								</svg>
+							</label>
+						</div>
+					</div>
+					<input type="email" placeholder="Enter email" />
+					<button type="submit">Send</button>
+				</form>
+			</div>
+		</div>
 	</body>
 </html>

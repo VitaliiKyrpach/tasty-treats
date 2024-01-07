@@ -15,7 +15,7 @@ export const createCards = (page, totalPages) => {
 		filtered = data.filter((item) => item.category == category);
 	}
 	recipeListFav.innerHTML = "";
-	console.log(totalPages);
+	// console.log(totalPages);
 	if (!totalPages) {
 		const text =
 			"It appears that you haven't added any recipes to your favorites yet. To get started, you can add recipes that you like to your favorites for easier access in the future.";
@@ -29,13 +29,16 @@ export const createCards = (page, totalPages) => {
 };
 
 const createMarkUpFav = (page, results, totalPages) => {
+	let limit;
+	if (screen.width < 768) limit = 9;
+	if (screen.width > 767) limit = 12;
 	const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
 	let markUp = "";
 	let addedClass = "";
-	const start = (page - 1) * 12;
+	const start = (page - 1) * limit;
 	let end;
-	page == totalPages ? (end = results.length) : (end = page * 12);
-	console.log(page, results, totalPages);
+	page == totalPages ? (end = results.length) : (end = page * limit);
+	// console.log(page, results, totalPages);
 	for (let i = start; i < end; i++) {
 		const stars = createStars(results[i].rating);
 		added.find((item) => item._id == results[i]._id)

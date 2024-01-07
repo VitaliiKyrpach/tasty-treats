@@ -5,7 +5,7 @@ import { addToFavorites } from "./addToFavorites";
 const modal = document.querySelector(".backdrop");
 export const openModal = async (recipeId) => {
 	// console.log(recipeId);
-
+	modal.innerHTML = "";
 	const data = await getData(recipeId);
 	// console.log(data);
 	modal.insertAdjacentHTML("beforeend", createMarkUp(data));

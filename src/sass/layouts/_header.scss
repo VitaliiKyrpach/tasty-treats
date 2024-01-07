@@ -1,6 +1,14 @@
 .header {
-	padding-top: 43px;
-	padding-bottom: 50px;
+	padding-top: 24px;
+	padding-bottom: 49px;
+	@media screen and (min-width: $bp-tablet) {
+		padding-top: 30px;
+		padding-bottom: 47px;
+	}
+	@media screen and (min-width: $bp-desktop) {
+		padding-top: 43px;
+		padding-bottom: 46px;
+	}
 	.wrapper {
 		display: flex;
 		justify-content: space-between;
@@ -22,28 +30,39 @@
 	flex-grow: 1;
 }
 .nav-list {
-	display: flex;
-	gap: 16px;
-	.link {
-		font-size: 12px;
-		line-height: 1.2;
-		color: $color-secondary-dark;
-		transition: color 150ms ease;
-		&:hover,
-		&:active {
-			color: $color-accent;
-		}
-		&.current {
-			color: $color-accent;
+	display: none;
+	@media screen and (min-width: $bp-tablet) {
+		display: flex;
+		gap: 16px;
+		.link {
+			font-size: 12px;
+			line-height: 1.2;
+			color: $color-secondary-dark;
+			transition: color 150ms ease;
+			&:hover,
+			&:active {
+				color: $color-accent;
+			}
+			&.current {
+				color: $color-accent;
+			}
 		}
 	}
 }
-.nav-logo {
+.logo-wrapper {
 	display: flex;
-	justify-content: center;
+	justify-content: start;
 	flex-grow: 1;
+	@media screen and (min-width: $bp-tablet) {
+		justify-content: center;
+	}
+}
+.nav-logo {
 	.src {
-		width: 93px;
+		width: 83px;
+		@media screen and (min-width: $bp-tablet) {
+			width: 93px;
+		}
 	}
 }
 .logo-light {
@@ -54,26 +73,46 @@
 }
 .nav-tech {
 	display: flex;
-	gap: 24px;
+	gap: 14px;
+	align-items: center;
+	@media screen and (min-width: $bp-tablet) {
+		gap: 18px;
+	}
+	@media screen and (min-width: $bp-desktop) {
+		gap: 24px;
+	}
+}
+.cart-btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: transparent;
+	border: none;
+	padding: 0;
 }
 .cart-svg {
 	width: 24px;
 	height: 24px;
+	cursor: pointer;
 	fill: $color-secondary-dark;
 }
 .theme-wrapper {
-	display: flex;
-	justify-content: start;
-	align-items: center;
-	width: 46px;
-	height: 20px;
-	background-color: $color-secondary-light;
-	border-radius: 11px;
-	padding: 1px;
-	box-shadow: 4px 4px 8px $color-secondary-light;
-	&.dark {
-		background-color: $color-accent;
-		justify-content: end;
+	display: none;
+	@media screen and (min-width: $bp-tablet) {
+		display: flex;
+		justify-content: start;
+		align-items: center;
+		width: 46px;
+		height: 20px;
+		background-color: $color-secondary-light;
+		border-radius: 11px;
+		padding: 1px;
+		box-shadow: 4px 4px 8px $color-secondary-light;
+		cursor: pointer;
+		&.dark {
+			background-color: $color-accent;
+			justify-content: end;
+		}
 	}
 }
 .theme-circle {
@@ -84,4 +123,21 @@
 	&.dark {
 		background-color: $color-primary-dark;
 	}
+}
+.burger-btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: transparent;
+	border: none;
+	padding: 0;
+	@media screen and (min-width: $bp-tablet) {
+		display: none;
+	}
+}
+.burger-svg {
+	width: 34px;
+	height: 34px;
+	cursor: pointer;
+	fill: $color-secondary-dark;
 }

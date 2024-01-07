@@ -1,11 +1,18 @@
 .popular {
 	.title {
 		color: $color-secondary-dark;
-		font-size: 24px;
+		font-size: 18px;
 		font-weight: 600;
-		line-height: 1.17;
+		line-height: 1.33;
 		text-transform: uppercase;
-		margin-bottom: 32px;
+		margin-bottom: 20px;
+		@media screen and (min-width: $bp-tablet) {
+			margin-bottom: 32px;
+		}
+		@media screen and (min-width: $bp-tablet) {
+			font-size: 24px;
+			line-height: 1.17;
+		}
 	}
 }
 .popular-content {
@@ -15,7 +22,10 @@
 .popular-list {
 	display: flex;
 	flex-direction: column;
-	gap: 32px;
+	gap: 16px;
+	@media screen and (min-width: $bp-tablet) {
+		gap: 32px;
+	}
 	.card {
 		display: flex;
 		gap: 16px;
@@ -41,13 +51,18 @@
 		}
 		.text {
 			color: $color-primary-dark;
-			font-size: 10px;
-			line-height: 1.4;
+			font-size: 12px;
+			line-height: 1.33;
 			overflow: hidden;
 			display: -webkit-box;
 			-webkit-box-orient: vertical;
-			-webkit-line-clamp: 3; /* start showing ellipsis when 3rd line is reached */
+			-webkit-line-clamp: 2; /* start showing ellipsis when 3rd line is reached */
 			pointer-events: none;
+			@media screen and (min-width: $bp-tablet) {
+				font-size: 10px;
+				line-height: 1.4;
+				-webkit-line-clamp: 3; /* start showing ellipsis when 3rd line is reached */
+			}
 		}
 		&:hover {
 			transform: scale(1.1);

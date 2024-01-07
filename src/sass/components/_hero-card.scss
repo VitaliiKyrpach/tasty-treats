@@ -10,51 +10,68 @@
 }
 .hero-card {
 	display: flex;
-	gap: 16px;
-	height: 442px;
-	width: 871px;
+	gap: 8px;
+	height: 280px;
+	width: 481px;
+	@media screen and (min-width: $bp-tablet) {
+		gap: 16px;
+		height: 442px;
+		width: 871px;
+	}
 	.card-chief {
 		position: relative;
-		width: 137px;
+		width: 80px;
+		@media screen and (min-width: $bp-tablet) {
+			width: 137px;
+		}
 		@extend %hero-card-image;
 	}
 	.card-dish {
 		@extend %hero-card-image;
 		position: relative;
-		width: 351px;
+		width: 200px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 8px;
 		justify-content: end;
-		padding-bottom: 32px;
-		// background: radial-gradient(
-		// 	circle,
-		// 	rgba(155, 181, 55, 1) 1%,
-		// 	rgba(155, 181, 55, 0.3) 5%,
-		// 	$color-secondary-dark 50%
-		// );
+		padding-bottom: 14px;
+		@media screen and (min-width: $bp-tablet) {
+			width: 351px;
+			padding-bottom: 32px;
+		}
 	}
 }
 .chief {
 	position: absolute;
-	top: 47%;
+	top: 55%;
 	left: 60%;
-	transform: translate(-50%, -50%) scale(3.1);
+	transform: translate(-50%, -50%) scale(3.6);
+	@media screen and (min-width: $bp-tablet) {
+		top: 47%;
+		transform: translate(-50%, -50%) scale(3.1);
+	}
 }
 .dish-img {
 	position: absolute;
-	top: 50%;
+	top: 45%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	height: 271px;
+	height: 142px;
 	z-index: 1;
+	@media screen and (min-width: $bp-tablet) {
+		height: 271px;
+		top: 50%;
+	}
 }
 .elips-img {
 	position: absolute;
-	top: 50%;
+	top: 45%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+	@media screen and (min-width: $bp-tablet) {
+		top: 50%;
+	}
 }
 .dish-1-big-img {
 	@extend %dish-big-img;
@@ -70,12 +87,23 @@
 	transform: translate(-50%, -50%) scale(2.4);
 }
 .master-text {
+	font-size: 10px;
+	line-height: 1.4;
 	font-weight: 500;
 	color: $color-third-light;
 	text-transform: uppercase;
+	text-align: center;
+	@media screen and (min-width: $bp-tablet) {
+		font-size: 14px;
+		line-height: 1.28;
+	}
 }
 .master-text-country {
 	color: $color-third-lighter;
-	font-size: 12px;
-	line-height: 1.16;
+	font-size: 8px;
+	line-height: 1.5;
+	@media screen and (min-width: $bp-tablet) {
+		font-size: 12px;
+		line-height: 1.16;
+	}
 }

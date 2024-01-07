@@ -4,20 +4,28 @@
 	font-size: 14px;
 	line-height: 1.21;
 	font-weight: 500;
-	padding: 13px 27px;
+	padding: 10px 20px;
 	border: 1px solid $color-accent;
-	border-radius: 15px;
+	border-radius: 12px;
 	cursor: pointer;
 	transition: color 150ms ease, background-color 150ms ease;
+	@media screen and (min-width: $bp-tablet) {
+		padding: 13px 27px;
+		border-radius: 15px;
+	}
 }
 %pag-button {
-	width: 44px;
-	height: 44px;
+	width: 40px;
+	height: 40px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	border-radius: 50%;
 	border: 1px solid;
+	@media screen and (min-width: $bp-tablet) {
+		width: 44px;
+		height: 44px;
+	}
 }
 %pag-arrow-jump {
 	display: flex;
@@ -73,8 +81,12 @@
 	}
 }
 .pag-arrow-prev {
+	display: none;
 	@extend %pag-arrow-step;
 	background-color: #050505;
+	@media screen and (min-width: $bp-tablet) {
+		display: block;
+	}
 	.svg {
 		fill: $color-third-light;
 	}
@@ -89,10 +101,14 @@
 	}
 }
 .pag-arrow-next {
+	display: none;
 	@extend %pag-arrow-step;
 	transform: rotate(180deg);
 	background-color: $color-accent;
 	border-color: $color-accent;
+	@media screen and (min-width: $bp-tablet) {
+		display: block;
+	}
 	.svg {
 		fill: #050505;
 	}

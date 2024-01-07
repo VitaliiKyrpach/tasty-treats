@@ -1,8 +1,8 @@
 %select {
 	font-family: "Inter", sans-serif;
-	font-size: 16px;
+	font-size: 14px;
 	font-weight: 500;
-	line-height: 1.25;
+	line-height: 1.28;
 	color: $color-secondary-lighter;
 	padding: 14px 18px;
 	border: 1px solid $color-secondary-lightest;
@@ -12,6 +12,10 @@
 	outline: none;
 	background-color: transparent;
 	cursor: pointer;
+	@media screen and (min-width: $bp-tablet) {
+		font-size: 16px;
+		line-height: 1.25;
+	}
 }
 %dropdown {
 	position: absolute;
@@ -49,8 +53,15 @@
 .filter {
 	position: relative;
 	display: flex;
-	gap: 16px;
-	margin-bottom: 44px;
+	flex-wrap: wrap;
+	gap: 14px;
+	margin-bottom: 50px;
+	max-width: 686px;
+	@media screen and (min-width: $bp-tablet) {
+		gap: 16px;
+		max-width: 100%;
+		margin-bottom: 44px;
+	}
 	.arrow {
 		position: absolute;
 		right: 18px;
@@ -63,17 +74,29 @@
 	}
 }
 .filter-label {
+	font-size: 12px;
+	line-height: 1.16;
 	font-weight: 500;
 	color: $color-secondary-lighter;
 	display: block;
 	text-align: start;
 	margin-bottom: 8px;
+	@media screen and (min-width: $bp-tablet) {
+		font-size: 14px;
+		line-height: 1.28;
+	}
 }
 .time {
-	width: 125px;
+	width: calc((100% - 14px) / 2);
+	@media screen and (min-width: $bp-tablet) {
+		width: 125px;
+	}
 }
 .area {
-	width: 141px;
+	width: calc((100% - 14px) / 2);
+	@media screen and (min-width: $bp-tablet) {
+		width: 141px;
+	}
 }
 .ingredients {
 	width: 188px;
@@ -84,7 +107,10 @@
 		@extend %select;
 		padding-left: 48px;
 	}
-	width: 278px;
+	width: 100%;
+	@media screen and (min-width: $bp-desktop) {
+		width: 278px;
+	}
 }
 .loop {
 	position: absolute;

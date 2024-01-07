@@ -1,0 +1,31 @@
+.rating-modal {
+	position: relative;
+	width: 424px;
+	// height: 905px;
+	padding: 32px;
+	background-color: $color-primary-light;
+	border-radius: 15px;
+	.title {
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 1.28;
+		margin-bottom: 4px;
+		color: $color-secondary-dark;
+	}
+	.score-text {
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 1.5;
+		color: $color-secondary-dark;
+	}
+	.radio-input {
+		display: none;
+	}
+	// .radio-input:checked + label {
+	// 	transform: translateY(5px);
+	// }
+	.buttons {
+		display: flex;
+		gap: 16px;
+	}
+}

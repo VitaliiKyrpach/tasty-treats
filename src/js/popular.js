@@ -13,14 +13,30 @@ const getData = async () => {
 };
 
 const createMarkUp = ({ data }) => {
-	return data
-		.map(
-			({
-				preview,
-				title,
-				description,
-				_id,
-			}) => `<li class="card" id=${_id} data-type="popular-card">
+	if (screen.width < 768) {
+		console.log(data);
+		let markUp = "";
+		for (let i = 0; i < 2; i++) {
+			markUp += `<li class="card" id=${data[i]._id} data-type="popular-card">
+            <img class="img" src=${data[i].preview} alt=${data[i].title} />
+            <div class="popular-content">
+                <h3 class="title">${data[i].title}</h3>
+                <p class="text">
+                    ${data[i].description}
+                </p>
+            </div>
+        </li>`;
+		}
+		return markUp;
+	} else {
+		return data
+			.map(
+				({
+					preview,
+					title,
+					description,
+					_id,
+				}) => `<li class="card" id=${_id} data-type="popular-card">
             <img class="img" src=${preview} alt=${title} />
             <div class="popular-content">
                 <h3 class="title">${title}</h3>
@@ -29,8 +45,9 @@ const createMarkUp = ({ data }) => {
                 </p>
             </div>
         </li>`
-		)
-		.join("");
+			)
+			.join("");
+	}
 };
 
 const getPopular = async () => {

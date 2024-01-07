@@ -1,17 +1,29 @@
 .numbers {
 	display: flex;
-	gap: 10px;
+	gap: 8px;
+	@media screen and (min-width: $bp-tablet) {
+		gap: 10px;
+	}
 }
 .pages {
 	display: flex;
-	gap: 10px;
+	gap: 8px;
+	@media screen and (min-width: $bp-tablet) {
+		gap: 10px;
+	}
 }
 .steps {
 	display: flex;
 	gap: 8px;
 }
-.pagination-recipe, .pagination-fav {
+.pagination-recipe,
+.pagination-fav {
 	display: flex;
 	justify-content: center;
-	gap: 24px;
+	gap: 14px;
+	max-width: 686px;
+	@media screen and (min-width: $bp-tablet) {
+		max-width: 100%;
+		gap: 24px;
+	}
 }

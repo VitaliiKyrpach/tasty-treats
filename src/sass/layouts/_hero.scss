@@ -1,19 +1,35 @@
 .hero {
-	padding: 50px 0;
+	padding: 40px 0;
+	@media screen and (min-width: $bp-desktop) {
+		padding: 50px 0;
+	}
 	.wrapper {
 		position: relative;
 	}
 }
 .hero-content {
-	padding-top: 64px;
-	width: 446px;
+	width: 335px;
+	margin-bottom: 48px;
+	@media screen and (min-width: $bp-tablet) {
+		width: 446px;
+		margin-bottom: 64px;
+	}
+	@media screen and (min-width: $bp-desktop) {
+		padding-top: 64px;
+		margin-bottom: 0;
+	}
 	.title {
-		font-size: 36px;
-		line-height: 1.16;
+		font-size: 26px;
+		line-height: 1.2;
 		font-weight: 600;
 		color: $color-secondary-dark;
-		margin-bottom: 16px;
+		margin-bottom: 14px;
 		text-transform: uppercase;
+		@media screen and (min-width: $bp-tablet) {
+			font-size: 36px;
+			line-height: 1.16;
+			margin-bottom: 16px;
+		}
 		.accent {
 			font-weight: 400;
 			color: $color-accent;
@@ -21,36 +37,63 @@
 		}
 	}
 	.text {
-		font-size: 16px;
-		line-height: 1.5;
+		font-size: 14px;
+		line-height: 1.28;
 		color: $color-secondary-dark;
-		width: 400px;
-		margin-bottom: 32px;
+		width: 335px;
+		margin-bottom: 28px;
+		@media screen and (min-width: $bp-tablet) {
+			font-size: 16px;
+			line-height: 1.5;
+			width: 400px;
+			margin-bottom: 32px;
+		}
 	}
 }
 .master-wrapper {
-	position: absolute;
-	top: 0;
-	left: 478px;
-	width: 696px;
+	width: 355px;
 	overflow: hidden;
+	@media screen and (min-width: $bp-tablet) {
+		width: 736px;
+	}
+	@media screen and (min-width: $bp-desktop) {
+		position: absolute;
+		top: 0;
+		left: 478px;
+		width: 696px;
+	}
 }
 .master-list {
-	margin-bottom: 20px;
+	margin-bottom: 16px;
+	@media screen and (min-width: $bp-tablet) {
+		margin-bottom: 20px;
+	}
 }
 .pagination {
 	display: flex;
 	justify-content: center;
-	gap: 6px;
-	transform: translateX(-19px);
+	gap: 4px;
+	transform: translateX(5px);
+	@media screen and (min-width: $bp-tablet) {
+		gap: 6px;
+		transform: translateX(-38px);
+	}
+	@media screen and (min-width: $bp-desktop) {
+		gap: 6px;
+		transform: translateX(-19px);
+	}
 }
 .bullet {
 	display: block;
-	width: 6px;
-	height: 6px;
+	width: 4px;
+	height: 4px;
 	background-color: $color-secondary-lighter;
 	border-radius: 50%;
 	cursor: pointer;
+	@media screen and (min-width: $bp-tablet) {
+		width: 6px;
+		height: 6px;
+	}
 }
 .bullet-active {
 	background-color: $color-accent;
