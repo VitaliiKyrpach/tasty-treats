@@ -112,6 +112,7 @@
 	width: 16px;
 	height: 16px;
 	fill: $color-star;
+	pointer-events: none;
 	@media screen and (min-width: $bp-tablet) {
 		width: 14px;
 		height: 14px;

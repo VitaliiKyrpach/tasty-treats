@@ -662,6 +662,108 @@ popList.addEventListener("click", openPopular);
 
 /***/ }),
 
+/***/ "./src/js/raiting-modal.js":
+/*!*********************************!*\
+  !*** ./src/js/raiting-modal.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   openRmodal: () => (/* binding */ openRmodal)
+/* harmony export */ });
+
+const rModal = document.querySelector(".backdrop");
+const openRmodal = target => {
+  rModal.innerHTML = "";
+  rModal.insertAdjacentHTML("beforeend", createMarkUp(target.id));
+  rModal.classList.remove("is-hidden");
+  document.body.classList.add("no-scroll");
+  const raitModalClose = document.querySelector(".btn-close");
+  raitModalClose.addEventListener("click", () => closeRaitModal(raitModalClose));
+  const starsGroup = document.querySelector(".score-stars");
+  starsGroup.addEventListener("click", handleRaiting);
+  const send = document.querySelector(".rating-form");
+  send.addEventListener("submit", handleRatPost);
+};
+const createMarkUp = function (id) {
+  let num = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  const stars = createModalStars(num);
+  console.log(num);
+  return `<div class="rating-modal">
+    <button class="btn-close" type="button">
+        <svg class="close-svg">
+            <use href="assets/sprite.svg#icon-reset"></use>
+        </svg>
+    </button>
+    <h2 class="title">Rating</h2>
+    <form class='rating-form'>
+        <div class="rating-stars">
+            <p class="rating-text">0</p>
+            <div class="score-stars">
+               ${stars}
+            </div>
+        </div>
+        <input class="rating-email" type="email" name="email" placeholder="Enter email" required/>
+        <button class="rating-post-btn" type="submit" name="subBtn" id=${id}>Send</button>
+    </form>
+</div>`;
+};
+const createModalStars = num => {
+  let markUp = "";
+  let starActive;
+  console.log(num);
+  for (let i = 1; i <= 5; i++) {
+    i <= num ? starActive = "active" : starActive = "";
+    markUp += `<input
+        class="radio-input"
+        type="radio"
+        id="star${i}"
+        name="RatStar"
+        value=${i}
+    />
+    <label class='star-label' for="star${i}"
+        ><svg class="star-svg ${starActive}">
+            <use href="assets/sprite.svg#icon-star"></use>
+        </svg>
+    </label>`;
+  }
+  return markUp;
+};
+const closeRaitModal = close => {
+  rModal.innerHTML = "";
+  rModal.classList.add("is-hidden");
+  document.body.classList.remove("no-scroll");
+  close.removeEventListener("click", closeRaitModal);
+};
+const handleRaiting = e => {
+  if (e.target.nodeName == "INPUT") {
+    const num = e.target.value;
+    const allStars = document.querySelector(".score-stars");
+    allStars.innerHTML = "";
+    allStars.insertAdjacentHTML("beforeend", createModalStars(num));
+    const text = document.querySelector(".rating-text");
+    text.textContent = num;
+    const star = document.querySelector(`#star${num}`);
+    console.log(`#star${num}`);
+    star.checked = true;
+    console.dir(e.target.value);
+  }
+};
+const handleRatPost = e => {
+  e.preventDefault();
+  let rating;
+  var star = document.getElementsByName("RatStar");
+  for (let i = 0; i < star.length; i++) {
+    if (star[i].checked) rating = i;
+  }
+  const email = e.target.elements.email.value;
+  console.log(e.target.elements.subBtn.id, email, rating);
+};
+
+/***/ }),
+
 /***/ "./src/js/recipe-modal.js":
 /*!********************************!*\
   !*** ./src/js/recipe-modal.js ***!
@@ -673,9 +775,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   openModal: () => (/* binding */ openModal)
 /* harmony export */ });
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
 /* harmony import */ var _createStars__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./createStars */ "./src/js/createStars.js");
 /* harmony import */ var _addToFavorites__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./addToFavorites */ "./src/js/addToFavorites.js");
+/* harmony import */ var _raiting_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./raiting-modal */ "./src/js/raiting-modal.js");
+
 
 
 
@@ -692,10 +796,12 @@ const openModal = async recipeId => {
   addBtn.addEventListener("click", handleAddBtn);
   const recModalClose = document.querySelector(".btn-close");
   recModalClose.addEventListener("click", () => closeModal(recModalClose, addBtn));
+  const btnRating = document.querySelector(".btn-rating");
+  btnRating.addEventListener("click", handleRatBtn);
 };
 const getData = async id => {
   try {
-    const fetch = await (0,axios__WEBPACK_IMPORTED_MODULE_2__["default"])(`/recipes/${id}`);
+    const fetch = await (0,axios__WEBPACK_IMPORTED_MODULE_3__["default"])(`/recipes/${id}`);
     // console.log(fetch);
     return fetch;
   } catch (err) {
@@ -769,7 +875,7 @@ const createMarkUp = _ref => {
             <button class="btn-add" type="button" id=${_id}>
                 ${addedToFav} favorite
             </button>
-            <button class="btn-rating" type="button">
+            <button class="btn-rating" type="button" id=${_id}>
                 Give a rating
             </button>
         </div>
@@ -781,6 +887,9 @@ const handleAddBtn = async e => {
   const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
   // console.log(added);
   added.find(item => item._id == e.target.id) ? e.target.textContent = "Remove from favorite" : e.target.textContent = "Add to favorite";
+};
+const handleRatBtn = async e => {
+  await (0,_raiting_modal__WEBPACK_IMPORTED_MODULE_2__.openRmodal)(e.target);
 };
 const closeModal = (close, add) => {
   modal.innerHTML = "";
@@ -1002,8 +1111,7 @@ var ___HTML_LOADER_REPLACEMENT_3___ = _node_modules_html_loader_dist_runtime_get
 var ___HTML_LOADER_REPLACEMENT_4___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_2___, { hash: "#icon-loop" });
 var ___HTML_LOADER_REPLACEMENT_5___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_2___, { hash: "#icon-arrow" });
 var ___HTML_LOADER_REPLACEMENT_6___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_2___, { hash: "#icon-reset" });
-var ___HTML_LOADER_REPLACEMENT_7___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_2___, { hash: "#icon-star" });
-var code = "<!DOCTYPE html>\r\n<html lang=\"en\" class=\"light\">\r\n\t<head>\r\n\t\t<meta charset=\"UTF-8\" />\r\n\t\t<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n\t\t<meta\r\n\t\t\tname=\"viewport\"\r\n\t\t\tcontent=\"width=device-width, initial-scale=1.0\"\r\n\t\t/>\r\n\t\t<title>Tasty treats</title>\r\n\t</head>\r\n\t<body>\r\n\t\t<div class=\"loader-wrapper\">\r\n\t\t\t<div class=\"loader\"></div>\r\n\t\t</div>\r\n\t\t<header class=\"header\">\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t<nav class=\"header-nav\">\r\n\t\t\t\t\t\t<ul class=\"nav-list\">\r\n\t\t\t\t\t\t\t<li>\r\n\t\t\t\t\t\t\t\t<a href=\"./index.html\" class=\"link current\">Home</a>\r\n\t\t\t\t\t\t\t</li>\r\n\t\t\t\t\t\t\t<li>\r\n\t\t\t\t\t\t\t\t<a href=\"./favorites.html\" class=\"link\">Favorites</a>\r\n\t\t\t\t\t\t\t</li>\r\n\t\t\t\t\t\t</ul>\r\n\t\t\t\t\t\t<div class=\"logo-wrapper\">\r\n\t\t\t\t\t\t\t<a href=\"\" class=\"nav-logo\"\r\n\t\t\t\t\t\t\t\t><img\r\n\t\t\t\t\t\t\t\t\tsrc=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n\t\t\t\t\t\t\t\t\talt=\"tasty treats logo\"\r\n\t\t\t\t\t\t\t\t\tclass=\"src logo-light\"\r\n\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t<img\r\n\t\t\t\t\t\t\t\t\tsrc=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"\r\n\t\t\t\t\t\t\t\t\talt=\"tasty treats logo\"\r\n\t\t\t\t\t\t\t\t\tclass=\"src logo-dark\"\r\n\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t</a>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</nav>\r\n\t\t\t\t\t<div class=\"nav-tech\">\r\n\t\t\t\t\t\t<button type=\"button\" class=\"cart-btn\">\r\n\t\t\t\t\t\t\t<svg class=\"cart-svg\">\r\n\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"></use>\r\n\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t</button>\r\n\r\n\t\t\t\t\t\t<div class=\"theme-wrapper\">\r\n\t\t\t\t\t\t\t<div class=\"theme-circle\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<button class=\"burger-btn\">\r\n\t\t\t\t\t\t\t<svg class=\"burger-svg\">\r\n\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"></use>\r\n\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t</button>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</header>\r\n\t\t<main>\r\n\t\t\t<section class=\"hero\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"hero-content\">\r\n\t\t\t\t\t\t\t<h1 class=\"title\">\r\n\t\t\t\t\t\t\t\tLearn to Cook\r\n\t\t\t\t\t\t\t\t<span class=\"accent\">Tasty Treats'</span> Customizable\r\n\t\t\t\t\t\t\t\tMasterclass\r\n\t\t\t\t\t\t\t</h1>\r\n\t\t\t\t\t\t\t<p class=\"text\">\r\n\t\t\t\t\t\t\t\tTastyTreats - Customize Your Meal with Ingredient\r\n\t\t\t\t\t\t\t\tOptions and Step-by-Step Video Guides.\r\n\t\t\t\t\t\t\t</p>\r\n\t\t\t\t\t\t\t<button type=\"button\" class=\"primary-btn\">\r\n\t\t\t\t\t\t\t\tOrder now\r\n\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div class=\"master-wrapper swiper-container\">\r\n\t\t\t\t\t\t\t<ul class=\"master-list swiper-wrapper\"></ul>\r\n\t\t\t\t\t\t\t<div class=\"pagination\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t\t<section class=\"recipes\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"aside\">\r\n\t\t\t\t\t\t\t<div class=\"categories\">\r\n\t\t\t\t\t\t\t\t<button class=\"cats-all\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\tAll categories\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t<ul class=\"cats-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"popular\">\r\n\t\t\t\t\t\t\t\t<h2 class=\"title\">Popular recipes</h2>\r\n\t\t\t\t\t\t\t\t<ul class=\"popular-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div>\r\n\t\t\t\t\t\t\t<div class=\"filter\">\r\n\t\t\t\t\t\t\t\t<div class=\"search\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"ilterSearch\"\r\n\t\t\t\t\t\t\t\t\t\t>Search</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"text\"\r\n\t\t\t\t\t\t\t\t\t\tid=\"filterSearch\"\r\n\t\t\t\t\t\t\t\t\t\tplaceholder=\"Enter Text\"\r\n\t\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t\t<svg class=\"loop\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_4___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"time\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Time</p>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\" data-type=\"time\">\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-time\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"time-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"area\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Area</p>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\" data-type=\"area\">\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-area\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"area-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"ingredients\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Ingredients</p>\r\n\t\t\t\t\t\t\t\t\t<div\r\n\t\t\t\t\t\t\t\t\t\tclass=\"options-wrapper\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"ingredients\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-ingredient\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"ingredients-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<button class=\"reset-filter-btn\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\t<svg class=\"reset-svg\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_6___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t<p class=\"reset-text\">Reset the filter</p>\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"all-recipes\">\r\n\t\t\t\t\t\t\t\t<ul class=\"recipe-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"pagination-recipe\">\r\n\t\t\t\t\t\t\t\t<div class=\"steps\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-first\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"first\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-prev hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"prev\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"pages\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-page dots-prev hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"dots\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t...\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<div class=\"numbers\"></div>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-page dots-next\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"dots\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t...\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"steps\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-next hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"next\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-last\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"last\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t</main>\r\n\r\n\t\t<!-- <div class=\"order-modal\">\r\n\t\t\t<h2 class=\"modal-title\">Замовити дзвінок</h2>\r\n\t\t\t<div class=\"modal-form-wrapper\">\r\n\t\t\t\t<p class=\"modal-form-title\">\r\n\t\t\t\t\tЗапишіться <span class=\"accent\">безкоштовно</span> та\r\n\t\t\t\t\tотримайте подарунок\r\n\t\t\t\t</p>\r\n\t\t\t\t<form class=\"form\">\r\n\t\t\t\t\t<div class=\"modal-input-group\">\r\n\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\ttype=\"text\"\r\n\t\t\t\t\t\t\tname=\"name\"\r\n\t\t\t\t\t\t\tid=\"customer-name\"\r\n\t\t\t\t\t\t\tplaceholder=\" \"\r\n\t\t\t\t\t\t\trequired\r\n\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t<label class=\"label\" for=\"customer-name\"\r\n\t\t\t\t\t\t\t>Ваше ім'я та прізвище</label\r\n\t\t\t\t\t\t>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t\t<div class=\"modal-input-group\">\r\n\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\ttype=\"tel\"\r\n\t\t\t\t\t\t\tname=\"phone\"\r\n\t\t\t\t\t\t\tid=\"customer-phone\"\r\n\t\t\t\t\t\t\tplaceholder=\" \"\r\n\t\t\t\t\t\t\trequired\r\n\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t<label class=\"label\" for=\"customer-phone\"\r\n\t\t\t\t\t\t\t>Ваш номер телефону</label\r\n\t\t\t\t\t\t>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t\t<div class=\"modal-input-group\">\r\n\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\ttype=\"email\"\r\n\t\t\t\t\t\t\tname=\"email\"\r\n\t\t\t\t\t\t\tid=\"customer-email\"\r\n\t\t\t\t\t\t\tplaceholder=\" \"\r\n\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t<label class=\"label\" for=\"customer-email\"\r\n\t\t\t\t\t\t\t>Ваша електронна пошта</label\r\n\t\t\t\t\t\t>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t\t<button class=\"button\" type=\"submit\">\r\n\t\t\t\t\t\tЗаписатись безкоштовно\r\n\t\t\t\t\t</button>\r\n\t\t\t\t</form>\r\n\t\t\t\t<p class=\"form-text\">\r\n\t\t\t\t\tНатискаючи на кнопку я погоджуюсь\r\n\t\t\t\t\t<a class=\"form-text-link\" href=\"\"\r\n\t\t\t\t\t\t>з політикою конфіденційності</a\r\n\t\t\t\t\t>\r\n\t\t\t\t</p>\r\n\t\t\t</div>\r\n\t\t\t<svg class=\"modal-cross\">\r\n\t\t\t\t<use href=\"./images/sprite.svg#icon-cross\"></use>\r\n\t\t\t</svg>\r\n\t\t</div> -->\r\n\t\t<div class=\"backdrop is-hidden\">\r\n\t\t\t<div class=\"rating-modal\">\r\n\t\t\t\t<button class=\"btn-close\" type=\"button\">\r\n\t\t\t\t\t<svg class=\"close-svg\">\r\n\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_6___ + "\"></use>\r\n\t\t\t\t\t</svg>\r\n\t\t\t\t</button>\r\n\t\t\t\t<h2 class=\"title\">Rating</h2>\r\n\t\t\t\t<form>\r\n\t\t\t\t\t<div class=\"stars\">\r\n\t\t\t\t\t\t<p class=\"score-text\">0</p>\r\n\t\t\t\t\t\t<div>\r\n\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\tclass=\"radio-input\"\r\n\t\t\t\t\t\t\t\ttype=\"radio\"\r\n\t\t\t\t\t\t\t\tid=\"1\"\r\n\t\t\t\t\t\t\t\tname=\"star\"\r\n\t\t\t\t\t\t\t\tvalue=\"1\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t<label for=\"1\"\r\n\t\t\t\t\t\t\t\t><svg class=\"star-svg\">\r\n\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_7___ + "\"></use>\r\n\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\tclass=\"radio-input\"\r\n\t\t\t\t\t\t\t\ttype=\"radio\"\r\n\t\t\t\t\t\t\t\tid=\"2\"\r\n\t\t\t\t\t\t\t\tname=\"star\"\r\n\t\t\t\t\t\t\t\tvalue=\"2\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t<label for=\"2\"\r\n\t\t\t\t\t\t\t\t><svg class=\"star-svg\">\r\n\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_7___ + "\"></use>\r\n\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\tclass=\"radio-input\"\r\n\t\t\t\t\t\t\t\ttype=\"radio\"\r\n\t\t\t\t\t\t\t\tid=\"3\"\r\n\t\t\t\t\t\t\t\tname=\"star\"\r\n\t\t\t\t\t\t\t\tvalue=\"3\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t<label for=\"3\"\r\n\t\t\t\t\t\t\t\t><svg class=\"star-svg\">\r\n\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_7___ + "\"></use>\r\n\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\tclass=\"radio-input\"\r\n\t\t\t\t\t\t\t\ttype=\"radio\"\r\n\t\t\t\t\t\t\t\tid=\"4\"\r\n\t\t\t\t\t\t\t\tname=\"star\"\r\n\t\t\t\t\t\t\t\tvalue=\"4\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t<label for=\"4\"\r\n\t\t\t\t\t\t\t\t><svg class=\"star-svg\">\r\n\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_7___ + "\"></use>\r\n\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\tclass=\"radio-input\"\r\n\t\t\t\t\t\t\t\ttype=\"radio\"\r\n\t\t\t\t\t\t\t\tid=\"5\"\r\n\t\t\t\t\t\t\t\tname=\"star\"\r\n\t\t\t\t\t\t\t\tvalue=\"5\"\r\n\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t<label for=\"5\"\r\n\t\t\t\t\t\t\t\t><svg class=\"star-svg\">\r\n\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_7___ + "\"></use>\r\n\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t\t<input type=\"email\" placeholder=\"Enter email\" />\r\n\t\t\t\t\t<button type=\"submit\">Send</button>\r\n\t\t\t\t</form>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</body>\r\n</html>\r\n";
+var code = "<!DOCTYPE html>\r\n<html lang=\"en\" class=\"light\">\r\n\t<head>\r\n\t\t<meta charset=\"UTF-8\" />\r\n\t\t<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n\t\t<meta\r\n\t\t\tname=\"viewport\"\r\n\t\t\tcontent=\"width=device-width, initial-scale=1.0\"\r\n\t\t/>\r\n\t\t<title>Tasty treats</title>\r\n\t</head>\r\n\t<body>\r\n\t\t<div class=\"loader-wrapper\">\r\n\t\t\t<div class=\"loader\"></div>\r\n\t\t</div>\r\n\t\t<header class=\"header\">\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t<nav class=\"header-nav\">\r\n\t\t\t\t\t\t<ul class=\"nav-list\">\r\n\t\t\t\t\t\t\t<li>\r\n\t\t\t\t\t\t\t\t<a href=\"./index.html\" class=\"link current\">Home</a>\r\n\t\t\t\t\t\t\t</li>\r\n\t\t\t\t\t\t\t<li>\r\n\t\t\t\t\t\t\t\t<a href=\"./favorites.html\" class=\"link\">Favorites</a>\r\n\t\t\t\t\t\t\t</li>\r\n\t\t\t\t\t\t</ul>\r\n\t\t\t\t\t\t<div class=\"logo-wrapper\">\r\n\t\t\t\t\t\t\t<a href=\"\" class=\"nav-logo\"\r\n\t\t\t\t\t\t\t\t><img\r\n\t\t\t\t\t\t\t\t\tsrc=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n\t\t\t\t\t\t\t\t\talt=\"tasty treats logo\"\r\n\t\t\t\t\t\t\t\t\tclass=\"src logo-light\"\r\n\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t<img\r\n\t\t\t\t\t\t\t\t\tsrc=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"\r\n\t\t\t\t\t\t\t\t\talt=\"tasty treats logo\"\r\n\t\t\t\t\t\t\t\t\tclass=\"src logo-dark\"\r\n\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t</a>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</nav>\r\n\t\t\t\t\t<div class=\"nav-tech\">\r\n\t\t\t\t\t\t<button type=\"button\" class=\"cart-btn\">\r\n\t\t\t\t\t\t\t<svg class=\"cart-svg\">\r\n\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"></use>\r\n\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t</button>\r\n\r\n\t\t\t\t\t\t<div class=\"theme-wrapper\">\r\n\t\t\t\t\t\t\t<div class=\"theme-circle\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<button class=\"burger-btn\">\r\n\t\t\t\t\t\t\t<svg class=\"burger-svg\">\r\n\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"></use>\r\n\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t</button>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</header>\r\n\t\t<main>\r\n\t\t\t<section class=\"hero\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"hero-content\">\r\n\t\t\t\t\t\t\t<h1 class=\"title\">\r\n\t\t\t\t\t\t\t\tLearn to Cook\r\n\t\t\t\t\t\t\t\t<span class=\"accent\">Tasty Treats'</span> Customizable\r\n\t\t\t\t\t\t\t\tMasterclass\r\n\t\t\t\t\t\t\t</h1>\r\n\t\t\t\t\t\t\t<p class=\"text\">\r\n\t\t\t\t\t\t\t\tTastyTreats - Customize Your Meal with Ingredient\r\n\t\t\t\t\t\t\t\tOptions and Step-by-Step Video Guides.\r\n\t\t\t\t\t\t\t</p>\r\n\t\t\t\t\t\t\t<button type=\"button\" class=\"primary-btn\">\r\n\t\t\t\t\t\t\t\tOrder now\r\n\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div class=\"master-wrapper swiper-container\">\r\n\t\t\t\t\t\t\t<ul class=\"master-list swiper-wrapper\"></ul>\r\n\t\t\t\t\t\t\t<div class=\"pagination\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t\t<section class=\"recipes\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"aside\">\r\n\t\t\t\t\t\t\t<div class=\"categories\">\r\n\t\t\t\t\t\t\t\t<button class=\"cats-all\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\tAll categories\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t<ul class=\"cats-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"popular\">\r\n\t\t\t\t\t\t\t\t<h2 class=\"title\">Popular recipes</h2>\r\n\t\t\t\t\t\t\t\t<ul class=\"popular-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div>\r\n\t\t\t\t\t\t\t<div class=\"filter\">\r\n\t\t\t\t\t\t\t\t<div class=\"search\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"ilterSearch\"\r\n\t\t\t\t\t\t\t\t\t\t>Search</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"text\"\r\n\t\t\t\t\t\t\t\t\t\tid=\"filterSearch\"\r\n\t\t\t\t\t\t\t\t\t\tplaceholder=\"Enter Text\"\r\n\t\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t\t<svg class=\"loop\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_4___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"time\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Time</p>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\" data-type=\"time\">\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-time\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"time-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"area\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Area</p>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\" data-type=\"area\">\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-area\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"area-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"ingredients\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Ingredients</p>\r\n\t\t\t\t\t\t\t\t\t<div\r\n\t\t\t\t\t\t\t\t\t\tclass=\"options-wrapper\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"ingredients\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-ingredient\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"ingredients-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<button class=\"reset-filter-btn\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\t<svg class=\"reset-svg\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_6___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t<p class=\"reset-text\">Reset the filter</p>\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"all-recipes\">\r\n\t\t\t\t\t\t\t\t<ul class=\"recipe-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"pagination-recipe\">\r\n\t\t\t\t\t\t\t\t<div class=\"steps\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-first\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"first\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-prev hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"prev\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"pages\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-page dots-prev hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"dots\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t...\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<div class=\"numbers\"></div>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-page dots-next\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"dots\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t...\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"steps\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-next hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"next\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-last\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"last\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t</main>\r\n\r\n\t\t<!-- <div class=\"order-modal\">\r\n\t\t\t<h2 class=\"modal-title\">Замовити дзвінок</h2>\r\n\t\t\t<div class=\"modal-form-wrapper\">\r\n\t\t\t\t<p class=\"modal-form-title\">\r\n\t\t\t\t\tЗапишіться <span class=\"accent\">безкоштовно</span> та\r\n\t\t\t\t\tотримайте подарунок\r\n\t\t\t\t</p>\r\n\t\t\t\t<form class=\"form\">\r\n\t\t\t\t\t<div class=\"modal-input-group\">\r\n\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\ttype=\"text\"\r\n\t\t\t\t\t\t\tname=\"name\"\r\n\t\t\t\t\t\t\tid=\"customer-name\"\r\n\t\t\t\t\t\t\tplaceholder=\" \"\r\n\t\t\t\t\t\t\trequired\r\n\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t<label class=\"label\" for=\"customer-name\"\r\n\t\t\t\t\t\t\t>Ваше ім'я та прізвище</label\r\n\t\t\t\t\t\t>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t\t<div class=\"modal-input-group\">\r\n\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\ttype=\"tel\"\r\n\t\t\t\t\t\t\tname=\"phone\"\r\n\t\t\t\t\t\t\tid=\"customer-phone\"\r\n\t\t\t\t\t\t\tplaceholder=\" \"\r\n\t\t\t\t\t\t\trequired\r\n\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t<label class=\"label\" for=\"customer-phone\"\r\n\t\t\t\t\t\t\t>Ваш номер телефону</label\r\n\t\t\t\t\t\t>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t\t<div class=\"modal-input-group\">\r\n\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\ttype=\"email\"\r\n\t\t\t\t\t\t\tname=\"email\"\r\n\t\t\t\t\t\t\tid=\"customer-email\"\r\n\t\t\t\t\t\t\tplaceholder=\" \"\r\n\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t<label class=\"label\" for=\"customer-email\"\r\n\t\t\t\t\t\t\t>Ваша електронна пошта</label\r\n\t\t\t\t\t\t>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t\t<button class=\"button\" type=\"submit\">\r\n\t\t\t\t\t\tЗаписатись безкоштовно\r\n\t\t\t\t\t</button>\r\n\t\t\t\t</form>\r\n\t\t\t\t<p class=\"form-text\">\r\n\t\t\t\t\tНатискаючи на кнопку я погоджуюсь\r\n\t\t\t\t\t<a class=\"form-text-link\" href=\"\"\r\n\t\t\t\t\t\t>з політикою конфіденційності</a\r\n\t\t\t\t\t>\r\n\t\t\t\t</p>\r\n\t\t\t</div>\r\n\t\t\t<svg class=\"modal-cross\">\r\n\t\t\t\t<use href=\"./images/sprite.svg#icon-cross\"></use>\r\n\t\t\t</svg>\r\n\t\t</div> -->\r\n\t\t<div class=\"backdrop is-hidden\"></div>\r\n\t</body>\r\n</html>\r\n";
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (code);
 
@@ -16093,10 +16201,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _js_popular__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./js/popular */ "./src/js/popular.js");
 /* harmony import */ var _js_recipes__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./js/recipes */ "./src/js/recipes.js");
 /* harmony import */ var _js_recipe_modal__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./js/recipe-modal */ "./src/js/recipe-modal.js");
-/* harmony import */ var _js_pagination__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./js/pagination */ "./src/js/pagination.js");
-/* harmony import */ var _js_filters__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./js/filters */ "./src/js/filters.js");
-/* harmony import */ var _js_filterBar__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./js/filterBar */ "./src/js/filterBar.js");
-/* harmony import */ var _js_handleRecipe__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./js/handleRecipe */ "./src/js/handleRecipe.js");
+/* harmony import */ var _js_raiting_modal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./js/raiting-modal */ "./src/js/raiting-modal.js");
+/* harmony import */ var _js_pagination__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./js/pagination */ "./src/js/pagination.js");
+/* harmony import */ var _js_filters__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./js/filters */ "./src/js/filters.js");
+/* harmony import */ var _js_filterBar__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./js/filterBar */ "./src/js/filterBar.js");
+/* harmony import */ var _js_handleRecipe__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./js/handleRecipe */ "./src/js/handleRecipe.js");
+
 
 
 

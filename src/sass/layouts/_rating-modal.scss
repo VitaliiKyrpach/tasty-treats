@@ -12,11 +12,12 @@
 		margin-bottom: 4px;
 		color: $color-secondary-dark;
 	}
-	.score-text {
+	.rating-text {
 		font-size: 16px;
 		font-weight: 500;
 		line-height: 1.5;
 		color: $color-secondary-dark;
+		width: 8px;
 	}
 	.radio-input {
 		display: none;
@@ -28,4 +29,37 @@
 		display: flex;
 		gap: 16px;
 	}
+}
+.rating-stars {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	margin-bottom: 32px;
+}
+.star-label {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	.star-svg {
+		width: 24px;
+		height: 24px;
+	}
+}
+.score-stars {
+	display: flex;
+}
+.rating-email {
+	font-family: "Inter", sans-serif;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.25;
+	color: $color-secondary-lighter;
+	width: 100%;
+	padding: 14px 18px;
+	border: 1px solid $color-secondary-lightest;
+	border-radius: 15px;
+	appearance: none;
+	outline: none;
+	background-color: transparent;
+	margin-bottom: 16px;
 }

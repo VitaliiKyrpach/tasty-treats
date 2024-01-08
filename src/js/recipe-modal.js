@@ -1,6 +1,7 @@
 import axios from "axios";
 import createStars from "./createStars";
 import { addToFavorites } from "./addToFavorites";
+import { openRmodal } from "./raiting-modal";
 
 const modal = document.querySelector(".backdrop");
 export const openModal = async (recipeId) => {
@@ -17,6 +18,8 @@ export const openModal = async (recipeId) => {
 	recModalClose.addEventListener("click", () =>
 		closeModal(recModalClose, addBtn)
 	);
+	const btnRating = document.querySelector(".btn-rating");
+	btnRating.addEventListener("click", handleRatBtn);
 };
 
 const getData = async (id) => {
@@ -97,7 +100,7 @@ const createMarkUp = ({ data }) => {
             <button class="btn-add" type="button" id=${_id}>
                 ${addedToFav} favorite
             </button>
-            <button class="btn-rating" type="button">
+            <button class="btn-rating" type="button" id=${_id}>
                 Give a rating
             </button>
         </div>
@@ -112,6 +115,10 @@ const handleAddBtn = async (e) => {
 	added.find((item) => item._id == e.target.id)
 		? (e.target.textContent = "Remove from favorite")
 		: (e.target.textContent = "Add to favorite");
+};
+
+const handleRatBtn = async (e) => {
+	await openRmodal(e.target);
 };
 
 const closeModal = (close, add) => {
