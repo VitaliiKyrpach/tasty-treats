@@ -254,7 +254,7 @@ ul {
     transform: rotate(-360deg);
   }
 }
-.btn-rating, .btn-add, .primary-btn {
+.rating-post-btn, .btn-rating, .btn-add, .primary-btn {
   display: block;
   font-family: "Inter", sans-serif;
   font-size: 14px;
@@ -267,7 +267,7 @@ ul {
   transition: color 150ms ease, background-color 150ms ease;
 }
 @media screen and (min-width: 768px) {
-  .btn-rating, .btn-add, .primary-btn {
+  .rating-post-btn, .btn-rating, .btn-add, .primary-btn {
     padding: 13px 27px;
     border-radius: 15px;
   }
@@ -392,6 +392,15 @@ ul {
 }
 .pag-page.hidden {
   display: none;
+}
+
+.rating-post-btn {
+  color: var(--color-card-title);
+  background-color: var(--color-accent);
+  width: 100%;
+}
+.rating-post-btn:hover {
+  color: var(--color-event-back);
 }
 
 .hero-card .card-dish, .hero-card .card-chief {
@@ -843,6 +852,7 @@ ul {
   width: 16px;
   height: 16px;
   fill: var(--color-star);
+  pointer-events: none;
 }
 @media screen and (min-width: 768px) {
   .star-svg {
@@ -1529,11 +1539,12 @@ ul {
   margin-bottom: 4px;
   color: var(--color-secondary-dark);
 }
-.rating-modal .score-text {
+.rating-modal .rating-text {
   font-size: 16px;
   font-weight: 500;
   line-height: 1.5;
   color: var(--color-secondary-dark);
+  width: 8px;
 }
 .rating-modal .radio-input {
   display: none;
@@ -1541,6 +1552,43 @@ ul {
 .rating-modal .buttons {
   display: flex;
   gap: 16px;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.star-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.star-label .star-svg {
+  width: 24px;
+  height: 24px;
+}
+
+.score-stars {
+  display: flex;
+}
+
+.rating-email {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--color-secondary-lighter);
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid var(--color-secondary-lightest);
+  border-radius: 15px;
+  appearance: none;
+  outline: none;
+  background-color: transparent;
+  margin-bottom: 16px;
 }
 
 .numbers {

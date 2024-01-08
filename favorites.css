@@ -174,7 +174,7 @@ ul {
   }
 }
 
-.btn-rating, .btn-add, .primary-btn {
+.rating-post-btn, .btn-rating, .btn-add, .primary-btn {
   display: block;
   font-family: "Inter", sans-serif;
   font-size: 14px;
@@ -187,7 +187,7 @@ ul {
   transition: color 150ms ease, background-color 150ms ease;
 }
 @media screen and (min-width: 768px) {
-  .btn-rating, .btn-add, .primary-btn {
+  .rating-post-btn, .btn-rating, .btn-add, .primary-btn {
     padding: 13px 27px;
     border-radius: 15px;
   }
@@ -312,6 +312,15 @@ ul {
 }
 .pag-page.hidden {
   display: none;
+}
+
+.rating-post-btn {
+  color: var(--color-card-title);
+  background-color: var(--color-accent);
+  width: 100%;
+}
+.rating-post-btn:hover {
+  color: var(--color-event-back);
 }
 
 .hero-card .card-dish, .hero-card .card-chief {
@@ -763,6 +772,7 @@ ul {
   width: 16px;
   height: 16px;
   fill: var(--color-star);
+  pointer-events: none;
 }
 @media screen and (min-width: 768px) {
   .star-svg {

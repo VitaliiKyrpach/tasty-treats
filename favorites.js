@@ -357,6 +357,108 @@ paginationFav.addEventListener("click", onClick);
 
 /***/ }),
 
+/***/ "./src/js/raiting-modal.js":
+/*!*********************************!*\
+  !*** ./src/js/raiting-modal.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   openRmodal: () => (/* binding */ openRmodal)
+/* harmony export */ });
+
+const rModal = document.querySelector(".backdrop");
+const openRmodal = target => {
+  rModal.innerHTML = "";
+  rModal.insertAdjacentHTML("beforeend", createMarkUp(target.id));
+  rModal.classList.remove("is-hidden");
+  document.body.classList.add("no-scroll");
+  const raitModalClose = document.querySelector(".btn-close");
+  raitModalClose.addEventListener("click", () => closeRaitModal(raitModalClose));
+  const starsGroup = document.querySelector(".score-stars");
+  starsGroup.addEventListener("click", handleRaiting);
+  const send = document.querySelector(".rating-form");
+  send.addEventListener("submit", handleRatPost);
+};
+const createMarkUp = function (id) {
+  let num = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  const stars = createModalStars(num);
+  console.log(num);
+  return `<div class="rating-modal">
+    <button class="btn-close" type="button">
+        <svg class="close-svg">
+            <use href="assets/sprite.svg#icon-reset"></use>
+        </svg>
+    </button>
+    <h2 class="title">Rating</h2>
+    <form class='rating-form'>
+        <div class="rating-stars">
+            <p class="rating-text">0</p>
+            <div class="score-stars">
+               ${stars}
+            </div>
+        </div>
+        <input class="rating-email" type="email" name="email" placeholder="Enter email" required/>
+        <button class="rating-post-btn" type="submit" name="subBtn" id=${id}>Send</button>
+    </form>
+</div>`;
+};
+const createModalStars = num => {
+  let markUp = "";
+  let starActive;
+  console.log(num);
+  for (let i = 1; i <= 5; i++) {
+    i <= num ? starActive = "active" : starActive = "";
+    markUp += `<input
+        class="radio-input"
+        type="radio"
+        id="star${i}"
+        name="RatStar"
+        value=${i}
+    />
+    <label class='star-label' for="star${i}"
+        ><svg class="star-svg ${starActive}">
+            <use href="assets/sprite.svg#icon-star"></use>
+        </svg>
+    </label>`;
+  }
+  return markUp;
+};
+const closeRaitModal = close => {
+  rModal.innerHTML = "";
+  rModal.classList.add("is-hidden");
+  document.body.classList.remove("no-scroll");
+  close.removeEventListener("click", closeRaitModal);
+};
+const handleRaiting = e => {
+  if (e.target.nodeName == "INPUT") {
+    const num = e.target.value;
+    const allStars = document.querySelector(".score-stars");
+    allStars.innerHTML = "";
+    allStars.insertAdjacentHTML("beforeend", createModalStars(num));
+    const text = document.querySelector(".rating-text");
+    text.textContent = num;
+    const star = document.querySelector(`#star${num}`);
+    console.log(`#star${num}`);
+    star.checked = true;
+    console.dir(e.target.value);
+  }
+};
+const handleRatPost = e => {
+  e.preventDefault();
+  let rating;
+  var star = document.getElementsByName("RatStar");
+  for (let i = 0; i < star.length; i++) {
+    if (star[i].checked) rating = i;
+  }
+  const email = e.target.elements.email.value;
+  console.log(e.target.elements.subBtn.id, email, rating);
+};
+
+/***/ }),
+
 /***/ "./src/js/recipe-modal.js":
 /*!********************************!*\
   !*** ./src/js/recipe-modal.js ***!
@@ -368,9 +470,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   openModal: () => (/* binding */ openModal)
 /* harmony export */ });
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
 /* harmony import */ var _createStars__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./createStars */ "./src/js/createStars.js");
 /* harmony import */ var _addToFavorites__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./addToFavorites */ "./src/js/addToFavorites.js");
+/* harmony import */ var _raiting_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./raiting-modal */ "./src/js/raiting-modal.js");
+
 
 
 
@@ -387,10 +491,12 @@ const openModal = async recipeId => {
   addBtn.addEventListener("click", handleAddBtn);
   const recModalClose = document.querySelector(".btn-close");
   recModalClose.addEventListener("click", () => closeModal(recModalClose, addBtn));
+  const btnRating = document.querySelector(".btn-rating");
+  btnRating.addEventListener("click", handleRatBtn);
 };
 const getData = async id => {
   try {
-    const fetch = await (0,axios__WEBPACK_IMPORTED_MODULE_2__["default"])(`/recipes/${id}`);
+    const fetch = await (0,axios__WEBPACK_IMPORTED_MODULE_3__["default"])(`/recipes/${id}`);
     // console.log(fetch);
     return fetch;
   } catch (err) {
@@ -464,7 +570,7 @@ const createMarkUp = _ref => {
             <button class="btn-add" type="button" id=${_id}>
                 ${addedToFav} favorite
             </button>
-            <button class="btn-rating" type="button">
+            <button class="btn-rating" type="button" id=${_id}>
                 Give a rating
             </button>
         </div>
@@ -476,6 +582,9 @@ const handleAddBtn = async e => {
   const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
   // console.log(added);
   added.find(item => item._id == e.target.id) ? e.target.textContent = "Remove from favorite" : e.target.textContent = "Add to favorite";
+};
+const handleRatBtn = async e => {
+  await (0,_raiting_modal__WEBPACK_IMPORTED_MODULE_2__.openRmodal)(e.target);
 };
 const closeModal = (close, add) => {
   modal.innerHTML = "";
