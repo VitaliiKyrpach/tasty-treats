@@ -55,17 +55,34 @@ const getData = async id => {
 /*!******************************!*\
   !*** ./src/js/cart-modal.js ***!
   \******************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+/* harmony import */ var notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! notiflix/build/notiflix-notify-aio */ "./node_modules/notiflix/build/notiflix-notify-aio.js");
+/* harmony import */ var notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__);
+
+
+
+// });
 const cartModal = document.querySelector(".backdrop");
-const cartBtn = document.querySelector('.cart-btn');
+const cartBtn = document.querySelector(".cart-btn");
 const openCartModal = () => {
+  document.addEventListener("keydown", handleEscape);
   cartModal.innerHTML = "";
   cartModal.insertAdjacentHTML("beforeend", createOrderMarkUp());
   cartModal.classList.remove("is-hidden");
   document.body.classList.add("no-scroll");
-  const orderCloseBtn = document.querySelector(".btn-close");
-  orderCloseBtn.addEventListener("click", () => closeOrderModal(orderCloseBtn));
+  cartModal.addEventListener("click", handleCloseModal);
+  const send = document.querySelector(".order-form");
+  send.addEventListener("submit", handleOrderPost);
+};
+const handleEscape = e => {
+  if (e.key == "Escape") {
+    closeModal();
+    console.log(e.key);
+  }
 };
 const createOrderMarkUp = () => {
   return `<div class="order-modal">
@@ -86,7 +103,7 @@ const createOrderMarkUp = () => {
                     class="input"
                     type="text"
                     name="name"
-                    id="customer-name"
+                    id="customerName"
                     placeholder="User"
                     required
                 />
@@ -100,7 +117,7 @@ const createOrderMarkUp = () => {
                     class="input"
                     type="tel"
                     name="phone"
-                    id="customer-phone"
+                    id="customerPhone"
                     placeholder="+38 000 000 00 00"
                     required
                 />
@@ -114,12 +131,13 @@ const createOrderMarkUp = () => {
                     class="input"
                     type="email"
                     name="email"
-                    id="customer-email"
+                    id="customerEmail"
                     placeholder="example@mail.com"
+                    required
                 />
                 
             </div>
-            <div class="modal-input-group">
+            <div class="modal-input-group textarea">
             <label class="label" for="customer-email"
                 >Comment</label
             >
@@ -127,8 +145,9 @@ const createOrderMarkUp = () => {
                 class="textarea input"
                 name="textarea"
                 rows='4'
-                id='customer-comment'
+                id='customerComment'
                 placeholder="Write something here..."
+                required
                 ></textarea>
             
         </div>
@@ -140,13 +159,45 @@ const createOrderMarkUp = () => {
 
 </div>`;
 };
-const closeOrderModal = close => {
+const closeModal = () => {
   cartModal.innerHTML = "";
   cartModal.classList.add("is-hidden");
   document.body.classList.remove("no-scroll");
-  close.removeEventListener("click", closeOrderModal);
+  document.removeEventListener("keydown", handleEscape);
 };
-cartBtn.addEventListener('click', openCartModal);
+const handleCloseModal = e => {
+  if (e.target.className == "btn-close" || e.target.className == "backdrop") {
+    closeModal();
+  }
+};
+const handleOrderPost = async e => {
+  e.preventDefault();
+  try {
+    const form = e.target.elements;
+    const body = {
+      name: form.customerName.value,
+      phone: form.customerPhone.value,
+      email: form.customerEmail.value,
+      comment: form.customerComment.value
+    };
+    console.dir(body);
+    const post = await postOrder(body);
+    console.log(post);
+    if (post.status == 201) {
+      notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__.Notify.success("Thank you for your order. Our manager will contact you ASAP");
+    }
+    const orderCloseBtn = document.querySelector(".btn-close");
+    closeOrderModal(orderCloseBtn);
+  } catch (err) {
+    console.log(err);
+    notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__.Notify.failure(`I'm sorry, something went wrong. ${err.response.data.message}`);
+  }
+};
+const postOrder = async body => {
+  const post = await axios__WEBPACK_IMPORTED_MODULE_1__["default"].post(`/orders/add`, body);
+  return post;
+};
+cartBtn.addEventListener("click", openCartModal);
 
 /***/ }),
 
@@ -806,20 +857,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   openRmodal: () => (/* binding */ openRmodal)
 /* harmony export */ });
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+/* harmony import */ var notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! notiflix/build/notiflix-notify-aio */ "./node_modules/notiflix/build/notiflix-notify-aio.js");
+/* harmony import */ var notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__);
+
 
 const rModal = document.querySelector(".backdrop");
 const openRmodal = target => {
+  document.addEventListener("keydown", handleEscape);
   rModal.innerHTML = "";
   rModal.insertAdjacentHTML("beforeend", createMarkUp(target.id));
   rModal.classList.remove("is-hidden");
   document.body.classList.add("no-scroll");
-  const raitModalClose = document.querySelector(".btn-close");
-  raitModalClose.addEventListener("click", () => closeRaitModal(raitModalClose));
+  rModal.addEventListener("click", handleCloseModal);
   const starsGroup = document.querySelector(".score-stars");
   starsGroup.addEventListener("click", handleRaiting);
   const send = document.querySelector(".rating-form");
   send.addEventListener("submit", handleRatPost);
+};
+const handleEscape = e => {
+  if (e.key == "Escape") {
+    closeModal();
+    console.log(e.key);
+  }
 };
 const createMarkUp = function (id) {
   let num = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
@@ -865,11 +925,16 @@ const createModalStars = num => {
   }
   return markUp;
 };
-const closeRaitModal = close => {
+const closeModal = () => {
   rModal.innerHTML = "";
   rModal.classList.add("is-hidden");
   document.body.classList.remove("no-scroll");
-  close.removeEventListener("click", closeRaitModal);
+  document.removeEventListener("keydown", handleEscape);
+};
+const handleCloseModal = e => {
+  if (e.target.className == "btn-close" || e.target.className == "backdrop") {
+    closeModal();
+  }
 };
 const handleRaiting = e => {
   if (e.target.nodeName == "INPUT") {
@@ -887,31 +952,39 @@ const handleRaiting = e => {
 };
 const handleRatPost = async e => {
   e.preventDefault();
-  let rating;
-  var star = document.getElementsByName("RatStar");
-  for (let i = 0; i < star.length; i++) {
-    if (star[i].checked) rating = i;
+  try {
+    let rating;
+    var star = document.getElementsByName("RatStar");
+    for (let i = 0; i < star.length; i++) {
+      if (star[i].checked) rating = i + 1;
+    }
+    if (!rating) {
+      notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__.Notify.failure("Please pick a star");
+      return;
+    } else {
+      const email = e.target.elements.email.value;
+      const id = e.target.elements.subBtn.id;
+      console.log(e.target.elements.subBtn.id, email, rating);
+      const body = {
+        rate: rating,
+        email: e.target.elements.email.value
+      };
+      const post = await postRating(id, body);
+      console.log(post);
+      if (post.status == 200) {
+        notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__.Notify.success("Your rating added successfully.Thank you!");
+      }
+      const raitModalClose = document.querySelector(".btn-close");
+      closeRaitModal(raitModalClose);
+    }
+  } catch (err) {
+    console.log(err.message);
+    notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__.Notify.failure(`I'm sorry, something went wrong. ${err.response.data.message}`);
   }
-  const email = e.target.elements.email.value;
-  const id = e.target.elements.subBtn.id;
-  console.log(e.target.elements.subBtn.id, email, rating);
-  const body = {
-    rate: rating,
-    email: e.target.elements.email.value
-  };
-  const post = await postRating(id, body);
-  console.log(post);
-  const raitModalClose = document.querySelector(".btn-close");
-  closeRaitModal(raitModalClose);
-  // if(post.status == 200) alert('Your rating successfully send. Thank you!');
 };
 const postRating = async (id, body) => {
-  try {
-    const post = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].patch(`/recipes/${id}/rating`, body);
-    return post;
-  } catch (err) {
-    console.log(err);
-  }
+  const post = await axios__WEBPACK_IMPORTED_MODULE_1__["default"].patch(`/recipes/${id}/rating`, body);
+  return post;
 };
 
 /***/ }),
@@ -938,6 +1011,7 @@ __webpack_require__.r(__webpack_exports__);
 const modal = document.querySelector(".backdrop");
 const openModal = async recipeId => {
   // console.log(recipeId);
+  document.addEventListener("keydown", handleEscape);
   modal.innerHTML = "";
   const data = await getData(recipeId);
   // console.log(data);
@@ -946,10 +1020,17 @@ const openModal = async recipeId => {
   document.body.classList.add("no-scroll");
   const addBtn = document.querySelector(".btn-add");
   addBtn.addEventListener("click", handleAddBtn);
-  const recModalClose = document.querySelector(".btn-close");
-  recModalClose.addEventListener("click", () => closeModal(recModalClose, addBtn));
+  modal.addEventListener("click", handleCloseModal);
   const btnRating = document.querySelector(".btn-rating");
   btnRating.addEventListener("click", handleRatBtn);
+  const tagList = document.querySelector(".tag-list");
+  handleTag(tagList);
+};
+const handleEscape = e => {
+  if (e.key == "Escape") {
+    closeModal();
+    console.log(e.key);
+  }
 };
 const getData = async id => {
   try {
@@ -990,7 +1071,49 @@ const createMarkUp = _ref => {
   let addedToFav = "";
   added.find(item => item._id == _id) ? addedToFav = "Remove from" : addedToFav = "Add to";
   const stars = (0,_createStars__WEBPACK_IMPORTED_MODULE_0__["default"])(rating);
-  return `
+  if (screen.width < 768) {
+    return `
+    <div class="recipe-modal">
+        <button class="btn-close" type="button">
+            <svg class="close-svg">
+                <use href="assets/sprite.svg#icon-reset"></use>
+            </svg>
+        </button>
+        <iframe
+            class="video"
+            src=${url}
+            title="YouTube video player"
+            frameborder="0"
+            
+        ></iframe>
+		<h2 class="title">${title}</h2>
+            <div class="modal-score">
+                <p class="modal-score-text">${rating}</p>
+                <div class="stars">
+                    ${stars}
+                </div>
+                <p class="modal-score-text min">${time} min</p>
+            </div>
+        <ul class="ing-list">
+            ${ingredientsMarkUp}
+        </ul>
+		<ul class="tag-list">
+                ${tagsMarkUp}
+            </ul>
+        <p class="text">
+            ${description}
+        </p>
+        <div class="buttons">
+            <button class="btn-add" type="button" id=${_id}>
+                ${addedToFav} favorite
+            </button>
+            <button class="btn-rating" type="button" id=${_id}>
+                Give a rating
+            </button>
+        </div>
+    </div>`;
+  } else {
+    return `
     <div class="recipe-modal">
         <button class="btn-close" type="button">
             <svg class="close-svg">
@@ -1009,12 +1132,12 @@ const createMarkUp = _ref => {
             <ul class="tag-list">
                 ${tagsMarkUp}
             </ul>
-            <div class="score">
+            <div class="modal-score">
                 <p class="modal-score-text">${rating}</p>
                 <div class="stars">
                     ${stars}
                 </div>
-                <p class="modal-score-text">${time} min</p>
+                <p class="modal-score-text min">${time} min</p>
             </div>
         </div>
         <ul class="ing-list">
@@ -1032,6 +1155,7 @@ const createMarkUp = _ref => {
             </button>
         </div>
     </div>`;
+  }
 };
 const handleAddBtn = async e => {
   // console.log(e.target.id);
@@ -1043,12 +1167,42 @@ const handleAddBtn = async e => {
 const handleRatBtn = async e => {
   await (0,_raiting_modal__WEBPACK_IMPORTED_MODULE_2__.openRmodal)(e.target);
 };
-const closeModal = (close, add) => {
+const closeModal = () => {
   modal.innerHTML = "";
   modal.classList.add("is-hidden");
   document.body.classList.remove("no-scroll");
-  close.removeEventListener("click", closeModal);
-  add.removeEventListener("click", handleAddBtn);
+  document.removeEventListener("keydown", handleEscape);
+};
+const handleCloseModal = e => {
+  if (e.target.className == "btn-close" || e.target.className == "backdrop") {
+    closeModal();
+  }
+};
+const handleTag = tagList => {
+  if (screen.width > 767) {
+    let isDragging = false;
+    let startX;
+    let scrollLeft;
+    tagList.addEventListener("mousemove", onDrag);
+    tagList.addEventListener("mousedown", dragStart);
+    document.addEventListener("mouseup", dragStop);
+    function dragStop() {
+      isDragging = false;
+    }
+    function dragStart(e) {
+      if (e.target.nodeName == "BUTTON") return;
+      isDragging = true;
+      startX = e.pageX - tagList.offsetLeft;
+      scrollLeft = tagList.scrollLeft;
+    }
+    function onDrag(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - tagList.offsetLeft;
+      const walk = (x - startX) * 3;
+      tagList.scrollLeft = scrollLeft - walk;
+    }
+  }
 };
 
 /***/ }),
@@ -1072,13 +1226,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const recipeList = document.querySelector(".recipe-list");
-
-// window.addEventListener("resize", myFunction);
-
-// function myFunction() {
-// 	console.log(screen.width);
-// }
-
 const InitParams = {
   title: "",
   category: "",
@@ -1266,7 +1413,7 @@ var ___HTML_LOADER_REPLACEMENT_3___ = _node_modules_html_loader_dist_runtime_get
 var ___HTML_LOADER_REPLACEMENT_4___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_2___, { hash: "#icon-loop" });
 var ___HTML_LOADER_REPLACEMENT_5___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_2___, { hash: "#icon-arrow" });
 var ___HTML_LOADER_REPLACEMENT_6___ = _node_modules_html_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_0___default()(___HTML_LOADER_IMPORT_2___, { hash: "#icon-reset" });
-var code = "<!DOCTYPE html>\r\n<html lang=\"en\" class=\"light\">\r\n\t<head>\r\n\t\t<meta charset=\"UTF-8\" />\r\n\t\t<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n\t\t<meta\r\n\t\t\tname=\"viewport\"\r\n\t\t\tcontent=\"width=device-width, initial-scale=1.0\"\r\n\t\t/>\r\n\t\t<title>Tasty treats</title>\r\n\t</head>\r\n\t<body>\r\n\t\t<div class=\"loader-wrapper\">\r\n\t\t\t<div class=\"loader\"></div>\r\n\t\t</div>\r\n\t\t<header class=\"header\">\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t<nav class=\"header-nav\">\r\n\t\t\t\t\t\t<ul class=\"nav-list\">\r\n\t\t\t\t\t\t\t<li>\r\n\t\t\t\t\t\t\t\t<a href=\"./index.html\" class=\"link current\">Home</a>\r\n\t\t\t\t\t\t\t</li>\r\n\t\t\t\t\t\t\t<li>\r\n\t\t\t\t\t\t\t\t<a href=\"./favorites.html\" class=\"link\">Favorites</a>\r\n\t\t\t\t\t\t\t</li>\r\n\t\t\t\t\t\t</ul>\r\n\t\t\t\t\t\t<div class=\"logo-wrapper\">\r\n\t\t\t\t\t\t\t<a href=\"\" class=\"nav-logo\"\r\n\t\t\t\t\t\t\t\t><img\r\n\t\t\t\t\t\t\t\t\tsrc=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n\t\t\t\t\t\t\t\t\talt=\"tasty treats logo\"\r\n\t\t\t\t\t\t\t\t\tclass=\"src logo-light\"\r\n\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t<img\r\n\t\t\t\t\t\t\t\t\tsrc=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"\r\n\t\t\t\t\t\t\t\t\talt=\"tasty treats logo\"\r\n\t\t\t\t\t\t\t\t\tclass=\"src logo-dark\"\r\n\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t</a>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</nav>\r\n\t\t\t\t\t<div class=\"nav-tech\">\r\n\t\t\t\t\t\t<button type=\"button\" class=\"cart-btn\">\r\n\t\t\t\t\t\t\t<svg class=\"cart-svg\">\r\n\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"></use>\r\n\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t</button>\r\n\r\n\t\t\t\t\t\t<div class=\"theme-wrapper\">\r\n\t\t\t\t\t\t\t<div class=\"theme-circle\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<button class=\"burger-btn\">\r\n\t\t\t\t\t\t\t<svg class=\"burger-svg\">\r\n\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"></use>\r\n\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t</button>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"mobile-menu\">\r\n\t\t\t\t<!-- <button class=\"menu-btn-close\">\r\n\t\t\t\t\t<svg class=\"close-svg\">\r\n\t\t\t\t\t\t<use href=\"assets/sprite.svg#icon-reset\"></use>\r\n\t\t\t\t\t</svg>\r\n\t\t\t\t</button> -->\r\n\t\t\t\t<h3>here is the mobile menu</h3>\r\n\t\t\t  </div>\r\n\t\t</header>\r\n\t\t<main>\r\n\t\t\t<section class=\"hero\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"hero-content\">\r\n\t\t\t\t\t\t\t<h1 class=\"title\">\r\n\t\t\t\t\t\t\t\tLearn to Cook\r\n\t\t\t\t\t\t\t\t<span class=\"accent\">Tasty Treats'</span> Customizable\r\n\t\t\t\t\t\t\t\tMasterclass\r\n\t\t\t\t\t\t\t</h1>\r\n\t\t\t\t\t\t\t<p class=\"text\">\r\n\t\t\t\t\t\t\t\tTastyTreats - Customize Your Meal with Ingredient\r\n\t\t\t\t\t\t\t\tOptions and Step-by-Step Video Guides.\r\n\t\t\t\t\t\t\t</p>\r\n\t\t\t\t\t\t\t<button type=\"button\" class=\"primary-btn\">\r\n\t\t\t\t\t\t\t\tOrder now\r\n\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div class=\"master-wrapper swiper-container\">\r\n\t\t\t\t\t\t\t<ul class=\"master-list swiper-wrapper\"></ul>\r\n\t\t\t\t\t\t\t<div class=\"pagination\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t\t<section class=\"recipes\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"aside\">\r\n\t\t\t\t\t\t\t<div class=\"categories\">\r\n\t\t\t\t\t\t\t\t<button class=\"cats-all\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\tAll categories\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t<ul class=\"cats-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"popular\">\r\n\t\t\t\t\t\t\t\t<h2 class=\"title\">Popular recipes</h2>\r\n\t\t\t\t\t\t\t\t<ul class=\"popular-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div>\r\n\t\t\t\t\t\t\t<div class=\"filter\">\r\n\t\t\t\t\t\t\t\t<div class=\"search\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"ilterSearch\"\r\n\t\t\t\t\t\t\t\t\t\t>Search</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"text\"\r\n\t\t\t\t\t\t\t\t\t\tid=\"filterSearch\"\r\n\t\t\t\t\t\t\t\t\t\tplaceholder=\"Enter Text\"\r\n\t\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t\t<svg class=\"loop\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_4___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"time\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Time</p>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\" data-type=\"time\">\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-time\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"time-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"area\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Area</p>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\" data-type=\"area\">\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-area\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"area-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"ingredients\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Ingredients</p>\r\n\t\t\t\t\t\t\t\t\t<div\r\n\t\t\t\t\t\t\t\t\t\tclass=\"options-wrapper\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"ingredients\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-ingredient\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"ingredients-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<button class=\"reset-filter-btn\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\t<svg class=\"reset-svg\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_6___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t<p class=\"reset-text\">Reset the filter</p>\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"all-recipes\">\r\n\t\t\t\t\t\t\t\t<ul class=\"recipe-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"pagination-recipe\">\r\n\t\t\t\t\t\t\t\t<div class=\"steps\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-first\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"first\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-prev hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"prev\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"pages\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-page dots-prev hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"dots\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t...\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<div class=\"numbers\"></div>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-page dots-next\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"dots\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t...\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"steps\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-next hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"next\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-last\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"last\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t</main>\r\n\t\t<div class=\"backdrop is-hidden\"></div>\r\n\t</body>\r\n</html>\r\n";
+var code = "<!DOCTYPE html>\r\n<html lang=\"en\" class=\"light\">\r\n\t<head>\r\n\t\t<meta charset=\"UTF-8\" />\r\n\t\t<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n\t\t<meta\r\n\t\t\tname=\"viewport\"\r\n\t\t\tcontent=\"width=device-width, initial-scale=1.0\"\r\n\t\t/>\r\n\t\t<title>Tasty treats</title>\r\n\t</head>\r\n\t<body>\r\n\t\t<div class=\"loader-wrapper\">\r\n\t\t\t<div class=\"loader\"></div>\r\n\t\t</div>\r\n\t\t<header class=\"header\">\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t<nav class=\"header-nav\">\r\n\t\t\t\t\t\t<ul class=\"nav-list\">\r\n\t\t\t\t\t\t\t<li>\r\n\t\t\t\t\t\t\t\t<a href=\"./index.html\" class=\"link current\">Home</a>\r\n\t\t\t\t\t\t\t</li>\r\n\t\t\t\t\t\t\t<li>\r\n\t\t\t\t\t\t\t\t<a href=\"./favorites.html\" class=\"link\">Favorites</a>\r\n\t\t\t\t\t\t\t</li>\r\n\t\t\t\t\t\t</ul>\r\n\t\t\t\t\t\t<div class=\"logo-wrapper\">\r\n\t\t\t\t\t\t\t<a href=\"\" class=\"nav-logo\"\r\n\t\t\t\t\t\t\t\t><img\r\n\t\t\t\t\t\t\t\t\tsrc=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\"\r\n\t\t\t\t\t\t\t\t\talt=\"tasty treats logo\"\r\n\t\t\t\t\t\t\t\t\tclass=\"src logo-light\"\r\n\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t<img\r\n\t\t\t\t\t\t\t\t\tsrc=\"" + ___HTML_LOADER_REPLACEMENT_1___ + "\"\r\n\t\t\t\t\t\t\t\t\talt=\"tasty treats logo\"\r\n\t\t\t\t\t\t\t\t\tclass=\"src logo-dark\"\r\n\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t</a>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</nav>\r\n\t\t\t\t\t<div class=\"nav-tech\">\r\n\t\t\t\t\t\t<button type=\"button\" class=\"cart-btn\">\r\n\t\t\t\t\t\t\t<svg class=\"cart-svg\">\r\n\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_2___ + "\"></use>\r\n\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t</button>\r\n\r\n\t\t\t\t\t\t<div class=\"theme-wrapper\">\r\n\t\t\t\t\t\t\t<div class=\"theme-circle\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<button class=\"burger-btn\">\r\n\t\t\t\t\t\t\t<svg class=\"burger-svg\">\r\n\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_3___ + "\"></use>\r\n\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t</button>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"mobile-menu\">\r\n\t\t\t\t<!-- <button class=\"menu-btn-close\">\r\n\t\t\t\t\t<svg class=\"close-svg\">\r\n\t\t\t\t\t\t<use href=\"assets/sprite.svg#icon-reset\"></use>\r\n\t\t\t\t\t</svg>\r\n\t\t\t\t</button> -->\r\n\t\t\t\t<h3>here is the mobile menu</h3>\r\n\t\t\t</div>\r\n\t\t</header>\r\n\t\t<main>\r\n\t\t\t<section class=\"hero\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"hero-content\">\r\n\t\t\t\t\t\t\t<h1 class=\"title\">\r\n\t\t\t\t\t\t\t\tLearn to Cook\r\n\t\t\t\t\t\t\t\t<span class=\"accent\">Tasty Treats'</span> Customizable\r\n\t\t\t\t\t\t\t\tMasterclass\r\n\t\t\t\t\t\t\t</h1>\r\n\t\t\t\t\t\t\t<p class=\"text\">\r\n\t\t\t\t\t\t\t\tTastyTreats - Customize Your Meal with Ingredient\r\n\t\t\t\t\t\t\t\tOptions and Step-by-Step Video Guides.\r\n\t\t\t\t\t\t\t</p>\r\n\t\t\t\t\t\t\t<button type=\"button\" class=\"primary-btn\">\r\n\t\t\t\t\t\t\t\tOrder now\r\n\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div class=\"master-wrapper swiper-container\">\r\n\t\t\t\t\t\t\t<ul class=\"master-list swiper-wrapper\"></ul>\r\n\t\t\t\t\t\t\t<div class=\"pagination\"></div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t\t<section class=\"recipes\">\r\n\t\t\t\t<div class=\"container\">\r\n\t\t\t\t\t<div class=\"wrapper\">\r\n\t\t\t\t\t\t<div class=\"aside\">\r\n\t\t\t\t\t\t\t<div class=\"categories\">\r\n\t\t\t\t\t\t\t\t<button class=\"cats-all\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\tAll categories\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t<ul class=\"cats-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"popular\">\r\n\t\t\t\t\t\t\t\t<h2 class=\"title\">Popular recipes</h2>\r\n\t\t\t\t\t\t\t\t<ul class=\"popular-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div>\r\n\t\t\t\t\t\t\t<div class=\"filter\">\r\n\t\t\t\t\t\t\t\t<div class=\"search\">\r\n\t\t\t\t\t\t\t\t\t<label class=\"filter-label\" for=\"ilterSearch\"\r\n\t\t\t\t\t\t\t\t\t\t>Search</label\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\t\tclass=\"input\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"text\"\r\n\t\t\t\t\t\t\t\t\t\tid=\"filterSearch\"\r\n\t\t\t\t\t\t\t\t\t\tplaceholder=\"Enter Text\"\r\n\t\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t\t<svg class=\"loop\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_4___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"time\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Time</p>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\" data-type=\"time\">\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-time\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"time-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"area\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Area</p>\r\n\t\t\t\t\t\t\t\t\t<div class=\"options-wrapper\" data-type=\"area\">\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-area\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"area-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"ingredients\">\r\n\t\t\t\t\t\t\t\t\t<p class=\"filter-label\">Ingredients</p>\r\n\t\t\t\t\t\t\t\t\t<div\r\n\t\t\t\t\t\t\t\t\t\tclass=\"options-wrapper\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"ingredients\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"arrow\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<p class=\"pick-ingredient\">.....</p>\r\n\t\t\t\t\t\t\t\t\t\t<ul class=\"ingredients-list is-hidden\"></ul>\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<button class=\"reset-filter-btn\" type=\"button\">\r\n\t\t\t\t\t\t\t\t\t<svg class=\"reset-svg\">\r\n\t\t\t\t\t\t\t\t\t\t<use href=\"" + ___HTML_LOADER_REPLACEMENT_6___ + "\"></use>\r\n\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t<p class=\"reset-text\">Reset the filter</p>\r\n\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"all-recipes\">\r\n\t\t\t\t\t\t\t\t<ul class=\"recipe-list\"></ul>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"pagination-recipe\">\r\n\t\t\t\t\t\t\t\t<div class=\"steps\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-first\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"first\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-prev hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"prev\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"pages\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-page dots-prev hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"dots\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t...\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<div class=\"numbers\"></div>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-page dots-next\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"dots\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t...\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t<div class=\"steps\">\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-next hidden\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"next\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t\t<button\r\n\t\t\t\t\t\t\t\t\t\tclass=\"pag-arrow-last\"\r\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\r\n\t\t\t\t\t\t\t\t\t\tdata-type=\"last\"\r\n\t\t\t\t\t\t\t\t\t>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t\t<svg class=\"svg\">\r\n\t\t\t\t\t\t\t\t\t\t\t<use\r\n\t\t\t\t\t\t\t\t\t\t\t\thref=\"" + ___HTML_LOADER_REPLACEMENT_5___ + "\"\r\n\t\t\t\t\t\t\t\t\t\t\t></use>\r\n\t\t\t\t\t\t\t\t\t\t</svg>\r\n\t\t\t\t\t\t\t\t\t</button>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\r\n\t\t</main>\r\n\t\t<div class=\"backdrop is-hidden\"></div>\r\n\t</body>\r\n</html>\r\n";
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (code);
 
@@ -1731,6 +1878,596 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
+
+/***/ }),
+
+/***/ "./node_modules/notiflix/build/notiflix-notify-aio.js":
+/*!************************************************************!*\
+  !*** ./node_modules/notiflix/build/notiflix-notify-aio.js ***!
+  \************************************************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+* Notiflix Notify AIO (https://notiflix.github.io)
+* Description: This file has been created automatically that using "notiflix.js", and "notiflix.css" files.
+* Version: 3.2.7
+* Author: Furkan (https://github.com/furcan)
+* Copyright 2019 - 2024 Notiflix, MIT License (https://opensource.org/licenses/MIT)
+*/
+
+/* global define */
+(function (root, factory) {
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+      return factory(root);
+    }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else {}
+})(typeof __webpack_require__.g !== 'undefined' ? __webpack_require__.g : typeof window !== 'undefined' ? window : this, function (window) {
+
+  'use strict';
+
+  // COMMON: SSR check: begin
+  if (typeof window === 'undefined' && typeof window.document === 'undefined') {
+    return false;
+  }
+  // COMMON: SSR check: end
+
+  // COMMON: Variables: begin
+  var notiflixNamespace = 'Notiflix';
+  var notiflixConsoleDocs = '\n\nVisit documentation page to learn more: https://notiflix.github.io/documentation';
+  var defaultFontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif';
+  // COMMON: Variables: end
+
+  // NOTIFY: Default Settings: begin
+  var typesNotify = {
+    Success: 'Success',
+    Failure: 'Failure',
+    Warning: 'Warning',
+    Info: 'Info',
+  };
+  var newNotifySettings;
+  var notifySettings = {
+    wrapID: 'NotiflixNotifyWrap', // can not customizable
+    overlayID: 'NotiflixNotifyOverlay', // can not customizable
+    width: '280px',
+    position: 'right-top', // 'right-top' - 'right-bottom' - 'left-top' - 'left-bottom' - 'center-top' - 'center-bottom' - 'center-center'
+    distance: '10px',
+    opacity: 1,
+    borderRadius: '5px',
+    rtl: false,
+    timeout: 3000,
+    messageMaxLength: 110,
+    backOverlay: false,
+    backOverlayColor: 'rgba(0,0,0,0.5)',
+    plainText: true,
+    showOnlyTheLastOne: false,
+    clickToClose: false,
+    pauseOnHover: true,
+
+    ID: 'NotiflixNotify',
+    className: 'notiflix-notify',
+    zindex: 4001,
+    fontFamily: 'Quicksand',
+    fontSize: '13px',
+    cssAnimation: true,
+    cssAnimationDuration: 400,
+    cssAnimationStyle: 'fade', // 'fade' - 'zoom' - 'from-right' - 'from-top' - 'from-bottom' - 'from-left'
+    closeButton: false,
+    useIcon: true,
+    useFontAwesome: false,
+    fontAwesomeIconStyle: 'basic', // 'basic' - 'shadow'
+    fontAwesomeIconSize: '34px',
+
+    success: {
+      background: '#32c682',
+      textColor: '#fff',
+      childClassName: 'notiflix-notify-success',
+      notiflixIconColor: 'rgba(0,0,0,0.2)',
+      fontAwesomeClassName: 'fas fa-check-circle',
+      fontAwesomeIconColor: 'rgba(0,0,0,0.2)',
+      backOverlayColor: 'rgba(50,198,130,0.2)',
+    },
+
+    failure: {
+      background: '#ff5549',
+      textColor: '#fff',
+      childClassName: 'notiflix-notify-failure',
+      notiflixIconColor: 'rgba(0,0,0,0.2)',
+      fontAwesomeClassName: 'fas fa-times-circle',
+      fontAwesomeIconColor: 'rgba(0,0,0,0.2)',
+      backOverlayColor: 'rgba(255,85,73,0.2)',
+    },
+
+    warning: {
+      background: '#eebf31',
+      textColor: '#fff',
+      childClassName: 'notiflix-notify-warning',
+      notiflixIconColor: 'rgba(0,0,0,0.2)',
+      fontAwesomeClassName: 'fas fa-exclamation-circle',
+      fontAwesomeIconColor: 'rgba(0,0,0,0.2)',
+      backOverlayColor: 'rgba(238,191,49,0.2)',
+    },
+
+    info: {
+      background: '#26c0d3',
+      textColor: '#fff',
+      childClassName: 'notiflix-notify-info',
+      notiflixIconColor: 'rgba(0,0,0,0.2)',
+      fontAwesomeClassName: 'fas fa-info-circle',
+      fontAwesomeIconColor: 'rgba(0,0,0,0.2)',
+      backOverlayColor: 'rgba(38,192,211,0.2)',
+    },
+  };
+  // NOTIFY: Default Settings: end
+
+  // COMMON: Console Error: begin
+  var commonConsoleError = function (message) {
+    return console.error('%c ' + notiflixNamespace + ' Error ', 'padding:2px;border-radius:20px;color:#fff;background:#ff5549', '\n' + message + notiflixConsoleDocs);
+  };
+  // COMMON: Console Error: end
+
+  // COMMON: Check Head or Body: begin
+  var commonCheckHeadOrBody = function (element) {
+    if (!element) { element = 'head'; }
+    if (window.document[element] === null) {
+      commonConsoleError('\nNotiflix needs to be appended to the "<' + element + '>" element, but you called it before the "<' + element + '>" element has been created.');
+      return false;
+    }
+    return true;
+  };
+  // COMMON: Check Head or Body: end
+
+  // COMMON: Set Internal CSS Codes: begin
+  var commonSetInternalCSSCodes = function (getInternalCSSCodes, styleElementId) {
+    // check doc head
+    if (!commonCheckHeadOrBody('head')) { return false; }
+
+    // internal css
+    if (getInternalCSSCodes() !== null && !window.document.getElementById(styleElementId)) {
+      var internalCSS = window.document.createElement('style');
+      internalCSS.id = styleElementId;
+      internalCSS.innerHTML = getInternalCSSCodes();
+      window.document.head.appendChild(internalCSS);
+    }
+  };
+  // COMMON: Set Internal CSS Codes: end
+
+  // COMMON: Extend Options: begin
+  var commonExtendOptions = function () {
+    // variables
+    var extended = {};
+    var deep = false;
+    var i = 0;
+    // check if a deep merge
+    if (Object.prototype.toString.call(arguments[0]) === '[object Boolean]') {
+      deep = arguments[0];
+      i++;
+    }
+    // merge the object into the extended object
+    var merge = function (obj) {
+      for (var prop in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+          // if property is an object, merge properties
+          if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
+            extended[prop] = commonExtendOptions(extended[prop], obj[prop]);
+          } else {
+            extended[prop] = obj[prop];
+          }
+        }
+      }
+    };
+    // loop through each object and conduct a merge
+    for (; i < arguments.length; i++) {
+      merge(arguments[i]);
+    }
+    return extended;
+  };
+  // COMMON: Extend Options: end
+
+  // COMMON: Get Plaintext: begin
+  var commonGetPlaintext = function (html) {
+    var htmlPool = window.document.createElement('div');
+    htmlPool.innerHTML = html;
+    return htmlPool.textContent || htmlPool.innerText || '';
+  };
+  // COMMON: Get Plaintext: end
+
+  // NOTIFY: Get Internal CSS Codes: begin
+  var notifyGetInternalCSSCodes = function () {
+    var notifyCSS = '[id^=NotiflixNotifyWrap]{pointer-events:none;position:fixed;z-index:4001;opacity:1;right:10px;top:10px;width:280px;max-width:96%;-webkit-box-sizing:border-box;box-sizing:border-box;background:transparent}[id^=NotiflixNotifyWrap].nx-flex-center-center{max-height:calc(100vh - 20px);overflow-x:hidden;overflow-y:auto;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;margin:auto}[id^=NotiflixNotifyWrap]::-webkit-scrollbar{width:0;height:0}[id^=NotiflixNotifyWrap]::-webkit-scrollbar-thumb{background:transparent}[id^=NotiflixNotifyWrap]::-webkit-scrollbar-track{background:transparent}[id^=NotiflixNotifyWrap] *{-webkit-box-sizing:border-box;box-sizing:border-box}[id^=NotiflixNotifyOverlay]{-webkit-transition:background .3s ease-in-out;-o-transition:background .3s ease-in-out;transition:background .3s ease-in-out}[id^=NotiflixNotifyWrap]>div{pointer-events:all;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;font-family:"Quicksand",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;width:100%;display:-webkit-inline-box;display:-webkit-inline-flex;display:-ms-inline-flexbox;display:inline-flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;position:relative;margin:0 0 10px;border-radius:5px;background:#1e1e1e;color:#fff;padding:10px 12px;font-size:14px;line-height:1.4}[id^=NotiflixNotifyWrap]>div:last-child{margin:0}[id^=NotiflixNotifyWrap]>div.nx-with-callback{cursor:pointer}[id^=NotiflixNotifyWrap]>div.nx-with-icon{padding:8px;min-height:56px}[id^=NotiflixNotifyWrap]>div.nx-paused{cursor:auto}[id^=NotiflixNotifyWrap]>div.nx-notify-click-to-close{cursor:pointer}[id^=NotiflixNotifyWrap]>div.nx-with-close-button{padding:10px 36px 10px 12px}[id^=NotiflixNotifyWrap]>div.nx-with-icon.nx-with-close-button{padding:6px 36px 6px 6px}[id^=NotiflixNotifyWrap]>div>span.nx-message{cursor:inherit;font-weight:normal;font-family:inherit!important;word-break:break-all;word-break:break-word}[id^=NotiflixNotifyWrap]>div>span.nx-close-button{cursor:pointer;-webkit-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out;position:absolute;right:8px;top:0;bottom:0;margin:auto;color:inherit;width:20px;height:20px}[id^=NotiflixNotifyWrap]>div>span.nx-close-button:hover{-webkit-transform:rotate(90deg);transform:rotate(90deg)}[id^=NotiflixNotifyWrap]>div>span.nx-close-button>svg{position:absolute;width:16px;height:16px;right:2px;top:2px}[id^=NotiflixNotifyWrap]>div>.nx-message-icon{position:absolute;width:40px;height:40px;font-size:30px;line-height:40px;text-align:center;left:8px;top:0;bottom:0;margin:auto;border-radius:inherit}[id^=NotiflixNotifyWrap]>div>.nx-message-icon-fa.nx-message-icon-fa-shadow{color:inherit;background:rgba(0,0,0,.15);-webkit-box-shadow:inset 0 0 34px rgba(0,0,0,.2);box-shadow:inset 0 0 34px rgba(0,0,0,.2);text-shadow:0 0 10px rgba(0,0,0,.3)}[id^=NotiflixNotifyWrap]>div>span.nx-with-icon{position:relative;float:left;width:calc(100% - 40px);margin:0 0 0 40px;padding:0 0 0 10px;-webkit-box-sizing:border-box;box-sizing:border-box}[id^=NotiflixNotifyWrap]>div.nx-rtl-on>.nx-message-icon{left:auto;right:8px}[id^=NotiflixNotifyWrap]>div.nx-rtl-on>span.nx-with-icon{padding:0 10px 0 0;margin:0 40px 0 0}[id^=NotiflixNotifyWrap]>div.nx-rtl-on>span.nx-close-button{right:auto;left:8px}[id^=NotiflixNotifyWrap]>div.nx-with-icon.nx-with-close-button.nx-rtl-on{padding:6px 6px 6px 36px}[id^=NotiflixNotifyWrap]>div.nx-with-close-button.nx-rtl-on{padding:10px 12px 10px 36px}[id^=NotiflixNotifyOverlay].nx-with-animation,[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-fade{-webkit-animation:notify-animation-fade .3s ease-in-out 0s normal;animation:notify-animation-fade .3s ease-in-out 0s normal}@-webkit-keyframes notify-animation-fade{0%{opacity:0}100%{opacity:1}}@keyframes notify-animation-fade{0%{opacity:0}100%{opacity:1}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-zoom{-webkit-animation:notify-animation-zoom .3s ease-in-out 0s normal;animation:notify-animation-zoom .3s ease-in-out 0s normal}@-webkit-keyframes notify-animation-zoom{0%{-webkit-transform:scale(0);transform:scale(0)}50%{-webkit-transform:scale(1.05);transform:scale(1.05)}100%{-webkit-transform:scale(1);transform:scale(1)}}@keyframes notify-animation-zoom{0%{-webkit-transform:scale(0);transform:scale(0)}50%{-webkit-transform:scale(1.05);transform:scale(1.05)}100%{-webkit-transform:scale(1);transform:scale(1)}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-right{-webkit-animation:notify-animation-from-right .3s ease-in-out 0s normal;animation:notify-animation-from-right .3s ease-in-out 0s normal}@-webkit-keyframes notify-animation-from-right{0%{right:-300px;opacity:0}50%{right:8px;opacity:1}100%{right:0;opacity:1}}@keyframes notify-animation-from-right{0%{right:-300px;opacity:0}50%{right:8px;opacity:1}100%{right:0;opacity:1}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-left{-webkit-animation:notify-animation-from-left .3s ease-in-out 0s normal;animation:notify-animation-from-left .3s ease-in-out 0s normal}@-webkit-keyframes notify-animation-from-left{0%{left:-300px;opacity:0}50%{left:8px;opacity:1}100%{left:0;opacity:1}}@keyframes notify-animation-from-left{0%{left:-300px;opacity:0}50%{left:8px;opacity:1}100%{left:0;opacity:1}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-top{-webkit-animation:notify-animation-from-top .3s ease-in-out 0s normal;animation:notify-animation-from-top .3s ease-in-out 0s normal}@-webkit-keyframes notify-animation-from-top{0%{top:-50px;opacity:0}50%{top:8px;opacity:1}100%{top:0;opacity:1}}@keyframes notify-animation-from-top{0%{top:-50px;opacity:0}50%{top:8px;opacity:1}100%{top:0;opacity:1}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-bottom{-webkit-animation:notify-animation-from-bottom .3s ease-in-out 0s normal;animation:notify-animation-from-bottom .3s ease-in-out 0s normal}@-webkit-keyframes notify-animation-from-bottom{0%{bottom:-50px;opacity:0}50%{bottom:8px;opacity:1}100%{bottom:0;opacity:1}}@keyframes notify-animation-from-bottom{0%{bottom:-50px;opacity:0}50%{bottom:8px;opacity:1}100%{bottom:0;opacity:1}}[id^=NotiflixNotifyOverlay].nx-with-animation.nx-remove,[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-fade.nx-remove{opacity:0;-webkit-animation:notify-remove-fade .3s ease-in-out 0s normal;animation:notify-remove-fade .3s ease-in-out 0s normal}@-webkit-keyframes notify-remove-fade{0%{opacity:1}100%{opacity:0}}@keyframes notify-remove-fade{0%{opacity:1}100%{opacity:0}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-zoom.nx-remove{-webkit-transform:scale(0);transform:scale(0);-webkit-animation:notify-remove-zoom .3s ease-in-out 0s normal;animation:notify-remove-zoom .3s ease-in-out 0s normal}@-webkit-keyframes notify-remove-zoom{0%{-webkit-transform:scale(1);transform:scale(1)}50%{-webkit-transform:scale(1.05);transform:scale(1.05)}100%{-webkit-transform:scale(0);transform:scale(0)}}@keyframes notify-remove-zoom{0%{-webkit-transform:scale(1);transform:scale(1)}50%{-webkit-transform:scale(1.05);transform:scale(1.05)}100%{-webkit-transform:scale(0);transform:scale(0)}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-top.nx-remove{opacity:0;-webkit-animation:notify-remove-to-top .3s ease-in-out 0s normal;animation:notify-remove-to-top .3s ease-in-out 0s normal}@-webkit-keyframes notify-remove-to-top{0%{top:0;opacity:1}50%{top:8px;opacity:1}100%{top:-50px;opacity:0}}@keyframes notify-remove-to-top{0%{top:0;opacity:1}50%{top:8px;opacity:1}100%{top:-50px;opacity:0}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-right.nx-remove{opacity:0;-webkit-animation:notify-remove-to-right .3s ease-in-out 0s normal;animation:notify-remove-to-right .3s ease-in-out 0s normal}@-webkit-keyframes notify-remove-to-right{0%{right:0;opacity:1}50%{right:8px;opacity:1}100%{right:-300px;opacity:0}}@keyframes notify-remove-to-right{0%{right:0;opacity:1}50%{right:8px;opacity:1}100%{right:-300px;opacity:0}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-bottom.nx-remove{opacity:0;-webkit-animation:notify-remove-to-bottom .3s ease-in-out 0s normal;animation:notify-remove-to-bottom .3s ease-in-out 0s normal}@-webkit-keyframes notify-remove-to-bottom{0%{bottom:0;opacity:1}50%{bottom:8px;opacity:1}100%{bottom:-50px;opacity:0}}@keyframes notify-remove-to-bottom{0%{bottom:0;opacity:1}50%{bottom:8px;opacity:1}100%{bottom:-50px;opacity:0}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-left.nx-remove{opacity:0;-webkit-animation:notify-remove-to-left .3s ease-in-out 0s normal;animation:notify-remove-to-left .3s ease-in-out 0s normal}@-webkit-keyframes notify-remove-to-left{0%{left:0;opacity:1}50%{left:8px;opacity:1}100%{left:-300px;opacity:0}}@keyframes notify-remove-to-left{0%{left:0;opacity:1}50%{left:8px;opacity:1}100%{left:-300px;opacity:0}}';
+    return notifyCSS || null;
+  };
+  // NOTIFY: Get Internal CSS Codes: end
+
+  // NOTIFY: Create: begin
+  var notifyCreateCounter = 0;
+  var notifyCreate = function (notifyType, message, callbackOrOptions, options) {
+    // check doc body
+    if (!commonCheckHeadOrBody('body')) { return false; }
+
+    // if not initialized pretend like init
+    if (!newNotifySettings) {
+      Notiflix.Notify.init({});
+    }
+
+    // create a backup for new settings
+    var newNotifySettingsBackup = commonExtendOptions(true, newNotifySettings, {});
+
+    // check callbackOrOptions and options: begin
+    if ((typeof callbackOrOptions === 'object' && !Array.isArray(callbackOrOptions)) || (typeof options === 'object' && !Array.isArray(options))) {
+      // new options
+      var newOptions = {};
+      if (typeof callbackOrOptions === 'object') {
+        newOptions = callbackOrOptions;
+      } else if (typeof options === 'object') {
+        newOptions = options;
+      }
+
+      // extend new settings with the new options
+      newNotifySettings = commonExtendOptions(true, newNotifySettings, newOptions);
+    }
+    // check callbackOrOptions and options: end
+
+    // notify type
+    var theType = newNotifySettings[notifyType.toLocaleLowerCase('en')];
+
+    // notify counter
+    notifyCreateCounter++;
+
+    // check the message: begin
+    if (typeof message !== 'string') {
+      message = 'Notiflix ' + notifyType;
+    }
+    // check the message: end
+
+    // if plainText is true => HTML tags not allowed: begin
+    if (newNotifySettings.plainText) {
+      message = commonGetPlaintext(message); // message plain text
+    }
+    // if plainText is true => HTML tags not allowed: end
+
+    // if plainText is false but the message length more than messageMaxLength => Possible HTML tags error: begin
+    if (!newNotifySettings.plainText && message.length > newNotifySettings.messageMaxLength) {
+      // extend settings for error massege
+      newNotifySettings = commonExtendOptions(true, newNotifySettings, { closeButton: true, messageMaxLength: 150 });
+      // error message
+      message = 'Possible HTML Tags Error: The "plainText" option is "false" and the notification content length is more than the "messageMaxLength" option.';
+    }
+    // if plainText is false but the message length more than messageMaxLength => Possible HTML tags error: end
+
+    // check message max length: begin
+    if (message.length > newNotifySettings.messageMaxLength) {
+      message = message.substring(0, newNotifySettings.messageMaxLength) + '...';
+    }
+    // check message max length: end
+
+    // font awesome icon style: begin
+    if (newNotifySettings.fontAwesomeIconStyle === 'shadow') {
+      theType.fontAwesomeIconColor = theType.background;
+    }
+    // font awesome icon style: end
+
+    // if cssAnimaion is false => duration: begin
+    if (!newNotifySettings.cssAnimation) {
+      newNotifySettings.cssAnimationDuration = 0;
+    }
+    // if cssAnimaion is false => duration: end
+
+    // notify wrap: begin
+    var ntflxNotifyWrap = window.document.getElementById(notifySettings.wrapID) || window.document.createElement('div');
+    ntflxNotifyWrap.id = notifySettings.wrapID;
+    ntflxNotifyWrap.style.width = newNotifySettings.width;
+    ntflxNotifyWrap.style.zIndex = newNotifySettings.zindex;
+    ntflxNotifyWrap.style.opacity = newNotifySettings.opacity;
+
+    // wrap position: begin
+    if (newNotifySettings.position === 'center-center') {
+      ntflxNotifyWrap.style.left = newNotifySettings.distance;
+      ntflxNotifyWrap.style.top = newNotifySettings.distance;
+      ntflxNotifyWrap.style.right = newNotifySettings.distance;
+      ntflxNotifyWrap.style.bottom = newNotifySettings.distance;
+      ntflxNotifyWrap.style.margin = 'auto';
+      ntflxNotifyWrap.classList.add('nx-flex-center-center');
+      ntflxNotifyWrap.style.maxHeight = 'calc((100vh - ' + newNotifySettings.distance + ') - ' + newNotifySettings.distance + ')';
+      ntflxNotifyWrap.style.display = 'flex';
+      ntflxNotifyWrap.style.flexWrap = 'wrap';
+      ntflxNotifyWrap.style.flexDirection = 'column';
+      ntflxNotifyWrap.style.justifyContent = 'center';
+      ntflxNotifyWrap.style.alignItems = 'center';
+      ntflxNotifyWrap.style.pointerEvents = 'none';
+    } else if (newNotifySettings.position === 'center-top') {
+      ntflxNotifyWrap.style.left = newNotifySettings.distance;
+      ntflxNotifyWrap.style.right = newNotifySettings.distance;
+      ntflxNotifyWrap.style.top = newNotifySettings.distance;
+      ntflxNotifyWrap.style.bottom = 'auto';
+      ntflxNotifyWrap.style.margin = 'auto';
+    } else if (newNotifySettings.position === 'center-bottom') {
+      ntflxNotifyWrap.style.left = newNotifySettings.distance;
+      ntflxNotifyWrap.style.right = newNotifySettings.distance;
+      ntflxNotifyWrap.style.bottom = newNotifySettings.distance;
+      ntflxNotifyWrap.style.top = 'auto';
+      ntflxNotifyWrap.style.margin = 'auto';
+    } else if (newNotifySettings.position === 'right-bottom') {
+      ntflxNotifyWrap.style.right = newNotifySettings.distance;
+      ntflxNotifyWrap.style.bottom = newNotifySettings.distance;
+      ntflxNotifyWrap.style.top = 'auto';
+      ntflxNotifyWrap.style.left = 'auto';
+    } else if (newNotifySettings.position === 'left-top') {
+      ntflxNotifyWrap.style.left = newNotifySettings.distance;
+      ntflxNotifyWrap.style.top = newNotifySettings.distance;
+      ntflxNotifyWrap.style.right = 'auto';
+      ntflxNotifyWrap.style.bottom = 'auto';
+    } else if (newNotifySettings.position === 'left-bottom') {
+      ntflxNotifyWrap.style.left = newNotifySettings.distance;
+      ntflxNotifyWrap.style.bottom = newNotifySettings.distance;
+      ntflxNotifyWrap.style.top = 'auto';
+      ntflxNotifyWrap.style.right = 'auto';
+    } else { // 'right-top' or else
+      ntflxNotifyWrap.style.right = newNotifySettings.distance;
+      ntflxNotifyWrap.style.top = newNotifySettings.distance;
+      ntflxNotifyWrap.style.left = 'auto';
+      ntflxNotifyWrap.style.bottom = 'auto';
+    }
+    // wrap position: end
+
+    // if background overlay is true: begin
+    if (newNotifySettings.backOverlay) {
+      var ntflxNotifyOverlay = window.document.getElementById(notifySettings.overlayID) || window.document.createElement('div');
+      ntflxNotifyOverlay.id = notifySettings.overlayID;
+      ntflxNotifyOverlay.style.width = '100%';
+      ntflxNotifyOverlay.style.height = '100%';
+      ntflxNotifyOverlay.style.position = 'fixed';
+      ntflxNotifyOverlay.style.zIndex = newNotifySettings.zindex - 1;
+      ntflxNotifyOverlay.style.left = 0;
+      ntflxNotifyOverlay.style.top = 0;
+      ntflxNotifyOverlay.style.right = 0;
+      ntflxNotifyOverlay.style.bottom = 0;
+      ntflxNotifyOverlay.style.background = theType.backOverlayColor || newNotifySettings.backOverlayColor;
+      ntflxNotifyOverlay.className = newNotifySettings.cssAnimation ? 'nx-with-animation' : '';
+      ntflxNotifyOverlay.style.animationDuration = newNotifySettings.cssAnimation ? newNotifySettings.cssAnimationDuration + 'ms' : '';
+
+      if (!window.document.getElementById(notifySettings.overlayID)) {
+        window.document.body.appendChild(ntflxNotifyOverlay);
+      }
+    }
+    // if background overlay is true: end
+
+    if (!window.document.getElementById(notifySettings.wrapID)) {
+      window.document.body.appendChild(ntflxNotifyWrap);
+    }
+    // notify wrap: end
+
+    // notify content: begin
+    var ntflxNotify = window.document.createElement('div');
+    ntflxNotify.id = newNotifySettings.ID + '-' + notifyCreateCounter;
+    ntflxNotify.className = newNotifySettings.className + ' ' + theType.childClassName + ' ' + (newNotifySettings.cssAnimation ? 'nx-with-animation' : '') + ' ' + (newNotifySettings.useIcon ? 'nx-with-icon' : '') + ' nx-' + newNotifySettings.cssAnimationStyle + ' ' + (newNotifySettings.closeButton && typeof callbackOrOptions !== 'function' ? 'nx-with-close-button' : '') + ' ' + (typeof callbackOrOptions === 'function' ? 'nx-with-callback' : '') + ' ' + (newNotifySettings.clickToClose ? 'nx-notify-click-to-close' : '');
+    ntflxNotify.style.fontSize = newNotifySettings.fontSize;
+    ntflxNotify.style.color = theType.textColor;
+    ntflxNotify.style.background = theType.background;
+    ntflxNotify.style.borderRadius = newNotifySettings.borderRadius;
+    ntflxNotify.style.pointerEvents = 'all';
+
+    // rtl: begin
+    if (newNotifySettings.rtl) {
+      ntflxNotify.setAttribute('dir', 'rtl');
+      ntflxNotify.classList.add('nx-rtl-on');
+    }
+    // rtl: end
+
+    // font-family: begin
+    ntflxNotify.style.fontFamily = '"' + newNotifySettings.fontFamily + '", ' + defaultFontFamily;
+    // font-family: end
+
+    // use css animation: begin
+    if (newNotifySettings.cssAnimation) {
+      ntflxNotify.style.animationDuration = newNotifySettings.cssAnimationDuration + 'ms';
+    }
+    // use css animation: end
+
+    // close button element: begin
+    var closeButtonHTML = '';
+    if (newNotifySettings.closeButton && typeof callbackOrOptions !== 'function') {
+      closeButtonHTML = '<span class="nx-close-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><g><path fill="' + theType.notiflixIconColor + '" d="M0.38 2.19l7.8 7.81 -7.8 7.81c-0.51,0.5 -0.51,1.31 -0.01,1.81 0.25,0.25 0.57,0.38 0.91,0.38 0.34,0 0.67,-0.14 0.91,-0.38l7.81 -7.81 7.81 7.81c0.24,0.24 0.57,0.38 0.91,0.38 0.34,0 0.66,-0.14 0.9,-0.38 0.51,-0.5 0.51,-1.31 0,-1.81l-7.81 -7.81 7.81 -7.81c0.51,-0.5 0.51,-1.31 0,-1.82 -0.5,-0.5 -1.31,-0.5 -1.81,0l-7.81 7.81 -7.81 -7.81c-0.5,-0.5 -1.31,-0.5 -1.81,0 -0.51,0.51 -0.51,1.32 0,1.82z"/></g></svg></span>';
+    }
+    // close buttpon element: end
+
+    // use icon: begin
+    if (newNotifySettings.useIcon) {
+      // use font awesome
+      if (newNotifySettings.useFontAwesome) {
+        ntflxNotify.innerHTML = '<i style="color:' + theType.fontAwesomeIconColor + '; font-size:' + newNotifySettings.fontAwesomeIconSize + ';" class="nx-message-icon nx-message-icon-fa ' + theType.fontAwesomeClassName + ' ' + (newNotifySettings.fontAwesomeIconStyle === 'shadow' ? 'nx-message-icon-fa-shadow' : 'nx-message-icon-fa-basic') + '"></i><span class="nx-message nx-with-icon">' + message + '</span>' + (newNotifySettings.closeButton ? closeButtonHTML : '');
+      }
+      // use notiflix icon
+      else {
+        var svgIcon = '';
+        if (notifyType === typesNotify.Success) {  // success
+          svgIcon = '<svg class="nx-message-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><g><path fill="' + theType.notiflixIconColor + '" d="M20 0c11.03,0 20,8.97 20,20 0,11.03 -8.97,20 -20,20 -11.03,0 -20,-8.97 -20,-20 0,-11.03 8.97,-20 20,-20zm0 37.98c9.92,0 17.98,-8.06 17.98,-17.98 0,-9.92 -8.06,-17.98 -17.98,-17.98 -9.92,0 -17.98,8.06 -17.98,17.98 0,9.92 8.06,17.98 17.98,17.98zm-2.4 -13.29l11.52 -12.96c0.37,-0.41 1.01,-0.45 1.42,-0.08 0.42,0.37 0.46,1 0.09,1.42l-12.16 13.67c-0.19,0.22 -0.46,0.34 -0.75,0.34 -0.23,0 -0.45,-0.07 -0.63,-0.22l-7.6 -6.07c-0.43,-0.35 -0.5,-0.99 -0.16,-1.42 0.35,-0.43 0.99,-0.5 1.42,-0.16l6.85 5.48z"/></g></svg>';
+        } else if (notifyType === typesNotify.Failure) { // failure
+          svgIcon = '<svg class="nx-message-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><g><path fill="' + theType.notiflixIconColor + '" d="M20 0c11.03,0 20,8.97 20,20 0,11.03 -8.97,20 -20,20 -11.03,0 -20,-8.97 -20,-20 0,-11.03 8.97,-20 20,-20zm0 37.98c9.92,0 17.98,-8.06 17.98,-17.98 0,-9.92 -8.06,-17.98 -17.98,-17.98 -9.92,0 -17.98,8.06 -17.98,17.98 0,9.92 8.06,17.98 17.98,17.98zm1.42 -17.98l6.13 6.12c0.39,0.4 0.39,1.04 0,1.43 -0.19,0.19 -0.45,0.29 -0.71,0.29 -0.27,0 -0.53,-0.1 -0.72,-0.29l-6.12 -6.13 -6.13 6.13c-0.19,0.19 -0.44,0.29 -0.71,0.29 -0.27,0 -0.52,-0.1 -0.71,-0.29 -0.39,-0.39 -0.39,-1.03 0,-1.43l6.13 -6.12 -6.13 -6.13c-0.39,-0.39 -0.39,-1.03 0,-1.42 0.39,-0.39 1.03,-0.39 1.42,0l6.13 6.12 6.12 -6.12c0.4,-0.39 1.04,-0.39 1.43,0 0.39,0.39 0.39,1.03 0,1.42l-6.13 6.13z"/></g></svg>';
+        } else if (notifyType === typesNotify.Warning) { // warning
+          svgIcon = '<svg class="nx-message-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><g><path fill="' + theType.notiflixIconColor + '" d="M21.91 3.48l17.8 30.89c0.84,1.46 -0.23,3.25 -1.91,3.25l-35.6 0c-1.68,0 -2.75,-1.79 -1.91,-3.25l17.8 -30.89c0.85,-1.47 2.97,-1.47 3.82,0zm16.15 31.84l-17.8 -30.89c-0.11,-0.2 -0.41,-0.2 -0.52,0l-17.8 30.89c-0.12,0.2 0.05,0.4 0.26,0.4l35.6 0c0.21,0 0.38,-0.2 0.26,-0.4zm-19.01 -4.12l0 -1.05c0,-0.53 0.42,-0.95 0.95,-0.95 0.53,0 0.95,0.42 0.95,0.95l0 1.05c0,0.53 -0.42,0.95 -0.95,0.95 -0.53,0 -0.95,-0.42 -0.95,-0.95zm0 -4.66l0 -13.39c0,-0.52 0.42,-0.95 0.95,-0.95 0.53,0 0.95,0.43 0.95,0.95l0 13.39c0,0.53 -0.42,0.96 -0.95,0.96 -0.53,0 -0.95,-0.43 -0.95,-0.96z"/></g></svg>';
+        } else if (notifyType === typesNotify.Info) { // info
+          svgIcon = '<svg class="nx-message-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><g><path fill="' + theType.notiflixIconColor + '" d="M20 0c11.03,0 20,8.97 20,20 0,11.03 -8.97,20 -20,20 -11.03,0 -20,-8.97 -20,-20 0,-11.03 8.97,-20 20,-20zm0 37.98c9.92,0 17.98,-8.06 17.98,-17.98 0,-9.92 -8.06,-17.98 -17.98,-17.98 -9.92,0 -17.98,8.06 -17.98,17.98 0,9.92 8.06,17.98 17.98,17.98zm-0.99 -23.3c0,-0.54 0.44,-0.98 0.99,-0.98 0.55,0 0.99,0.44 0.99,0.98l0 15.86c0,0.55 -0.44,0.99 -0.99,0.99 -0.55,0 -0.99,-0.44 -0.99,-0.99l0 -15.86zm0 -5.22c0,-0.55 0.44,-0.99 0.99,-0.99 0.55,0 0.99,0.44 0.99,0.99l0 1.09c0,0.54 -0.44,0.99 -0.99,0.99 -0.55,0 -0.99,-0.45 -0.99,-0.99l0 -1.09z"/></g></svg>';
+        }
+        ntflxNotify.innerHTML = svgIcon + '<span class="nx-message nx-with-icon">' + message + '</span>' + (newNotifySettings.closeButton ? closeButtonHTML : '');
+      }
+    }
+    // without icon
+    else {
+      ntflxNotify.innerHTML = '<span class="nx-message">' + message + '</span>' + (newNotifySettings.closeButton ? closeButtonHTML : '');
+    }
+    // use icon: end
+    // notify content: end
+
+    // notify append or prepend: begin
+    if (newNotifySettings.position === 'left-bottom' || newNotifySettings.position === 'right-bottom') { // the new one will be first
+      var notifyWrap = window.document.getElementById(notifySettings.wrapID);
+      notifyWrap.insertBefore(ntflxNotify, notifyWrap.firstChild);
+    } else {
+      window.document.getElementById(notifySettings.wrapID).appendChild(ntflxNotify);
+    }
+    // notify append or prepend: end
+
+    // remove by timeout or click: begin
+    var eachNotifyElement = window.document.getElementById(ntflxNotify.id);
+    if (eachNotifyElement) {
+      // timeout variables
+      var timeoutHide;
+      var timeoutRemove;
+
+      // hide notify elm and hide overlay: begin
+      var hideNotifyElementsAndOverlay = function () {
+        eachNotifyElement.classList.add('nx-remove');
+        var removeOverlay = window.document.getElementById(notifySettings.overlayID);
+        if (removeOverlay && ntflxNotifyWrap.childElementCount <= 0) {
+          removeOverlay.classList.add('nx-remove');
+        }
+        clearTimeout(timeoutHide);
+      };
+      // hide notify elm and hide overlay: end
+
+      // remove notify elm and wrapper: begin
+      var removeNotifyElmentsAndWrapper = function () {
+        if (eachNotifyElement && eachNotifyElement.parentNode !== null) {
+          eachNotifyElement.parentNode.removeChild(eachNotifyElement);
+        }
+        if (ntflxNotifyWrap.childElementCount <= 0 && ntflxNotifyWrap.parentNode !== null) { // if childs count === 0 remove wrap
+          ntflxNotifyWrap.parentNode.removeChild(ntflxNotifyWrap);
+          var removeOverlay = window.document.getElementById(notifySettings.overlayID);
+          if (removeOverlay && removeOverlay.parentNode !== null) {
+            removeOverlay.parentNode.removeChild(removeOverlay);
+          }
+        }
+        clearTimeout(timeoutRemove);
+      };
+      // remove notify elm and wrapper: end
+
+      // if has close button and callbackOrOptions is not a function: begin
+      if (newNotifySettings.closeButton && typeof callbackOrOptions !== 'function') {
+        var closeButtonElm = window.document.getElementById(ntflxNotify.id).querySelector('span.nx-close-button');
+        closeButtonElm.addEventListener('click', function () {
+          hideNotifyElementsAndOverlay();
+          var clickToCloseTimeout = setTimeout(function () {
+            removeNotifyElmentsAndWrapper();
+            clearTimeout(clickToCloseTimeout);
+          }, newNotifySettings.cssAnimationDuration);
+        });
+      }
+      // if has close button and callbackOrOptions is not a function: end
+
+      // if callbackOrOptions or click to close: begin
+      if (typeof callbackOrOptions === 'function' || newNotifySettings.clickToClose) {
+        eachNotifyElement.addEventListener('click', function () {
+          if (typeof callbackOrOptions === 'function') {
+            callbackOrOptions();
+          }
+          hideNotifyElementsAndOverlay();
+          var callbackTimeout = setTimeout(function () {
+            removeNotifyElmentsAndWrapper();
+            clearTimeout(callbackTimeout);
+          }, newNotifySettings.cssAnimationDuration);
+        });
+      }
+      // if callbackOrOptions or click to close: end
+
+      // else auto remove: begin
+      if (!newNotifySettings.closeButton && typeof callbackOrOptions !== 'function') {
+        // auto remove: begin
+        var autoRemove = function () {
+          timeoutHide = setTimeout(function () {
+            hideNotifyElementsAndOverlay();
+          }, newNotifySettings.timeout);
+          timeoutRemove = setTimeout(function () {
+            removeNotifyElmentsAndWrapper();
+          }, newNotifySettings.timeout + newNotifySettings.cssAnimationDuration);
+        };
+        autoRemove();
+        // auto remove: end
+
+        // pause auto remove: begin
+        if (newNotifySettings.pauseOnHover) {
+          eachNotifyElement.addEventListener('mouseenter', function () {
+            eachNotifyElement.classList.add('nx-paused');
+            clearTimeout(timeoutHide);
+            clearTimeout(timeoutRemove);
+          });
+          eachNotifyElement.addEventListener('mouseleave', function () {
+            eachNotifyElement.classList.remove('nx-paused');
+            autoRemove();
+          });
+        }
+        // pause auto remove: end
+      }
+      // else auto remove: end
+    }
+    // remove by timeout or click: end
+
+    // notify - show only the last one: begin
+    if (newNotifySettings.showOnlyTheLastOne && notifyCreateCounter > 0) {
+      var allNotifyElmNotTheLastOne = window.document.querySelectorAll('[id^=' + newNotifySettings.ID + '-]:not([id=' + newNotifySettings.ID + '-' + notifyCreateCounter + '])');
+      for (var i = 0; i < allNotifyElmNotTheLastOne.length; i++) {
+        var eachNotifyElmNotLastOne = allNotifyElmNotTheLastOne[i];
+        if (eachNotifyElmNotLastOne.parentNode !== null) {
+          eachNotifyElmNotLastOne.parentNode.removeChild(eachNotifyElmNotLastOne);
+        }
+      }
+    }
+    // notify - show only the last one: end
+
+    // extend new settings with the backup settings
+    newNotifySettings = commonExtendOptions(true, newNotifySettings, newNotifySettingsBackup);
+
+  };
+  // NOTIFY: Create: end
+
+  var Notiflix = {
+    Notify: {
+      // Init
+      init: function (userNotifyOptions) {
+        // extend options
+        newNotifySettings = commonExtendOptions(true, notifySettings, userNotifyOptions);
+        // internal css if exist
+        commonSetInternalCSSCodes(notifyGetInternalCSSCodes, 'NotiflixNotifyInternalCSS');
+      },
+      // Merge First Init
+      merge: function (userNotifyExtendOptions) {
+        // if initialized already
+        if (newNotifySettings) {
+          newNotifySettings = commonExtendOptions(true, newNotifySettings, userNotifyExtendOptions);
+        }
+        // initialize first
+        else {
+          commonConsoleError('You have to initialize the Notify module before call Merge function.');
+          return false;
+        }
+      },
+      // Success
+      success: function (message, callbackOrOptions, options) {
+        notifyCreate(typesNotify.Success, message, callbackOrOptions, options);
+      },
+      // Failure
+      failure: function (message, callbackOrOptions, options) {
+        notifyCreate(typesNotify.Failure, message, callbackOrOptions, options);
+      },
+      // Warning
+      warning: function (message, callbackOrOptions, options) {
+        notifyCreate(typesNotify.Warning, message, callbackOrOptions, options);
+      },
+      // Info
+      info: function (message, callbackOrOptions, options) {
+        notifyCreate(typesNotify.Info, message, callbackOrOptions, options);
+      },
+    },
+  };
+
+  if (typeof window.Notiflix === 'object') {
+    return commonExtendOptions(true, window.Notiflix, { Notify: Notiflix.Notify });
+  } else {
+    return { Notify: Notiflix.Notify };
+  }
+
+});
 
 /***/ }),
 
@@ -16224,7 +16961,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -16351,7 +17088,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _js_themes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/themes */ "./src/js/themes.js");
 /* harmony import */ var _js_themes__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_js_themes__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _js_cart_modal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./js/cart-modal */ "./src/js/cart-modal.js");
-/* harmony import */ var _js_cart_modal__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_js_cart_modal__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _js_mobile_menu__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./js/mobile-menu */ "./src/js/mobile-menu.js");
 /* harmony import */ var _js_mobile_menu__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_js_mobile_menu__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _js_swiper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./js/swiper */ "./src/js/swiper.js");
@@ -16365,6 +17101,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _js_filters__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./js/filters */ "./src/js/filters.js");
 /* harmony import */ var _js_filterBar__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./js/filterBar */ "./src/js/filterBar.js");
 /* harmony import */ var _js_handleRecipe__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./js/handleRecipe */ "./src/js/handleRecipe.js");
+/* harmony import */ var notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! notiflix/build/notiflix-notify-aio */ "./node_modules/notiflix/build/notiflix-notify-aio.js");
+/* harmony import */ var notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_17__);
 
 
 
@@ -16382,6 +17120,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_17__.Notify.init({
+  position: "center-top",
+  borderRadius: "10px",
+  fontSize: "18px",
+  width: "450px",
+  success: {
+    background: "#6ccf7e"
+  },
+  failure: {
+    background: "#f27c74"
+  }
+});
 })();
 
 /******/ })()
