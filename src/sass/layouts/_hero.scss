@@ -1,5 +1,9 @@
 .hero {
 	padding: 40px 0;
+	padding-bottom: 340px;
+	@media screen and (min-width: $bp-tablet) {
+		padding-bottom: 500px;
+	}
 	@media screen and (min-width: $bp-desktop) {
 		padding: 50px 0;
 	}
@@ -51,15 +55,17 @@
 	}
 }
 .master-wrapper {
+	position: absolute;
+	right: -20px;
 	width: 355px;
 	overflow: hidden;
 	@media screen and (min-width: $bp-tablet) {
 		width: 736px;
+		right: -32px;
 	}
 	@media screen and (min-width: $bp-desktop) {
-		position: absolute;
 		top: 0;
-		left: 478px;
+		right: -100px;
 		width: 696px;
 	}
 }

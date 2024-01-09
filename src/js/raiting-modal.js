@@ -83,7 +83,7 @@ const handleRaiting = (e) => {
 	}
 };
 
-const handleRatPost = (e) => {
+const handleRatPost = async(e) => {
 	e.preventDefault();
 	let rating;
 	var star = document.getElementsByName("RatStar");
@@ -91,5 +91,24 @@ const handleRatPost = (e) => {
 		if (star[i].checked) rating = i;
 	}
 	const email = e.target.elements.email.value;
+	const id =e.target.elements.subBtn.id;
 	console.log(e.target.elements.subBtn.id, email, rating);
+	const body ={
+		rate: rating,
+		email: e.target.elements.email.value
+	}
+	const post = await postRating(id, body);
+	console.log(post)
+	const raitModalClose = document.querySelector(".btn-close");
+	closeRaitModal(raitModalClose)
+	// if(post.status == 200) alert('Your rating successfully send. Thank you!');
 };
+
+const postRating = async(id, body) =>{
+	try{
+		const post = await axios.patch(`/recipes/${id}/rating`, body);
+		return post;
+	}catch(err){
+		console.log(err)
+	}
+}

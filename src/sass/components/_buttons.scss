@@ -139,3 +139,12 @@
 		color: $color-event-back;
 	}
 }
+.order-post-btn {
+	@extend %button;
+	color: $color-card-title;
+	background-color: $color-accent;
+	width: 100%;
+	&:hover {
+		color: $color-event-back;
+	}
+}

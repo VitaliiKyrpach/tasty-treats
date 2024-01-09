@@ -174,7 +174,7 @@ ul {
   }
 }
 
-.rating-post-btn, .btn-rating, .btn-add, .primary-btn {
+.order-post-btn, .rating-post-btn, .btn-rating, .btn-add, .primary-btn {
   display: block;
   font-family: "Inter", sans-serif;
   font-size: 14px;
@@ -187,7 +187,7 @@ ul {
   transition: color 150ms ease, background-color 150ms ease;
 }
 @media screen and (min-width: 768px) {
-  .rating-post-btn, .btn-rating, .btn-add, .primary-btn {
+  .order-post-btn, .rating-post-btn, .btn-rating, .btn-add, .primary-btn {
     padding: 13px 27px;
     border-radius: 15px;
   }
@@ -320,6 +320,15 @@ ul {
   width: 100%;
 }
 .rating-post-btn:hover {
+  color: var(--color-event-back);
+}
+
+.order-post-btn {
+  color: var(--color-card-title);
+  background-color: var(--color-accent);
+  width: 100%;
+}
+.order-post-btn:hover {
   color: var(--color-event-back);
 }
 

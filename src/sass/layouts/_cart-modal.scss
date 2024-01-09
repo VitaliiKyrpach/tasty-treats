@@ -1,0 +1,32 @@
+.order-modal{
+    position: relative;
+	width: 424px;
+	padding: 32px;
+	background-color: $color-primary-light;
+	border-radius: 15px;
+    .title {
+		font-size: 20px;
+		font-weight: 600;
+		line-height: 1.28;
+		margin-bottom: 40px;
+		color: $color-secondary-dark;
+	}
+    .input {
+        font-family: "Inter", sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.25;
+        color: $color-secondary-lighter;
+        width: 100%;
+        padding: 14px 18px;
+        border: 1px solid $color-secondary-lightest;
+        border-radius: 15px;
+        appearance: none;
+        outline: none;
+        background-color: transparent;
+        margin-bottom: 16px;
+    }
+    .textarea{
+        resize: none;
+    }
+}

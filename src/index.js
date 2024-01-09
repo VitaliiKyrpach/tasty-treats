@@ -3,6 +3,8 @@ import "./main.scss";
 
 import "./js/loader";
 import "./js/themes";
+import "./js/cart-modal";
+import './js/mobile-menu';
 import "./js/swiper";
 import "./js/events";
 import "./js/categories";
