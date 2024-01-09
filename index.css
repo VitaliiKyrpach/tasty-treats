@@ -254,7 +254,7 @@ ul {
     transform: rotate(-360deg);
   }
 }
-.rating-post-btn, .btn-rating, .btn-add, .primary-btn {
+.order-post-btn, .rating-post-btn, .btn-rating, .btn-add, .primary-btn {
   display: block;
   font-family: "Inter", sans-serif;
   font-size: 14px;
@@ -267,7 +267,7 @@ ul {
   transition: color 150ms ease, background-color 150ms ease;
 }
 @media screen and (min-width: 768px) {
-  .rating-post-btn, .btn-rating, .btn-add, .primary-btn {
+  .order-post-btn, .rating-post-btn, .btn-rating, .btn-add, .primary-btn {
     padding: 13px 27px;
     border-radius: 15px;
   }
@@ -400,6 +400,15 @@ ul {
   width: 100%;
 }
 .rating-post-btn:hover {
+  color: var(--color-event-back);
+}
+
+.order-post-btn {
+  color: var(--color-card-title);
+  background-color: var(--color-accent);
+  width: 100%;
+}
+.order-post-btn:hover {
   color: var(--color-event-back);
 }
 
@@ -1043,8 +1052,64 @@ ul {
   fill: var(--color-secondary-dark);
 }
 
+.mobile-menu {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16px 24px;
+  background-color: var(--color-primary-light);
+  z-index: 2;
+  transform: translateX(100%);
+  transition: transform 150ms ease;
+}
+.mobile-menu.open {
+  transform: translateX(0%);
+}
+
+.order-modal {
+  position: relative;
+  width: 424px;
+  padding: 32px;
+  background-color: var(--color-primary-light);
+  border-radius: 15px;
+}
+.order-modal .title {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.28;
+  margin-bottom: 40px;
+  color: var(--color-secondary-dark);
+}
+.order-modal .input {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--color-secondary-lighter);
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid var(--color-secondary-lightest);
+  border-radius: 15px;
+  appearance: none;
+  outline: none;
+  background-color: transparent;
+  margin-bottom: 16px;
+}
+.order-modal .textarea {
+  resize: none;
+}
+
 .hero {
   padding: 40px 0;
+  padding-bottom: 340px;
+}
+@media screen and (min-width: 768px) {
+  .hero {
+    padding-bottom: 500px;
+  }
 }
 @media screen and (min-width: 1280px) {
   .hero {
@@ -1108,19 +1173,21 @@ ul {
 }
 
 .master-wrapper {
+  position: absolute;
+  right: -20px;
   width: 355px;
   overflow: hidden;
 }
 @media screen and (min-width: 768px) {
   .master-wrapper {
     width: 736px;
+    right: -32px;
   }
 }
 @media screen and (min-width: 1280px) {
   .master-wrapper {
-    position: absolute;
     top: 0;
-    left: 478px;
+    right: -100px;
     width: 696px;
   }
 }
