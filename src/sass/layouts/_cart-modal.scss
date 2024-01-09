@@ -1,32 +1,52 @@
-.order-modal{
-    position: relative;
-	width: 424px;
-	padding: 32px;
+.order-modal {
+	position: relative;
+	width: 335px;
+	padding: 28px 20px;
 	background-color: $color-primary-light;
 	border-radius: 15px;
-    .title {
-		font-size: 20px;
-		font-weight: 600;
-		line-height: 1.28;
-		margin-bottom: 40px;
-		color: $color-secondary-dark;
+	@media screen and (min-width: $bp-tablet) {
+		width: 440px;
+		padding: 40px;
 	}
-    .input {
-        font-family: "Inter", sans-serif;
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 1.25;
-        color: $color-secondary-lighter;
-        width: 100%;
-        padding: 14px 18px;
-        border: 1px solid $color-secondary-lightest;
-        border-radius: 15px;
-        appearance: none;
-        outline: none;
-        background-color: transparent;
-        margin-bottom: 16px;
-    }
-    .textarea{
-        resize: none;
-    }
+	.title {
+		font-size: 18px;
+		font-weight: 600;
+		line-height: 1.22;
+		margin-bottom: 28px;
+		color: $color-secondary-dark;
+		@media screen and (min-width: $bp-tablet) {
+			margin-bottom: 40px;
+		}
+	}
+	.modal-input-group {
+		margin-bottom: 16px;
+		@media screen and (min-width: $bp-tablet) {
+			margin-bottom: 18px;
+		}
+		&.textarea {
+			margin-bottom: 40px;
+		}
+	}
+	.label {
+		display: block;
+		color: $color-secondary-lighter;
+		margin-bottom: 8px;
+	}
+	.input {
+		font-family: "Inter", sans-serif;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 1.25;
+		color: $color-secondary-lighter;
+		width: 100%;
+		padding: 14px 18px;
+		border: 1px solid $color-secondary-lightest;
+		border-radius: 15px;
+		appearance: none;
+		outline: none;
+		background-color: transparent;
+	}
+	.textarea {
+		resize: none;
+	}
 }

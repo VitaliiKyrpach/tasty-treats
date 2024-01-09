@@ -6,6 +6,7 @@ import { openRmodal } from "./raiting-modal";
 const modal = document.querySelector(".backdrop");
 export const openModal = async (recipeId) => {
 	// console.log(recipeId);
+	document.addEventListener("keydown", handleEscape);
 	modal.innerHTML = "";
 	const data = await getData(recipeId);
 	// console.log(data);
@@ -14,12 +15,18 @@ export const openModal = async (recipeId) => {
 	document.body.classList.add("no-scroll");
 	const addBtn = document.querySelector(".btn-add");
 	addBtn.addEventListener("click", handleAddBtn);
-	const recModalClose = document.querySelector(".btn-close");
-	recModalClose.addEventListener("click", () =>
-		closeModal(recModalClose, addBtn)
-	);
+	modal.addEventListener("click", handleCloseModal);
 	const btnRating = document.querySelector(".btn-rating");
 	btnRating.addEventListener("click", handleRatBtn);
+	const tagList = document.querySelector(".tag-list");
+	handleTag(tagList);
+};
+
+const handleEscape = (e) => {
+	if (e.key == "Escape") {
+		closeModal();
+		console.log(e.key);
+	}
 };
 
 const getData = async (id) => {
@@ -63,7 +70,49 @@ const createMarkUp = ({ data }) => {
 		? (addedToFav = "Remove from")
 		: (addedToFav = "Add to");
 	const stars = createStars(rating);
-	return `
+	if (screen.width < 768) {
+		return `
+    <div class="recipe-modal">
+        <button class="btn-close" type="button">
+            <svg class="close-svg">
+                <use href="assets/sprite.svg#icon-reset"></use>
+            </svg>
+        </button>
+        <iframe
+            class="video"
+            src=${url}
+            title="YouTube video player"
+            frameborder="0"
+            
+        ></iframe>
+		<h2 class="title">${title}</h2>
+            <div class="modal-score">
+                <p class="modal-score-text">${rating}</p>
+                <div class="stars">
+                    ${stars}
+                </div>
+                <p class="modal-score-text min">${time} min</p>
+            </div>
+        <ul class="ing-list">
+            ${ingredientsMarkUp}
+        </ul>
+		<ul class="tag-list">
+                ${tagsMarkUp}
+            </ul>
+        <p class="text">
+            ${description}
+        </p>
+        <div class="buttons">
+            <button class="btn-add" type="button" id=${_id}>
+                ${addedToFav} favorite
+            </button>
+            <button class="btn-rating" type="button" id=${_id}>
+                Give a rating
+            </button>
+        </div>
+    </div>`;
+	} else {
+		return `
     <div class="recipe-modal">
         <button class="btn-close" type="button">
             <svg class="close-svg">
@@ -82,12 +131,12 @@ const createMarkUp = ({ data }) => {
             <ul class="tag-list">
                 ${tagsMarkUp}
             </ul>
-            <div class="score">
+            <div class="modal-score">
                 <p class="modal-score-text">${rating}</p>
                 <div class="stars">
                     ${stars}
                 </div>
-                <p class="modal-score-text">${time} min</p>
+                <p class="modal-score-text min">${time} min</p>
             </div>
         </div>
         <ul class="ing-list">
@@ -105,6 +154,7 @@ const createMarkUp = ({ data }) => {
             </button>
         </div>
     </div>`;
+	}
 };
 
 const handleAddBtn = async (e) => {
@@ -121,10 +171,48 @@ const handleRatBtn = async (e) => {
 	await openRmodal(e.target);
 };
 
-const closeModal = (close, add) => {
+const closeModal = () => {
 	modal.innerHTML = "";
 	modal.classList.add("is-hidden");
 	document.body.classList.remove("no-scroll");
-	close.removeEventListener("click", closeModal);
-	add.removeEventListener("click", handleAddBtn);
+	document.removeEventListener("keydown", handleEscape);
+};
+
+const handleCloseModal = (e) => {
+	if (
+		e.target.className == "btn-close" ||
+		e.target.className == "backdrop"
+	) {
+		closeModal();
+	}
+};
+
+const handleTag = (tagList) => {
+	if (screen.width > 767) {
+		let isDragging = false;
+		let startX;
+		let scrollLeft;
+		tagList.addEventListener("mousemove", onDrag);
+		tagList.addEventListener("mousedown", dragStart);
+		document.addEventListener("mouseup", dragStop);
+
+		function dragStop() {
+			isDragging = false;
+		}
+
+		function dragStart(e) {
+			if (e.target.nodeName == "BUTTON") return;
+			isDragging = true;
+			startX = e.pageX - tagList.offsetLeft;
+			scrollLeft = tagList.scrollLeft;
+		}
+
+		function onDrag(e) {
+			if (!isDragging) return;
+			e.preventDefault();
+			const x = e.pageX - tagList.offsetLeft;
+			const walk = (x - startX) * 3;
+			tagList.scrollLeft = scrollLeft - walk;
+		}
+	}
 };

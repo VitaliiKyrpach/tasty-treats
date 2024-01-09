@@ -1,18 +1,29 @@
+import axios from "axios";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
+
+// });
 const cartModal = document.querySelector(".backdrop");
-const cartBtn = document.querySelector('.cart-btn')
-const openCartModal =()=>{
-    cartModal.innerHTML = "";
+const cartBtn = document.querySelector(".cart-btn");
+const openCartModal = () => {
+	document.addEventListener("keydown", handleEscape);
+	cartModal.innerHTML = "";
 	cartModal.insertAdjacentHTML("beforeend", createOrderMarkUp());
 	cartModal.classList.remove("is-hidden");
 	document.body.classList.add("no-scroll");
-    const orderCloseBtn = document.querySelector(".btn-close");
-	orderCloseBtn.addEventListener("click", () =>
-		closeOrderModal(orderCloseBtn)
-	);
-}
+	cartModal.addEventListener("click", handleCloseModal);
+	const send = document.querySelector(".order-form");
+	send.addEventListener("submit", handleOrderPost);
+};
 
-const createOrderMarkUp = () =>{
-    return `<div class="order-modal">
+const handleEscape = (e) => {
+	if (e.key == "Escape") {
+		closeModal();
+		console.log(e.key);
+	}
+};
+
+const createOrderMarkUp = () => {
+	return `<div class="order-modal">
     <button class="btn-close" type="button">
         <svg class="close-svg">
             <use href="assets/sprite.svg#icon-reset"></use>
@@ -30,7 +41,7 @@ const createOrderMarkUp = () =>{
                     class="input"
                     type="text"
                     name="name"
-                    id="customer-name"
+                    id="customerName"
                     placeholder="User"
                     required
                 />
@@ -44,7 +55,7 @@ const createOrderMarkUp = () =>{
                     class="input"
                     type="tel"
                     name="phone"
-                    id="customer-phone"
+                    id="customerPhone"
                     placeholder="+38 000 000 00 00"
                     required
                 />
@@ -58,12 +69,13 @@ const createOrderMarkUp = () =>{
                     class="input"
                     type="email"
                     name="email"
-                    id="customer-email"
+                    id="customerEmail"
                     placeholder="example@mail.com"
+                    required
                 />
                 
             </div>
-            <div class="modal-input-group">
+            <div class="modal-input-group textarea">
             <label class="label" for="customer-email"
                 >Comment</label
             >
@@ -71,8 +83,9 @@ const createOrderMarkUp = () =>{
                 class="textarea input"
                 name="textarea"
                 rows='4'
-                id='customer-comment'
+                id='customerComment'
                 placeholder="Write something here..."
+                required
                 ></textarea>
             
         </div>
@@ -82,14 +95,57 @@ const createOrderMarkUp = () =>{
             </button>
         </form>
 
-</div>`
-} 
+</div>`;
+};
 
-const closeOrderModal = (close) => {
+const closeModal = () => {
 	cartModal.innerHTML = "";
 	cartModal.classList.add("is-hidden");
 	document.body.classList.remove("no-scroll");
-	close.removeEventListener("click", closeOrderModal);
+	document.removeEventListener("keydown", handleEscape);
 };
 
-cartBtn.addEventListener('click', openCartModal)
+const handleCloseModal = (e) => {
+	if (
+		e.target.className == "btn-close" ||
+		e.target.className == "backdrop"
+	) {
+		closeModal();
+	}
+};
+
+const handleOrderPost = async (e) => {
+	e.preventDefault();
+	try {
+		const form = e.target.elements;
+
+		const body = {
+			name: form.customerName.value,
+			phone: form.customerPhone.value,
+			email: form.customerEmail.value,
+			comment: form.customerComment.value,
+		};
+		console.dir(body);
+		const post = await postOrder(body);
+		console.log(post);
+		if (post.status == 201) {
+			Notify.success(
+				"Thank you for your order. Our manager will contact you ASAP"
+			);
+		}
+		const orderCloseBtn = document.querySelector(".btn-close");
+		closeOrderModal(orderCloseBtn);
+	} catch (err) {
+		console.log(err);
+		Notify.failure(
+			`I'm sorry, something went wrong. ${err.response.data.message}`
+		);
+	}
+};
+
+const postOrder = async (body) => {
+	const post = await axios.post(`/orders/add`, body);
+	return post;
+};
+
+cartBtn.addEventListener("click", openCartModal);

@@ -1,19 +1,26 @@
 import axios from "axios";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
+
 const rModal = document.querySelector(".backdrop");
 
 export const openRmodal = (target) => {
+	document.addEventListener("keydown", handleEscape);
 	rModal.innerHTML = "";
 	rModal.insertAdjacentHTML("beforeend", createMarkUp(target.id));
 	rModal.classList.remove("is-hidden");
 	document.body.classList.add("no-scroll");
-	const raitModalClose = document.querySelector(".btn-close");
-	raitModalClose.addEventListener("click", () =>
-		closeRaitModal(raitModalClose)
-	);
+	rModal.addEventListener("click", handleCloseModal);
 	const starsGroup = document.querySelector(".score-stars");
 	starsGroup.addEventListener("click", handleRaiting);
 	const send = document.querySelector(".rating-form");
 	send.addEventListener("submit", handleRatPost);
+};
+
+const handleEscape = (e) => {
+	if (e.key == "Escape") {
+		closeModal();
+		console.log(e.key);
+	}
 };
 
 const createMarkUp = (id, num = 0) => {
@@ -61,11 +68,20 @@ const createModalStars = (num) => {
 	return markUp;
 };
 
-const closeRaitModal = (close) => {
+const closeModal = () => {
 	rModal.innerHTML = "";
 	rModal.classList.add("is-hidden");
 	document.body.classList.remove("no-scroll");
-	close.removeEventListener("click", closeRaitModal);
+	document.removeEventListener("keydown", handleEscape);
+};
+
+const handleCloseModal = (e) => {
+	if (
+		e.target.className == "btn-close" ||
+		e.target.className == "backdrop"
+	) {
+		closeModal();
+	}
 };
 
 const handleRaiting = (e) => {
@@ -83,32 +99,42 @@ const handleRaiting = (e) => {
 	}
 };
 
-const handleRatPost = async(e) => {
+const handleRatPost = async (e) => {
 	e.preventDefault();
-	let rating;
-	var star = document.getElementsByName("RatStar");
-	for (let i = 0; i < star.length; i++) {
-		if (star[i].checked) rating = i;
+	try {
+		let rating;
+		var star = document.getElementsByName("RatStar");
+		for (let i = 0; i < star.length; i++) {
+			if (star[i].checked) rating = i + 1;
+		}
+		if (!rating) {
+			Notify.failure("Please pick a star");
+			return;
+		} else {
+			const email = e.target.elements.email.value;
+			const id = e.target.elements.subBtn.id;
+			console.log(e.target.elements.subBtn.id, email, rating);
+			const body = {
+				rate: rating,
+				email: e.target.elements.email.value,
+			};
+			const post = await postRating(id, body);
+			console.log(post);
+			if (post.status == 200) {
+				Notify.success("Your rating added successfully.Thank you!");
+			}
+			const raitModalClose = document.querySelector(".btn-close");
+			closeRaitModal(raitModalClose);
+		}
+	} catch (err) {
+		console.log(err.message);
+		Notify.failure(
+			`I'm sorry, something went wrong. ${err.response.data.message}`
+		);
 	}
-	const email = e.target.elements.email.value;
-	const id =e.target.elements.subBtn.id;
-	console.log(e.target.elements.subBtn.id, email, rating);
-	const body ={
-		rate: rating,
-		email: e.target.elements.email.value
-	}
-	const post = await postRating(id, body);
-	console.log(post)
-	const raitModalClose = document.querySelector(".btn-close");
-	closeRaitModal(raitModalClose)
-	// if(post.status == 200) alert('Your rating successfully send. Thank you!');
 };
 
-const postRating = async(id, body) =>{
-	try{
-		const post = await axios.patch(`/recipes/${id}/rating`, body);
-		return post;
-	}catch(err){
-		console.log(err)
-	}
-}
+const postRating = async (id, body) => {
+	const post = await axios.patch(`/recipes/${id}/rating`, body);
+	return post;
+};

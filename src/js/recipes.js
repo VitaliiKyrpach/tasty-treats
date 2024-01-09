@@ -3,12 +3,6 @@ import createStars from "./createStars";
 import emptyResult from "./emptyResult";
 const recipeList = document.querySelector(".recipe-list");
 
-// window.addEventListener("resize", myFunction);
-
-// function myFunction() {
-// 	console.log(screen.width);
-// }
-
 const InitParams = {
 	title: "",
 	category: "",

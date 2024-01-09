@@ -36,6 +36,7 @@
 .recipe-list {
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: center;
 	gap: 24px;
 	@media screen and (min-width: $bp-tablet) {
 		gap: 16px;
