@@ -16,9 +16,6 @@ __webpack_require__.r(__webpack_exports__);
 
 const addToFavorites = async target => {
   let favArr = JSON.parse(localStorage.getItem("favorites")) ?? [];
-  // console.log(target.id);
-  // console.group(favArr);
-
   const isAdded = favArr.find(item => item._id == target.id);
   if (!isAdded) {
     const data = await getData(target.id);
@@ -32,10 +29,8 @@ const addToFavorites = async target => {
     };
     favArr.push(card);
     localStorage.setItem("favorites", JSON.stringify(favArr));
-    console.log("added");
   } else {
     const newArr = favArr.filter(item => item._id !== target.id);
-    console.log("deleted");
     localStorage.setItem("favorites", JSON.stringify(newArr));
   }
   target.classList.toggle("added");
@@ -80,7 +75,6 @@ const openCartModal = () => {
 const handleEscape = e => {
   if (e.key == "Escape") {
     closeModal();
-    console.log(e.key);
   }
 };
 const createOrderMarkUp = () => {
@@ -179,14 +173,11 @@ const handleOrderPost = async e => {
       email: form.customerEmail.value,
       comment: form.customerComment.value
     };
-    console.dir(body);
     const post = await postOrder(body);
-    console.log(post);
     if (post.status == 201) {
       notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__.Notify.success("Thank you for your order. Our manager will contact you ASAP");
     }
-    const orderCloseBtn = document.querySelector(".btn-close");
-    closeOrderModal(orderCloseBtn);
+    closeModal();
   } catch (err) {
     console.log(err);
     notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__.Notify.failure(`I'm sorry, something went wrong. ${err.response.data.message}`);
@@ -197,7 +188,7 @@ const postOrder = async body => {
   return post;
 };
 cartBtn.addEventListener("click", openCartModal);
-orderBtn.addEventListener("click", openCartModal);
+if (orderBtn) orderBtn.addEventListener("click", openCartModal);
 
 /***/ }),
 
@@ -408,15 +399,12 @@ const params = {
   ingredient: ""
 };
 searchInput.value = LSparams && LSparams.value ? LSparams.title : "";
-// console.log(searchInput);
 areaLabel.textContent = LSparams && LSparams.area ? LSparams.area : ".....";
 timeLabel.textContent = LSparams && LSparams.time ? LSparams.time : ".....";
 ingLabel.textContent = LSparams && LSparams.ingredient ? LSparams.ingredient : ".....";
 const handlePick = e => {
-  // console.log(e.target.textContent);
   if (e.target.nodeName !== "BUTTON") return;
   if (e.target.dataset.option == "option-area") {
-    // console.log(areaLabel.textContent);
     areaLabel.textContent = e.target.textContent;
     params.area = e.target.textContent;
   }
@@ -425,7 +413,6 @@ const handlePick = e => {
     params.time = String(Number.parseInt(e.target.textContent));
   }
   if (e.target.dataset.option == "option-ingredient") {
-    // console.log(e.target.id);
     ingLabel.textContent = e.target.textContent;
     params.ingredient = e.target.id;
   }
@@ -437,7 +424,6 @@ const handlePick = e => {
   }
   localStorage.setItem("params", JSON.stringify(params));
   (0,_pagination__WEBPACK_IMPORTED_MODULE_0__.onStartPag)();
-  // console.log(params);
 };
 const resetCats = () => {
   const oldActive = document.querySelector(".cat-active");
@@ -445,7 +431,6 @@ const resetCats = () => {
   params.category = "";
   localStorage.setItem("params", JSON.stringify(params));
   (0,_pagination__WEBPACK_IMPORTED_MODULE_0__.onStartPag)();
-  // console.log(params);
 };
 const resetFilter = () => {
   params.title = "";
@@ -457,7 +442,6 @@ const resetFilter = () => {
   ingLabel.textContent = ".....";
   localStorage.setItem("params", JSON.stringify(params));
   (0,_pagination__WEBPACK_IMPORTED_MODULE_0__.onStartPag)();
-  // console.log(params);
 };
 const handleChange = e => {
   console.log(e.target.value);
@@ -548,7 +532,6 @@ getFilters(timeList, "option-time");
 const handleFilters = e => {
   console.dir(e.currentTarget.firstElementChild);
   const arrows = document.querySelectorAll(".arrow");
-  console.log(arrows);
   if (e.currentTarget.dataset.type == "time") {
     handleArrow("time");
     timeList.classList.toggle("is-hidden");
@@ -595,7 +578,6 @@ __webpack_require__.r(__webpack_exports__);
 
 const recipes = document.querySelector(".recipe-list");
 const handleRecipe = e => {
-  // console.log(e.target);
   const recipeId = e.target.id;
   if (e.target.dataset.type == "recipe-btn" || e.target.dataset.type == "popular-card") (0,_recipe_modal__WEBPACK_IMPORTED_MODULE_0__.openModal)(recipeId);
   if (e.target.dataset.type == "heart-btn") (0,_addToFavorites__WEBPACK_IMPORTED_MODULE_1__.addToFavorites)(e.target);
@@ -767,8 +749,6 @@ const onClick = e => {
   if (e.target.dataset.type == "last") page = totalPages;
   createMarkUp(page, totalPages);
   hendleDots(page, totalPages);
-  // if (page >= totalPages - 1 ) dotsNext.classList.add("hidden");
-  // else dotsNext.classList.remove("hidden");
   (0,_recipes__WEBPACK_IMPORTED_MODULE_0__.getRecipes)(page);
   localStorage.setItem("currentPage", page);
 };
@@ -802,7 +782,6 @@ const createMarkUp = _ref => {
     data
   } = _ref;
   if (screen.width < 768) {
-    console.log(data);
     let markUp = "";
     for (let i = 0; i < 2; i++) {
       markUp += `<li class="card" id=${data[i]._id} data-type="popular-card">
@@ -880,13 +859,11 @@ const openRmodal = target => {
 const handleEscape = e => {
   if (e.key == "Escape") {
     closeModal();
-    console.log(e.key);
   }
 };
 const createMarkUp = function (id) {
   let num = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   const stars = createModalStars(num);
-  console.log(num);
   return `<div class="rating-modal">
     <button class="btn-close" type="button">
         <svg class="close-svg">
@@ -909,7 +886,6 @@ const createMarkUp = function (id) {
 const createModalStars = num => {
   let markUp = "";
   let starActive;
-  console.log(num);
   for (let i = 1; i <= 5; i++) {
     i <= num ? starActive = "active" : starActive = "";
     markUp += `<input
@@ -947,9 +923,7 @@ const handleRaiting = e => {
     const text = document.querySelector(".rating-text");
     text.textContent = num;
     const star = document.querySelector(`#star${num}`);
-    console.log(`#star${num}`);
     star.checked = true;
-    console.dir(e.target.value);
   }
 };
 const handleRatPost = async e => {
@@ -966,18 +940,15 @@ const handleRatPost = async e => {
     } else {
       const email = e.target.elements.email.value;
       const id = e.target.elements.subBtn.id;
-      console.log(e.target.elements.subBtn.id, email, rating);
       const body = {
         rate: rating,
-        email: e.target.elements.email.value
+        email
       };
       const post = await postRating(id, body);
-      console.log(post);
       if (post.status == 200) {
         notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__.Notify.success("Your rating added successfully.Thank you!");
       }
-      const raitModalClose = document.querySelector(".btn-close");
-      closeRaitModal(raitModalClose);
+      closeModal();
     }
   } catch (err) {
     console.log(err.message);
@@ -1012,11 +983,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const modal = document.querySelector(".backdrop");
 const openModal = async recipeId => {
-  // console.log(recipeId);
   document.addEventListener("keydown", handleEscape);
   modal.innerHTML = "";
   const data = await getData(recipeId);
-  // console.log(data);
   modal.insertAdjacentHTML("beforeend", createMarkUp(data));
   modal.classList.remove("is-hidden");
   document.body.classList.add("no-scroll");
@@ -1031,13 +1000,11 @@ const openModal = async recipeId => {
 const handleEscape = e => {
   if (e.key == "Escape") {
     closeModal();
-    console.log(e.key);
   }
 };
 const getData = async id => {
   try {
     const fetch = await (0,axios__WEBPACK_IMPORTED_MODULE_3__["default"])(`/recipes/${id}`);
-    // console.log(fetch);
     return fetch;
   } catch (err) {
     console.log(err);
@@ -1161,14 +1128,12 @@ const createMarkUp = _ref => {
   }
 };
 const handleAddBtn = async e => {
-  // console.log(e.target.id);
   await (0,_addToFavorites__WEBPACK_IMPORTED_MODULE_1__.addToFavorites)(e.target);
   const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
-  // console.log(added);
   added.find(item => item._id == e.target.id) ? e.target.textContent = "Remove from favorite" : e.target.textContent = "Add to favorite";
 };
-const handleRatBtn = async e => {
-  await (0,_raiting_modal__WEBPACK_IMPORTED_MODULE_2__.openRmodal)(e.target);
+const handleRatBtn = e => {
+  (0,_raiting_modal__WEBPACK_IMPORTED_MODULE_2__.openRmodal)(e.target);
 };
 const closeModal = () => {
   modal.innerHTML = "";
@@ -1252,7 +1217,6 @@ const getData = async function () {
     const fetch = await (0,axios__WEBPACK_IMPORTED_MODULE_2__["default"])("/recipes", {
       params
     });
-    console.log(fetch.data);
     return fetch;
   } catch (err) {
     console.log(err);
@@ -1300,7 +1264,6 @@ const createMarkUp = results => {
 };
 const getRecipes = async page => {
   const data = await getData(page);
-  // console.log(data.data.results);
   recipeList.innerHTML = "";
   if (data.data.totalPages === null) {
     const text = "Sorry, there are no recipes found according to your requirements. Sorry, there are no recipes found according to your requirements. Please try changing the filters";
@@ -1309,7 +1272,6 @@ const getRecipes = async page => {
   recipeList.insertAdjacentHTML("beforeend", createMarkUp(data.data.results));
   return data;
 };
-// getRecipes();
 
 /***/ }),
 
