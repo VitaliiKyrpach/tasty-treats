@@ -18,7 +18,6 @@ const openCartModal = () => {
 const handleEscape = (e) => {
 	if (e.key == "Escape") {
 		closeModal();
-		console.log(e.key);
 	}
 };
 
@@ -125,16 +124,13 @@ const handleOrderPost = async (e) => {
 			email: form.customerEmail.value,
 			comment: form.customerComment.value,
 		};
-		console.dir(body);
 		const post = await postOrder(body);
-		console.log(post);
 		if (post.status == 201) {
 			Notify.success(
 				"Thank you for your order. Our manager will contact you ASAP"
 			);
 		}
-		const orderCloseBtn = document.querySelector(".btn-close");
-		closeOrderModal(orderCloseBtn);
+		closeModal();
 	} catch (err) {
 		console.log(err);
 		Notify.failure(
@@ -149,4 +145,4 @@ const postOrder = async (body) => {
 };
 
 cartBtn.addEventListener("click", openCartModal);
-orderBtn.addEventListener("click", openCartModal);
+if (orderBtn) orderBtn.addEventListener("click", openCartModal);

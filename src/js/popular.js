@@ -14,7 +14,6 @@ const getData = async () => {
 
 const createMarkUp = ({ data }) => {
 	if (screen.width < 768) {
-		console.log(data);
 		let markUp = "";
 		for (let i = 0; i < 2; i++) {
 			markUp += `<li class="card" id=${data[i]._id} data-type="popular-card">

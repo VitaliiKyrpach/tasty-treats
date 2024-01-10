@@ -5,11 +5,9 @@ import { openRmodal } from "./raiting-modal";
 
 const modal = document.querySelector(".backdrop");
 export const openModal = async (recipeId) => {
-	// console.log(recipeId);
 	document.addEventListener("keydown", handleEscape);
 	modal.innerHTML = "";
 	const data = await getData(recipeId);
-	// console.log(data);
 	modal.insertAdjacentHTML("beforeend", createMarkUp(data));
 	modal.classList.remove("is-hidden");
 	document.body.classList.add("no-scroll");
@@ -25,14 +23,12 @@ export const openModal = async (recipeId) => {
 const handleEscape = (e) => {
 	if (e.key == "Escape") {
 		closeModal();
-		console.log(e.key);
 	}
 };
 
 const getData = async (id) => {
 	try {
 		const fetch = await axios(`/recipes/${id}`);
-		// console.log(fetch);
 		return fetch;
 	} catch (err) {
 		console.log(err);
@@ -159,17 +155,15 @@ const createMarkUp = ({ data }) => {
 };
 
 const handleAddBtn = async (e) => {
-	// console.log(e.target.id);
 	await addToFavorites(e.target);
 	const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
-	// console.log(added);
 	added.find((item) => item._id == e.target.id)
 		? (e.target.textContent = "Remove from favorite")
 		: (e.target.textContent = "Add to favorite");
 };
 
-const handleRatBtn = async (e) => {
-	await openRmodal(e.target);
+const handleRatBtn = (e) => {
+	openRmodal(e.target);
 };
 
 const closeModal = () => {

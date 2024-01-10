@@ -140,8 +140,6 @@ const onClick = (e) => {
 	createMarkUp(page, totalPages);
 
 	hendleDots(page, totalPages);
-	// if (page >= totalPages - 1 ) dotsNext.classList.add("hidden");
-	// else dotsNext.classList.remove("hidden");
 	getRecipes(page);
 	localStorage.setItem("currentPage", page);
 };

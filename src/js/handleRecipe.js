@@ -3,7 +3,6 @@ import { addToFavorites } from "./addToFavorites";
 const recipes = document.querySelector(".recipe-list");
 
 const handleRecipe = (e) => {
-	// console.log(e.target);
 	const recipeId = e.target.id;
 	if (
 		e.target.dataset.type == "recipe-btn" ||

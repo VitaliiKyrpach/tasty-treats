@@ -104,21 +104,17 @@ const createMarkUp = (page, totalPages) => {
 };
 
 export const onStartFavPag = (page = 1, totalPages = 0) => {
-	// console.log("here");
 	createCards(page, totalPages);
 	if (totalPages < 2) {
 		paginationFav.classList.add("is-hidden");
-		// console.log("hidden");
 	} else {
 		paginationFav.classList.remove("is-hidden");
 		createMarkUp(page, totalPages);
-		// console.log("shown");
 	}
 	handleDots(page, totalPages);
 };
 
 const onClick = (e) => {
-	console.log(e.target.dataset.type);
 	if (
 		e.target.nodeName !== "BUTTON" ||
 		e.target.dataset.type == "dots" ||

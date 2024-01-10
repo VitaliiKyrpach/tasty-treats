@@ -16,9 +16,6 @@ __webpack_require__.r(__webpack_exports__);
 
 const addToFavorites = async target => {
   let favArr = JSON.parse(localStorage.getItem("favorites")) ?? [];
-  // console.log(target.id);
-  // console.group(favArr);
-
   const isAdded = favArr.find(item => item._id == target.id);
   if (!isAdded) {
     const data = await getData(target.id);
@@ -32,10 +29,8 @@ const addToFavorites = async target => {
     };
     favArr.push(card);
     localStorage.setItem("favorites", JSON.stringify(favArr));
-    console.log("added");
   } else {
     const newArr = favArr.filter(item => item._id !== target.id);
-    console.log("deleted");
     localStorage.setItem("favorites", JSON.stringify(newArr));
   }
   target.classList.toggle("added");
@@ -80,7 +75,6 @@ const openCartModal = () => {
 const handleEscape = e => {
   if (e.key == "Escape") {
     closeModal();
-    console.log(e.key);
   }
 };
 const createOrderMarkUp = () => {
@@ -179,14 +173,11 @@ const handleOrderPost = async e => {
       email: form.customerEmail.value,
       comment: form.customerComment.value
     };
-    console.dir(body);
     const post = await postOrder(body);
-    console.log(post);
     if (post.status == 201) {
       notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__.Notify.success("Thank you for your order. Our manager will contact you ASAP");
     }
-    const orderCloseBtn = document.querySelector(".btn-close");
-    closeOrderModal(orderCloseBtn);
+    closeModal();
   } catch (err) {
     console.log(err);
     notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__.Notify.failure(`I'm sorry, something went wrong. ${err.response.data.message}`);
@@ -197,7 +188,7 @@ const postOrder = async body => {
   return post;
 };
 cartBtn.addEventListener("click", openCartModal);
-orderBtn.addEventListener("click", openCartModal);
+if (orderBtn) orderBtn.addEventListener("click", openCartModal);
 
 /***/ }),
 
@@ -296,18 +287,15 @@ const createMarkUp = () => {
 };
 const createFilters = function () {
   let totalPages = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-  // console.log(totalPages);
   filterList.innerHTML = "";
   if (totalPages) filterList.insertAdjacentHTML("beforeend", createMarkUp());
 };
 const onStartPage = () => {
   let page = JSON.parse(localStorage.getItem("currentPageFav")) ?? 1;
   const data = JSON.parse(localStorage.getItem("favorites"));
-  // console.log(data);
   if (!data) {
     (0,_pagination_fav__WEBPACK_IMPORTED_MODULE_0__.onStartFavPag)();
   } else {
-    // console.log("not working");
     const category = localStorage.getItem("filterFav") ?? "all";
     let filtered;
     if (category == "all") {
@@ -340,7 +328,6 @@ const handleFilters = e => {
   }
   const totalPages = Math.ceil(filtered.length / 12);
   (0,_pagination_fav__WEBPACK_IMPORTED_MODULE_0__.onStartFavPag)(page, totalPages);
-  console.log(e.target.id);
 };
 filterList.addEventListener("click", handleFilters);
 if (screen.width > 767) {
@@ -498,20 +485,16 @@ const createMarkUp = (page, totalPages) => {
 const onStartFavPag = function () {
   let page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
   let totalPages = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  // console.log("here");
   (0,_recipes_fav__WEBPACK_IMPORTED_MODULE_0__.createCards)(page, totalPages);
   if (totalPages < 2) {
     paginationFav.classList.add("is-hidden");
-    // console.log("hidden");
   } else {
     paginationFav.classList.remove("is-hidden");
     createMarkUp(page, totalPages);
-    // console.log("shown");
   }
   handleDots(page, totalPages);
 };
 const onClick = e => {
-  console.log(e.target.dataset.type);
   if (e.target.nodeName !== "BUTTON" || e.target.dataset.type == "dots" || e.target.outerText == page || e.target.dataset.type == "next" && page == totalPages || e.target.dataset.type == "last" && page == totalPages || e.target.dataset.type == "first" && page == 1 || e.target.dataset.type == "prev" && page == 1) return;
   if (e.target.dataset.type == "count") {
     page = Number(e.target.outerText);
@@ -561,13 +544,11 @@ const openRmodal = target => {
 const handleEscape = e => {
   if (e.key == "Escape") {
     closeModal();
-    console.log(e.key);
   }
 };
 const createMarkUp = function (id) {
   let num = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   const stars = createModalStars(num);
-  console.log(num);
   return `<div class="rating-modal">
     <button class="btn-close" type="button">
         <svg class="close-svg">
@@ -590,7 +571,6 @@ const createMarkUp = function (id) {
 const createModalStars = num => {
   let markUp = "";
   let starActive;
-  console.log(num);
   for (let i = 1; i <= 5; i++) {
     i <= num ? starActive = "active" : starActive = "";
     markUp += `<input
@@ -628,9 +608,7 @@ const handleRaiting = e => {
     const text = document.querySelector(".rating-text");
     text.textContent = num;
     const star = document.querySelector(`#star${num}`);
-    console.log(`#star${num}`);
     star.checked = true;
-    console.dir(e.target.value);
   }
 };
 const handleRatPost = async e => {
@@ -647,18 +625,15 @@ const handleRatPost = async e => {
     } else {
       const email = e.target.elements.email.value;
       const id = e.target.elements.subBtn.id;
-      console.log(e.target.elements.subBtn.id, email, rating);
       const body = {
         rate: rating,
-        email: e.target.elements.email.value
+        email
       };
       const post = await postRating(id, body);
-      console.log(post);
       if (post.status == 200) {
         notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__.Notify.success("Your rating added successfully.Thank you!");
       }
-      const raitModalClose = document.querySelector(".btn-close");
-      closeRaitModal(raitModalClose);
+      closeModal();
     }
   } catch (err) {
     console.log(err.message);
@@ -693,11 +668,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const modal = document.querySelector(".backdrop");
 const openModal = async recipeId => {
-  // console.log(recipeId);
   document.addEventListener("keydown", handleEscape);
   modal.innerHTML = "";
   const data = await getData(recipeId);
-  // console.log(data);
   modal.insertAdjacentHTML("beforeend", createMarkUp(data));
   modal.classList.remove("is-hidden");
   document.body.classList.add("no-scroll");
@@ -712,13 +685,11 @@ const openModal = async recipeId => {
 const handleEscape = e => {
   if (e.key == "Escape") {
     closeModal();
-    console.log(e.key);
   }
 };
 const getData = async id => {
   try {
     const fetch = await (0,axios__WEBPACK_IMPORTED_MODULE_3__["default"])(`/recipes/${id}`);
-    // console.log(fetch);
     return fetch;
   } catch (err) {
     console.log(err);
@@ -842,14 +813,12 @@ const createMarkUp = _ref => {
   }
 };
 const handleAddBtn = async e => {
-  // console.log(e.target.id);
   await (0,_addToFavorites__WEBPACK_IMPORTED_MODULE_1__.addToFavorites)(e.target);
   const added = JSON.parse(localStorage.getItem("favorites")) ?? [];
-  // console.log(added);
   added.find(item => item._id == e.target.id) ? e.target.textContent = "Remove from favorite" : e.target.textContent = "Add to favorite";
 };
-const handleRatBtn = async e => {
-  await (0,_raiting_modal__WEBPACK_IMPORTED_MODULE_2__.openRmodal)(e.target);
+const handleRatBtn = e => {
+  (0,_raiting_modal__WEBPACK_IMPORTED_MODULE_2__.openRmodal)(e.target);
 };
 const closeModal = () => {
   modal.innerHTML = "";
@@ -923,7 +892,6 @@ const createCards = (page, totalPages) => {
     filtered = data.filter(item => item.category == category);
   }
   recipeListFav.innerHTML = "";
-  // console.log(totalPages);
   if (!totalPages) {
     const text = "It appears that you haven't added any recipes to your favorites yet. To get started, you can add recipes that you like to your favorites for easier access in the future.";
     recipeListFav.insertAdjacentHTML("beforeend", (0,_emptyResult__WEBPACK_IMPORTED_MODULE_0__["default"])(text));
@@ -941,7 +909,6 @@ const createMarkUpFav = (page, results, totalPages) => {
   const start = (page - 1) * limit;
   let end;
   page == totalPages ? end = results.length : end = page * limit;
-  // console.log(page, results, totalPages);
   for (let i = start; i < end; i++) {
     const stars = (0,_createStars__WEBPACK_IMPORTED_MODULE_3__["default"])(results[i].rating);
     added.find(item => item._id == results[i]._id) ? addedClass = "added" : addedClass = "";
@@ -981,7 +948,6 @@ const handleRecipeFav = e => {
 const deleteFromFavorites = target => {
   const favArr = JSON.parse(localStorage.getItem("favorites"));
   const newArr = favArr.filter(item => item._id !== target.id);
-  console.log("deleted");
   localStorage.setItem("favorites", JSON.stringify(newArr));
   target.classList.remove("added");
   const page = localStorage.getItem("currentPageFav") ?? 1;

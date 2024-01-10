@@ -31,7 +31,6 @@ const createMarkUp = () => {
 };
 
 export const createFilters = (totalPages = 0) => {
-	// console.log(totalPages);
 	filterList.innerHTML = "";
 	if (totalPages)
 		filterList.insertAdjacentHTML("beforeend", createMarkUp());
@@ -40,11 +39,9 @@ export const createFilters = (totalPages = 0) => {
 const onStartPage = () => {
 	let page = JSON.parse(localStorage.getItem("currentPageFav")) ?? 1;
 	const data = JSON.parse(localStorage.getItem("favorites"));
-	// console.log(data);
 	if (!data) {
 		onStartFavPag();
 	} else {
-		// console.log("not working");
 		const category = localStorage.getItem("filterFav") ?? "all";
 		let filtered;
 		if (category == "all") {
@@ -79,7 +76,6 @@ const handleFilters = (e) => {
 	}
 	const totalPages = Math.ceil(filtered.length / 12);
 	onStartFavPag(page, totalPages);
-	console.log(e.target.id);
 };
 
 filterList.addEventListener("click", handleFilters);

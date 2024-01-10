@@ -19,13 +19,11 @@ export const openRmodal = (target) => {
 const handleEscape = (e) => {
 	if (e.key == "Escape") {
 		closeModal();
-		console.log(e.key);
 	}
 };
 
 const createMarkUp = (id, num = 0) => {
 	const stars = createModalStars(num);
-	console.log(num);
 	return `<div class="rating-modal">
     <button class="btn-close" type="button">
         <svg class="close-svg">
@@ -49,7 +47,6 @@ const createMarkUp = (id, num = 0) => {
 const createModalStars = (num) => {
 	let markUp = "";
 	let starActive;
-	console.log(num);
 	for (let i = 1; i <= 5; i++) {
 		i <= num ? (starActive = "active") : (starActive = "");
 		markUp += `<input
@@ -93,9 +90,7 @@ const handleRaiting = (e) => {
 		const text = document.querySelector(".rating-text");
 		text.textContent = num;
 		const star = document.querySelector(`#star${num}`);
-		console.log(`#star${num}`);
 		star.checked = true;
-		console.dir(e.target.value);
 	}
 };
 
@@ -113,18 +108,15 @@ const handleRatPost = async (e) => {
 		} else {
 			const email = e.target.elements.email.value;
 			const id = e.target.elements.subBtn.id;
-			console.log(e.target.elements.subBtn.id, email, rating);
 			const body = {
 				rate: rating,
-				email: e.target.elements.email.value,
+				email,
 			};
 			const post = await postRating(id, body);
-			console.log(post);
 			if (post.status == 200) {
 				Notify.success("Your rating added successfully.Thank you!");
 			}
-			const raitModalClose = document.querySelector(".btn-close");
-			closeRaitModal(raitModalClose);
+			closeModal();
 		}
 	} catch (err) {
 		console.log(err.message);

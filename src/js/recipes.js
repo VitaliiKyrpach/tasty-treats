@@ -23,7 +23,6 @@ const getData = async (page = 1) => {
 		const fetch = await axios("/recipes", {
 			params,
 		});
-		console.log(fetch.data);
 		return fetch;
 	} catch (err) {
 		console.log(err);
@@ -71,7 +70,6 @@ export const createMarkUp = (results) => {
 
 export const getRecipes = async (page) => {
 	const data = await getData(page);
-	// console.log(data.data.results);
 	recipeList.innerHTML = "";
 	if (data.data.totalPages === null) {
 		const text =
@@ -84,4 +82,3 @@ export const getRecipes = async (page) => {
 	);
 	return data;
 };
-// getRecipes();

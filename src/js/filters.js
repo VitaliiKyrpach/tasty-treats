@@ -66,7 +66,6 @@ getFilters(timeList, "option-time");
 const handleFilters = (e) => {
 	console.dir(e.currentTarget.firstElementChild);
 	const arrows = document.querySelectorAll(".arrow");
-	console.log(arrows);
 	if (e.currentTarget.dataset.type == "time") {
 		handleArrow("time");
 		timeList.classList.toggle("is-hidden");

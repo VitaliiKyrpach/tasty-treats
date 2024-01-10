@@ -21,7 +21,7 @@ const params = {
 	ingredient: "",
 };
 searchInput.value = LSparams && LSparams.value ? LSparams.title : "";
-// console.log(searchInput);
+
 areaLabel.textContent =
 	LSparams && LSparams.area ? LSparams.area : ".....";
 timeLabel.textContent =
@@ -30,10 +30,8 @@ ingLabel.textContent =
 	LSparams && LSparams.ingredient ? LSparams.ingredient : ".....";
 
 const handlePick = (e) => {
-	// console.log(e.target.textContent);
 	if (e.target.nodeName !== "BUTTON") return;
 	if (e.target.dataset.option == "option-area") {
-		// console.log(areaLabel.textContent);
 		areaLabel.textContent = e.target.textContent;
 		params.area = e.target.textContent;
 	}
@@ -42,7 +40,6 @@ const handlePick = (e) => {
 		params.time = String(Number.parseInt(e.target.textContent));
 	}
 	if (e.target.dataset.option == "option-ingredient") {
-		// console.log(e.target.id);
 		ingLabel.textContent = e.target.textContent;
 		params.ingredient = e.target.id;
 	}
@@ -54,7 +51,6 @@ const handlePick = (e) => {
 	}
 	localStorage.setItem("params", JSON.stringify(params));
 	onStartPag();
-	// console.log(params);
 };
 
 const resetCats = () => {
@@ -63,7 +59,6 @@ const resetCats = () => {
 	params.category = "";
 	localStorage.setItem("params", JSON.stringify(params));
 	onStartPag();
-	// console.log(params);
 };
 const resetFilter = () => {
 	params.title = "";
@@ -75,7 +70,6 @@ const resetFilter = () => {
 	ingLabel.textContent = ".....";
 	localStorage.setItem("params", JSON.stringify(params));
 	onStartPag();
-	// console.log(params);
 };
 const handleChange = (e) => {
 	console.log(e.target.value);
