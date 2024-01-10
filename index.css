@@ -572,7 +572,7 @@ ul {
 .time-list {
   position: absolute;
   left: 0;
-  top: 101%;
+  top: 102%;
   width: 100%;
   height: 180px;
   display: flex;
@@ -631,6 +631,9 @@ ul {
   fill: var(--color-secondary-lighter);
   transform: rotate(-90deg);
   pointer-events: none;
+}
+.filter .arrow.picked {
+  transform: rotate(-90deg) scaleX(-100%);
 }
 
 .filter-label {
@@ -1591,7 +1594,7 @@ ul {
   font-weight: 600;
   line-height: 1.22;
   text-transform: uppercase;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   color: var(--color-secondary-dark);
 }
 @media screen and (min-width: 768px) {
@@ -1628,6 +1631,16 @@ ul {
   .recipe-modal .buttons {
     gap: 16px;
   }
+}
+.recipe-modal .content {
+  height: 500px;
+  overflow-y: auto;
+}
+.recipe-modal .content::-webkit-scrollbar {
+  display: none;
+}
+.recipe-modal .btn-close {
+  top: 10px;
 }
 
 .modal-score {
