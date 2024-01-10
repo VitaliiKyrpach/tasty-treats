@@ -21,6 +21,7 @@ $bp-desktop: 1280px;
 	--color-event-back: var(--color-secondary-dark);
 	--display-logo-light: block;
 	--display-logo-dark: none;
+	--color-menu-back: var(--color-accent)
 }
 :root[theme="dark"] {
 	--color-primary-dark: rgba(255, 255, 255, 0.8);
@@ -42,6 +43,7 @@ $bp-desktop: 1280px;
 	--color-event-back: #050505;
 	--display-logo-light: none;
 	--display-logo-dark: block;
+	--color-menu-back: var(--color-primary-light)
 }
 
 $color-primary-dark: var(--color-primary-dark);
@@ -65,3 +67,4 @@ $display-logo-dark: var(--display-logo-dark);
 $display-logo-light: var(--display-logo-light);
 $notify-back-success: #6ccf7e;
 $notify-back-failure: #f27c74;
+$color-menu-back: var(--color-menu-back)

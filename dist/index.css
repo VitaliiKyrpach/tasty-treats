@@ -42,6 +42,7 @@
   --color-event-back: var(--color-secondary-dark);
   --display-logo-light: block;
   --display-logo-dark: none;
+  --color-menu-back: var(--color-accent) ;
 }
 
 :root[theme=dark] {
@@ -64,6 +65,7 @@
   --color-event-back: #050505;
   --display-logo-light: none;
   --display-logo-dark: block;
+  --color-menu-back: var(--color-primary-light) ;
 }
 
 *,
@@ -1053,20 +1055,70 @@ ul {
 }
 
 .mobile-menu {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   padding: 16px 24px;
-  background-color: var(--color-primary-light);
+  background-color: var(--color-menu-back);
   z-index: 2;
   transform: translateX(100%);
   transition: transform 150ms ease;
 }
 .mobile-menu.open {
   transform: translateX(0%);
+}
+
+.nav-list-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.nav-list-menu .link {
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--color-card-title);
+}
+
+.theme-wrapper.menu {
+  display: flex;
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  justify-content: start;
+  align-items: center;
+  width: 46px;
+  height: 20px;
+  background-color: var(--color-secondary-light);
+  border-radius: 11px;
+  padding: 1px;
+  box-shadow: 4px 4px 8px var(--color-secondary-light);
+  cursor: pointer;
+}
+.theme-wrapper.menu.dark {
+  background-color: var(--color-accent);
+  justify-content: end;
+}
+
+.menu-btn-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  fill: var(--color-primary-dark);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 .order-modal {
