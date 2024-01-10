@@ -64,18 +64,23 @@ getFilters(ingredientsList, "option-ingredient", "/ingredients");
 getFilters(timeList, "option-time");
 
 const handleFilters = (e) => {
-	// console.dir(e.currentTarget);
+	console.dir(e.currentTarget.firstElementChild);
+	const arrows = document.querySelectorAll(".arrow");
+	console.log(arrows);
 	if (e.currentTarget.dataset.type == "time") {
+		handleArrow("time");
 		timeList.classList.toggle("is-hidden");
 		areaList.classList.add("is-hidden");
 		ingredientsList.classList.add("is-hidden");
 	}
 	if (e.currentTarget.dataset.type == "area") {
+		handleArrow("area");
 		areaList.classList.toggle("is-hidden");
 		timeList.classList.add("is-hidden");
 		ingredientsList.classList.add("is-hidden");
 	}
 	if (e.currentTarget.dataset.type == "ingredients") {
+		handleArrow("ingredients");
 		ingredientsList.classList.toggle("is-hidden");
 		timeList.classList.add("is-hidden");
 		areaList.classList.add("is-hidden");
@@ -85,3 +90,12 @@ const handleFilters = (e) => {
 labelArr.forEach((label) =>
 	label.addEventListener("click", handleFilters)
 );
+const handleArrow = (type) => {
+	labelArr.forEach((label) => {
+		if (label.dataset.type == type) {
+			label.firstElementChild.classList.toggle("picked");
+		} else {
+			label.firstElementChild.classList.remove("picked");
+		}
+	});
+};

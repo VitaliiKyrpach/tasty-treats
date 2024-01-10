@@ -78,14 +78,14 @@ const createMarkUp = ({ data }) => {
                 <use href="assets/sprite.svg#icon-reset"></use>
             </svg>
         </button>
-        <iframe
-            class="video"
-            src=${url}
-            title="YouTube video player"
-            frameborder="0"
-            
-        ></iframe>
-		<h2 class="title">${title}</h2>
+		<div class='content'>
+			<iframe
+            	class="video"
+            	src=${url}
+            	title="YouTube video player"
+            	frameborder="0"   
+        	></iframe>
+			<h2 class="title">${title}</h2>
             <div class="modal-score">
                 <p class="modal-score-text">${rating}</p>
                 <div class="stars">
@@ -93,15 +93,16 @@ const createMarkUp = ({ data }) => {
                 </div>
                 <p class="modal-score-text min">${time} min</p>
             </div>
-        <ul class="ing-list">
-            ${ingredientsMarkUp}
-        </ul>
-		<ul class="tag-list">
+			<ul class="ing-list">
+            	${ingredientsMarkUp}
+        	</ul>
+			<ul class="tag-list">
                 ${tagsMarkUp}
             </ul>
-        <p class="text">
-            ${description}
-        </p>
+        	<p class="text">
+            	${description}
+        	</p>
+		</div>
         <div class="buttons">
             <button class="btn-add" type="button" id=${_id}>
                 ${addedToFav} favorite

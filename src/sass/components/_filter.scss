@@ -20,7 +20,7 @@
 %dropdown {
 	position: absolute;
 	left: 0;
-	top: 101%;
+	top: 102%;
 	width: 100%;
 	height: 180px;
 	display: flex;
@@ -71,6 +71,9 @@
 		fill: $color-secondary-lighter;
 		transform: rotate(-90deg);
 		pointer-events: none;
+		&.picked {
+			transform: rotate(-90deg) scaleX(-100%);
+		}
 	}
 }
 .filter-label {

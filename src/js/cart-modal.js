@@ -1,9 +1,9 @@
 import axios from "axios";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 
-// });
 const cartModal = document.querySelector(".backdrop");
 const cartBtn = document.querySelector(".cart-btn");
+const orderBtn = document.querySelector(".order-btn");
 const openCartModal = () => {
 	document.addEventListener("keydown", handleEscape);
 	cartModal.innerHTML = "";
@@ -149,3 +149,4 @@ const postOrder = async (body) => {
 };
 
 cartBtn.addEventListener("click", openCartModal);
+orderBtn.addEventListener("click", openCartModal);

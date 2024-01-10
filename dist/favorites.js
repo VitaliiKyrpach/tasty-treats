@@ -64,10 +64,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(notiflix_build_notiflix_notify_aio__WEBPACK_IMPORTED_MODULE_0__);
 
 
-
-// });
 const cartModal = document.querySelector(".backdrop");
 const cartBtn = document.querySelector(".cart-btn");
+const orderBtn = document.querySelector(".order-btn");
 const openCartModal = () => {
   document.addEventListener("keydown", handleEscape);
   cartModal.innerHTML = "";
@@ -198,6 +197,7 @@ const postOrder = async body => {
   return post;
 };
 cartBtn.addEventListener("click", openCartModal);
+orderBtn.addEventListener("click", openCartModal);
 
 /***/ }),
 
@@ -762,14 +762,14 @@ const createMarkUp = _ref => {
                 <use href="assets/sprite.svg#icon-reset"></use>
             </svg>
         </button>
-        <iframe
-            class="video"
-            src=${url}
-            title="YouTube video player"
-            frameborder="0"
-            
-        ></iframe>
-		<h2 class="title">${title}</h2>
+		<div class='content'>
+			<iframe
+            	class="video"
+            	src=${url}
+            	title="YouTube video player"
+            	frameborder="0"   
+        	></iframe>
+			<h2 class="title">${title}</h2>
             <div class="modal-score">
                 <p class="modal-score-text">${rating}</p>
                 <div class="stars">
@@ -777,15 +777,16 @@ const createMarkUp = _ref => {
                 </div>
                 <p class="modal-score-text min">${time} min</p>
             </div>
-        <ul class="ing-list">
-            ${ingredientsMarkUp}
-        </ul>
-		<ul class="tag-list">
+			<ul class="ing-list">
+            	${ingredientsMarkUp}
+        	</ul>
+			<ul class="tag-list">
                 ${tagsMarkUp}
             </ul>
-        <p class="text">
-            ${description}
-        </p>
+        	<p class="text">
+            	${description}
+        	</p>
+		</div>
         <div class="buttons">
             <button class="btn-add" type="button" id=${_id}>
                 ${addedToFav} favorite
@@ -1002,7 +1003,6 @@ document.addEventListener("DOMContentLoaded", () => {
   init();
 });
 const toggleBtns = document.querySelectorAll(".theme-wrapper");
-console.log(toggleBtns);
 function init() {
   if (localStorage.getItem("theme")) {
     document.documentElement.setAttribute("theme", "dark");
@@ -1035,7 +1035,7 @@ const handleToggleTheme = () => {
     localStorage.setItem("theme", 1);
   }
 };
-toggleBtns.forEach(btn => btn.addEventListener('click', handleToggleTheme));
+toggleBtns.forEach(btn => btn.addEventListener("click", handleToggleTheme));
 
 /***/ }),
 
