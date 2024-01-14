@@ -23,6 +23,7 @@ const getData = async (page = 1) => {
 		const fetch = await axios("/recipes", {
 			params,
 		});
+		console.log(fetch);
 		return fetch;
 	} catch (err) {
 		console.log(err);
